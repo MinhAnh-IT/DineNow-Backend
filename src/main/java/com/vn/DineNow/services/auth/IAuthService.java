@@ -13,10 +13,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public interface IAuthService {
     UserDTO register(UserDTO userDTO) throws CustomException;
     LoginResponse login(LoginRequest request, HttpServletResponse response) throws  CustomException;
-    LoginResponse refreshToken(String refreshToken);
-    boolean sendVerificationEmail(EmailRequest request);
-    boolean verifyOTP(VerifyOTPRequest request);
-    boolean forgotPassword(EmailRequest request);
-    boolean resetPassword(ResetPasswordRequest request);
-    boolean logout(HttpServletRequest request);
+    LoginResponse refreshToken(String refreshToken) throws CustomException;
+    boolean sendVerificationEmail(EmailRequest request)throws CustomException;
+    boolean verifyOTPForgotPassword(VerifyOTPRequest request) throws CustomException;
+    boolean verifyOTPVerifyAccount(VerifyOTPRequest request) throws CustomException;
+    boolean forgotPassword(EmailRequest request) throws CustomException;
+    boolean resetPassword(ResetPasswordRequest request) throws CustomException;
+    boolean logout(HttpServletRequest request, HttpServletResponse response);
 }

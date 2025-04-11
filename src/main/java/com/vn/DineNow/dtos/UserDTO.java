@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vn.DineNow.enums.Role;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import java.time.OffsetDateTime;
 
@@ -16,24 +16,28 @@ import java.time.OffsetDateTime;
 public class UserDTO {
     private Long id;
 
-    @NotNull
+    @NotBlank(message = "Full name should not be blank")
     @Size(max = 255)
     private String fullName;
 
-    @NotNull
+    @NotBlank(message = "Email should not be blank")
+    @Email
     @Size(max = 255)
     private String email;
 
     @NotNull
-    @Size(max = 255)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Pattern(
+            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+            message = "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 digit, and 1 special character and be at least 8 characters long"
+    )
     private String password;
 
     @NotNull
-    @Size(max = 20)
+    @Pattern(regexp = "^[0-9]{10}$", message = "Phone must be 10 digits")
     private String phone;
 
-    @Size(max = 255)
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Enumerated(EnumType.STRING)
     private Role role = Role.CUSTOMER;
@@ -41,8 +45,10 @@ public class UserDTO {
     @JsonProperty("isVerified")
     private Boolean isVerified;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private OffsetDateTime createdAt;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private OffsetDateTime updatedAt;
 
 }
