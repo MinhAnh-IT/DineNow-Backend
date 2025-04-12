@@ -1,18 +1,22 @@
 package com.vn.DineNow.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.vn.DineNow.enums.Role;
+import com.vn.DineNow.enums.SignWith;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
 import java.time.OffsetDateTime;
 
 @Setter
 @Getter
+@Builder
 public class UserDTO {
     private Long id;
 
@@ -24,6 +28,11 @@ public class UserDTO {
     @Email
     @Size(max = 255)
     private String email;
+
+    @Builder.Default
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Enumerated(EnumType.STRING)
+    private SignWith provider = SignWith.LOCAL;
 
     @NotNull
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -37,13 +46,17 @@ public class UserDTO {
     @Pattern(regexp = "^[0-9]{10}$", message = "Phone must be 10 digits")
     private String phone;
 
-
+    @Builder.Default
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Enumerated(EnumType.STRING)
     private Role role = Role.CUSTOMER;
 
     @JsonProperty("isVerified")
     private Boolean isVerified;
+
+    @Builder.Default
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Boolean enabled = true;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private OffsetDateTime createdAt;

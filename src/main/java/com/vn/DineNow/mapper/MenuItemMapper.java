@@ -8,6 +8,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface MenuItemMapper {
 
+    @Mapping(target = "category", ignore = true)
     @Mapping(target = "menuItemOrderItems", ignore = true)
     @Mapping(source = "restaurant", target = "restaurant.id")
     MenuItem toEntity(MenuItemDTO menuItemDTO);

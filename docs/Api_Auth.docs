@@ -100,7 +100,7 @@
             "status": 200,
             "message": "Request successful and data returned.",
             "data": {
-                "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiYXVkIjoiRGluZU5vdy5jb20udm4iLCJpYXQiOjE3NDQzMDUxMDYsImlzcyI6IkRpbmVOb3cuY29tLnZuIiwiZXhwIjoxNzQ0MzA2MDA2LCJyb2xlIjoiQ1VTVE9NRVIifQ.vYB2ZFqXIeaGbEO4fspqMwzPogrlMgoEPE0FWnjtMLQ"
+                "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIi..."
             }
         }
         # Chú thích:
@@ -227,6 +227,30 @@
 
         # lưu ý xác thực otp trước khi đổi mật khẩu
 
+------------------------------------------------------------------------------------------------------------------------
+10. Đăng nhập với google: api/auth/google-login
+    * Request body:
+           {
+             "idToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+           }
+
+           # Chú thích:
+               - idToken: Được lấy từ phía frontend với Oauth2 của gg
 
 
+      * Response:
+            {
+                "status": 200,
+                "message": "Request successful and data returned.",
+                "data":{
+                    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                }
+            }
 
+            # Chú thích:
+                - status: Mã trạng thái HTTP (200 - OK)
+
+                - message: Thông báo về kết quả của yêu cầu
+
+                - data: Thông tin chi tiết về người dùng đã được tạo
+                    + accessToken: Token truy cập (JWT) được sử dụng để xác thực các yêu cầu tiếp theo
