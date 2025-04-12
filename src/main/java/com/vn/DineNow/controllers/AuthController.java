@@ -3,6 +3,7 @@ package com.vn.DineNow.controllers;
 import com.vn.DineNow.dtos.UserDTO;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
+import com.vn.DineNow.payload.request.auth.GoogleLoginRequest;
 import com.vn.DineNow.payload.request.auth.LoginRequest;
 import com.vn.DineNow.payload.request.auth.ResetPasswordRequest;
 import com.vn.DineNow.payload.request.auth.VerifyOTPRequest;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -122,5 +124,16 @@ public class AuthController {
                 .data(isLoggedOut)
                 .build();
         return ResponseEntity.ok(apiResponse);
+    }
+
+    @PostMapping("/google-login")
+    public ResponseEntity<APIResponse<LoginResponse>> loginWithGoogle(@RequestBody GoogleLoginRequest request, HttpServletResponse httpServletResponse) throws CustomException{
+        LoginResponse loginResponse = authService.LoginWithGoogle(request, httpServletResponse);
+        APIResponse<LoginResponse> response = APIResponse.<LoginResponse>builder()
+                .status(StatusCode.OK.getCode())
+                .message(StatusCode.OK.getMessage())
+                .data(loginResponse)
+                .build();
+        return ResponseEntity.ok(response);
     }
 }

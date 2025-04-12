@@ -50,6 +50,9 @@ public class MenuItem {
     private Boolean available;
 
     @Column
+    private String imageUrl;
+
+    @Column
     private OffsetDateTime createdAt;
 
     @Column
@@ -62,4 +65,7 @@ public class MenuItem {
     @OneToMany(mappedBy = "menuItem")
     private Set<OrderItem> menuItemOrderItems;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private FoodCategory category;
 }

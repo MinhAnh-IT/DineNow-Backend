@@ -28,6 +28,9 @@ public class RestaurantDTO {
     @Size(max = 20)
     private String phone;
 
+    @NotNull
+    private Boolean enabled = true;
+
     private String description;
 
     @Digits(integer = 5, fraction = 2)

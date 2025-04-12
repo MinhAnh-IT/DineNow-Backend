@@ -1,17 +1,21 @@
 package com.vn.DineNow.services.auth;
 
 import com.vn.DineNow.dtos.UserDTO;
+import com.vn.DineNow.dtos.UserGoogleDTO;
 import com.vn.DineNow.entities.User;
+import com.vn.DineNow.enums.Role;
 import com.vn.DineNow.enums.SignWith;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.mapper.UserMapper;
+import com.vn.DineNow.payload.request.auth.GoogleLoginRequest;
 import com.vn.DineNow.payload.request.auth.LoginRequest;
 import com.vn.DineNow.payload.request.auth.ResetPasswordRequest;
 import com.vn.DineNow.payload.request.auth.VerifyOTPRequest;
 import com.vn.DineNow.payload.request.common.EmailRequest;
 import com.vn.DineNow.payload.response.auth.LoginResponse;
 import com.vn.DineNow.repositories.UserRepository;
+import com.vn.DineNow.services.GoogleService.IGoogleAuthService;
 import com.vn.DineNow.services.email.IEmailService;
 import com.vn.DineNow.services.redis.IRedisService;
 import com.vn.DineNow.util.CookieUtils;
@@ -36,6 +40,7 @@ public class AuthServiceImpl implements IAuthService{
     private final JwtService jwtService;
     private final IRedisService redisService;
     private final IEmailService emailService;
+    private final IGoogleAuthService googleAuthService;
 
 
     @Value("${DineNow.key.refreshToken}")
@@ -64,6 +69,9 @@ public class AuthServiceImpl implements IAuthService{
         if (userRepository.existsByPhone(userDTO.getPhone())) {
             throw new CustomException(StatusCode.EXIST_PHONE, userDTO.getPhone());
         }
+        userDTO.setEnabled(true);
+        userDTO.setRole(Role.CUSTOMER);
+        userDTO.setProvider(SignWith.LOCAL);
         var user = userMapper.toEntity(userDTO);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
@@ -83,6 +91,11 @@ public class AuthServiceImpl implements IAuthService{
         String accessToken = jwtService.generateAccessToken(userMapper.toDTO(user));
         String refreshToken = jwtService.generateRefreshToken(userMapper.toDTO(user));
 
+        // Check status of user
+        boolean isEnabled = user.getEnabled();
+        if (!isEnabled) {
+            throw new CustomException(StatusCode.ACCOUNT_DISABLED);
+        }
         // Store refresh token in Redis
         String refreshTokenKey = keyRefreshToken + user.getId();
         redisService.saveObject(refreshTokenKey, refreshToken, refreshTokenExpire, TimeUnit.DAYS);
@@ -96,19 +109,24 @@ public class AuthServiceImpl implements IAuthService{
 
     @Override
     public LoginResponse refreshToken(String refreshToken) throws CustomException{
-        // Get refresh token from redis for validation
-        String refreshTokenKey = keyRefreshToken + jwtService.getUserIdFromJWT(refreshToken);
-        String redisRefreshToken = redisService.getObject(refreshTokenKey, String.class);
-        // Validate the refresh token
-        if (redisRefreshToken == null || !redisRefreshToken.equals(refreshToken)) {
-            throw new CustomException(StatusCode.UNAUTHORIZED_TOKEN);
-        }
-
-        // Get user from id in JWT
         long userId = jwtService.getUserIdFromJWT(refreshToken);
         UserDTO user = userMapper.toDTO(userRepository.findById(userId).orElseThrow(
                 () -> new CustomException(StatusCode.NOT_FOUND, "user", String.valueOf(userId))
         ));
+
+        // Check status account
+        if (!user.getEnabled()){
+            throw new CustomException(StatusCode.ACCOUNT_DISABLED);
+        }
+
+        // Get refresh token from redis for validation
+        String refreshTokenKey = keyRefreshToken + jwtService.getUserIdFromJWT(refreshToken);
+        String redisRefreshToken = redisService.getObject(refreshTokenKey, String.class);
+
+        // Validate the refresh token
+        if (redisRefreshToken == null || !redisRefreshToken.equals(refreshToken)) {
+            throw new CustomException(StatusCode.UNAUTHORIZED_TOKEN);
+        }
 
         // regenerate access token
         String newAccessToken = jwtService.generateAccessToken(user);
@@ -119,8 +137,12 @@ public class AuthServiceImpl implements IAuthService{
 
     @Override
     public boolean sendVerificationEmail(EmailRequest request) throws CustomException{
-        if (!userRepository.existsByEmail(request.getEmail(), SignWith.LOCAL)) {
+        User user = userRepository.findByEmailAndProvider(request.getEmail(), SignWith.LOCAL);
+        if (user == null) {
             throw new CustomException(StatusCode.NOT_FOUND, "username", request.getEmail());
+        }
+        if (!user.getEnabled()){
+            throw new CustomException(StatusCode.ACCOUNT_DISABLED);
         }
 
         // Generate OTP
@@ -177,8 +199,12 @@ public class AuthServiceImpl implements IAuthService{
 
     @Override
     public boolean forgotPassword(EmailRequest request) throws CustomException{
-        if (!userRepository.existsByEmail(request.getEmail(), SignWith.LOCAL)) {
+        User user = userRepository.findByEmailAndProvider(request.getEmail(), SignWith.LOCAL);
+        if (user == null) {
             throw new CustomException(StatusCode.NOT_FOUND, "username", request.getEmail());
+        }
+        if (!user.getEnabled()){
+            throw new CustomException(StatusCode.ACCOUNT_DISABLED);
         }
         // Generate OTP
         String otp = generateOTP();
@@ -223,6 +249,53 @@ public class AuthServiceImpl implements IAuthService{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public LoginResponse LoginWithGoogle(GoogleLoginRequest request, HttpServletResponse response) throws CustomException {
+        User user = null;
+
+        try {
+            if (request.getIdToken() == null || request.getIdToken().isBlank()) {
+                throw new CustomException(StatusCode.INVALID_TOKEN);
+            }
+
+            var payload = googleAuthService.verifyToken(request.getIdToken());
+            String email = payload.getEmail();
+            user = userRepository.findByEmailAndProvider(email, SignWith.GOOGLE);
+
+            if (user != null && !user.getEnabled()) {
+                throw new CustomException(StatusCode.ACCOUNT_DISABLED);
+            }
+
+            if (user == null) {
+                String name = (String) payload.get("name");
+                UserGoogleDTO userDTO = UserGoogleDTO.builder()
+                        .email(email)
+                        .fullName(name)
+                        .build();
+                user = userMapper.toEntityFromGoogle(userDTO);
+                user = userRepository.save(user);
+            }
+
+            String accessToken = jwtService.generateAccessToken(userMapper.toDTO(user));
+            String refreshToken = jwtService.generateRefreshToken(userMapper.toDTO(user));
+
+            String refreshTokenKey = keyRefreshToken + user.getId();
+            redisService.saveObject(refreshTokenKey, refreshToken, refreshTokenExpire, TimeUnit.DAYS);
+
+            CookieUtils.addRefreshTokenCookie(response, refreshToken, isSecure, (int) refreshTokenExpire);
+
+            return LoginResponse.builder()
+                    .accessToken(accessToken)
+                    .build();
+
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Google login error: ", e);
+            throw new CustomException(StatusCode.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private String generateOTP() {

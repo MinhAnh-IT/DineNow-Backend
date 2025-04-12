@@ -27,10 +27,10 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
-    @Column(nullable = false, length = 20)
+    @Column(length = 10)
     private String phone;
 
     @Column(nullable = false)
@@ -38,6 +38,9 @@ public class User {
 
     @Column
     private Boolean isVerified;
+
+    @Column(nullable = false)
+    private Boolean enabled = true;
 
     @Column
     @Enumerated(EnumType.STRING)

@@ -2,6 +2,7 @@ package com.vn.DineNow.services.auth;
 
 import com.vn.DineNow.dtos.UserDTO;
 import com.vn.DineNow.exception.CustomException;
+import com.vn.DineNow.payload.request.auth.GoogleLoginRequest;
 import com.vn.DineNow.payload.request.auth.LoginRequest;
 import com.vn.DineNow.payload.request.auth.ResetPasswordRequest;
 import com.vn.DineNow.payload.request.auth.VerifyOTPRequest;
@@ -20,4 +21,5 @@ public interface IAuthService {
     boolean forgotPassword(EmailRequest request) throws CustomException;
     boolean resetPassword(ResetPasswordRequest request) throws CustomException;
     boolean logout(HttpServletRequest request, HttpServletResponse response);
+    LoginResponse LoginWithGoogle(GoogleLoginRequest request, HttpServletResponse response) throws CustomException;
 }

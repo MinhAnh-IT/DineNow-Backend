@@ -13,5 +13,7 @@
     - 410                       Dữ liệu đầu vào không hợp lệ
     - 411                       OTP không hợp lệ
     - 412                       Yêu cầu đổi mật khẩu không hợp lệ hoặc đã hết hạn
+    - 413                       Tài khoản đã bị khoá, không có quyền truy cập
+    - 414                       Token hết hạn hoặc không hợp lệ
     - 500                       Lỗi máy chủ nội bộ
 

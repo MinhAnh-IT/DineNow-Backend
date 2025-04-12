@@ -22,6 +22,8 @@ public enum StatusCode {
     INVALID_INPUT(410, "Invalid input."),
     INVALID_OTP(411, "Invalid OTP."),
     RESET_TOKEN_EXPIRED(412, "OTP not verified or session has expired."),
+    ACCOUNT_DISABLED(413, "Account is disabled."),
+    INVALID_TOKEN(414, "Invalid token, or it has expired."),
     EMAIL_ERROR(413, "An error occurred while sending the email.");
 
     private final int code;
