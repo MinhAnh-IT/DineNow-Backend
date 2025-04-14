@@ -24,7 +24,10 @@ public enum StatusCode {
     RESET_TOKEN_EXPIRED(412, "OTP not verified or session has expired."),
     ACCOUNT_DISABLED(413, "Account is disabled."),
     INVALID_TOKEN(414, "Invalid token, or it has expired."),
-    EMAIL_ERROR(413, "An error occurred while sending the email.");
+    EMAIL_ERROR(415, "An error occurred while sending the email."),
+    ALREADY_EXISTS(416, "Resource already exists"),
+    RESTAURANT_DISABLED(417, "The restaurant has been disabled or is currently unavailable."),
+    UNVERIFIED_ACCOUNT(418, "Account is not verified yet.");
 
     private final int code;
     private final String message;

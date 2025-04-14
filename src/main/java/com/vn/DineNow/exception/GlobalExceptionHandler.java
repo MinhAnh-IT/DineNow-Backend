@@ -1,6 +1,10 @@
 package com.vn.DineNow.exception;
 
+import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.payload.response.APIResponse;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -8,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.vn.DineNow.enums.StatusCode.INVALID_INPUT;
 
@@ -39,6 +44,19 @@ public class GlobalExceptionHandler {
                 .message(INVALID_INPUT.getMessage())
                 .data(errors)
                 .build();
+        return ResponseEntity.ok(response);
+    }
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<APIResponse<String>> handleConstraintViolationException(ConstraintViolationException ex) {
+        String message = ex.getConstraintViolations().stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.joining("; "));
+
+        APIResponse<String> response = APIResponse.<String>builder()
+                .status(StatusCode.RESTAURANT_DISABLED.getCode())
+                .message(message)
+                .build();
+
         return ResponseEntity.ok(response);
     }
 

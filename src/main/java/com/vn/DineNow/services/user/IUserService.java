@@ -1,10 +1,12 @@
 package com.vn.DineNow.services.user;
 
-import com.vn.DineNow.dtos.UserDTO;
 
-import java.util.List;
+import com.vn.DineNow.dtos.UserDTO;
+import com.vn.DineNow.exception.CustomException;
+import com.vn.DineNow.payload.request.user.UserUpdateDTO;
+
 
 public interface IUserService {
-    UserDTO createUser(UserDTO userDTO);
-    List<UserDTO> getAllUsers();
+    UserDTO getUserDetail(long userID) throws CustomException;
+    UserDTO updateUser(long id, UserUpdateDTO userDTO) throws  CustomException;
 }

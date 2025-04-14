@@ -12,6 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@Table(name = "restaurants")
 public class Restaurant {
 
     @Id
@@ -49,9 +50,6 @@ public class Restaurant {
 
     @Column(nullable = false)
     private Boolean enabled = true;
-
-    @Column
-    private String status;
 
     @Column
     private OffsetDateTime createdAt;

@@ -15,7 +15,7 @@ import com.vn.DineNow.payload.request.auth.VerifyOTPRequest;
 import com.vn.DineNow.payload.request.common.EmailRequest;
 import com.vn.DineNow.payload.response.auth.LoginResponse;
 import com.vn.DineNow.repositories.UserRepository;
-import com.vn.DineNow.services.GoogleService.IGoogleAuthService;
+import com.vn.DineNow.services.google.IGoogleAuthService;
 import com.vn.DineNow.services.email.IEmailService;
 import com.vn.DineNow.services.redis.IRedisService;
 import com.vn.DineNow.util.CookieUtils;
@@ -84,6 +84,9 @@ public class AuthServiceImpl implements IAuthService{
         if(!userRepository.existsByEmail(request.getEmail(), SignWith.LOCAL))
             throw new CustomException(StatusCode.NOT_FOUND, "username", request.getEmail());
         User user = userRepository.findByEmailAndProvider(request.getEmail(), SignWith.LOCAL);
+        if (user.getIsVerified() == null){
+            throw new CustomException(StatusCode.UNVERIFIED_ACCOUNT);
+        }
         var isPasswordMatch = passwordEncoder.matches(request.getPassword(), user.getPassword());
         if (!isPasswordMatch) {
             throw new CustomException(StatusCode.LOGIN_FAILED);
