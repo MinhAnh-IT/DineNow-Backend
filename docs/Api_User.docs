@@ -1,0 +1,151 @@
+1. Lấy thông tin chi tiết của User: api/users/me (Get)
+    * Request body: Không có
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "id": 5,
+                "fullName": "Huỳnh Minh Anh",
+                "email": "hma2004.it@gmail.com",
+                "provider": "LOCAL",
+                "phone": "0396899398",
+                "role": "CUSTOMER",
+                "isVerified": null,
+                "enabled": true,
+                "createdAt": "2025-04-14T02:14:18Z",
+                "updatedAt": "2025-04-14T02:14:18Z"
+            }
+        }
+        # Chú thích:
+            - Status: Trạng thái (200 - thành công)
+            - Message: Thông báo về kết quả của yêu cầu
+            - Data: Thông tin của người dùng
+
+------------------------------------------------------------------------------------------------------------------------
+2. Cập nhật thông tin người dùng (sđt, tên): api/users/me (Put)
+    * Request body:
+        {
+            "fullName": "Minh Anh",
+            "phone": "0396899397"
+        }
+        # Chú thích:
+            - fullName: Tên người dùng muốn đổi
+            - phone: số điện thoại cần đổi (bao gồm 10 số, và bắt đầu từ 0)
+
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "id": 1,
+                "fullName": "Minh Anh",
+                "email": "hma.tech04@gmail.com",
+                "provider": "LOCAL",
+                "phone": "0396899397",
+                "role": "CUSTOMER",
+                "isVerified": null,
+                "enabled": true,
+                "createdAt": "2025-04-12T14:30:33Z",
+                "updatedAt": "2025-04-14T16:58:26.958615+07:00"
+            }
+        }
+        # Chú thích:
+            - status: Trạng thái (200 - thành công)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: Thông tin người dùng sau khi cập nhật (ngày cập nhật tự động update)
+
+    * Lưu ý: Nhập đúng tên trường viết hoa và thường.
+
+------------------------------------------------------------------------------------------------------------------------
+3. Lấy thông tin nhà hàng yêu thích của người dùng: /api/users/me/favorites (Get)
+    * Request body: Không có
+    * Response:
+        "status": 200,
+            "message": "Request successful and data returned.",
+            "data": [
+                {
+                    "id": 100,
+                    "name": "Bún Riêu Gánh",
+                    "address": "123 Nguyễn Trãi, Q1",
+                    "thumbnailUrl": "https://cdn.example.com/images/bun-rieu.jpg",
+                    "averageRating": 4.5,
+                    "type": {
+                        "id": 1,
+                        "name": "Quán ăn",
+                        "description": "Các quán ăn bình dân"
+                    }
+                },
+                {
+                    "id": 101,
+                    "name": "Phở Thìn Hà Nội",
+                    "address": "456 Lê Lợi, Q1",
+                    "thumbnailUrl": "https://cdn.example.com/images/pho-thin.jpg",
+                    "averageRating": 4.7,
+                    "type": {
+                        "id": 1,
+                        "name": "Quán ăn",
+                        "description": "Các quán ăn bình dân"
+                    }
+                }
+            ]
+        }
+        # Chú thích:
+            - status: Trạng thái (200 - thành công)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: Danh sách nhà hàng yêu thích của người dùng
+
+    * Lưu ý: Dành cho Customer
+
+------------------------------------------------------------------------------------------------------------------------
+4. Thêm nhà hàng vào danh sách yêu thích: /api/users/me/favorites/{restaurantID} (Post)
+    * Request: thay restaurantID = id nhà hàng
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "id": 101,
+                "name": "Phở Thìn Hà Nội",
+                "address": "456 Lê Lợi, Q1",
+                "thumbnailUrl": "https://cdn.example.com/images/pho-thin.jpg",
+                "averageRating": 4.7,
+                "type": {
+                    "id": 1,
+                    "name": "Quán ăn",
+                    "description": "Các quán ăn bình dân"
+                }
+            }
+        }
+        # Chú thích:
+            - status: Trạng thái (200 - thành công)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: Thông tin nhà hàng vừa được thêm vào danh sách yêu thích
+
+    * Lưu ý: Dành cho Customer
+
+------------------------------------------------------------------------------------------------------------------------
+5. Xoá nhà hàng khỏi danh sách yêu thích của người dùng: api/users/me/favorites/1{restaurantID} (Delete)
+    * Request: thay restaurantID = id nhà hàng
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": true
+        }
+        # Chú thích:
+            - status: Trạng thái (200 - thành công)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: thông báo thành công hoặc thất bại
+                + true: thành công
+                + false: thất bại
+
+------------------------------------------------------------------------------------------------------------------------
+
+*** Các API trên yêu cầu xác thực qua token ***
+
+
+
+
+
+

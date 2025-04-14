@@ -15,5 +15,9 @@
     - 412                       Yêu cầu đổi mật khẩu không hợp lệ hoặc đã hết hạn
     - 413                       Tài khoản đã bị khoá, không có quyền truy cập
     - 414                       Token hết hạn hoặc không hợp lệ
+    - 415                       Xảy ra lỗi trong quá trình gửi mail
+    - 416                       Tài nguyên đã tồn tại (user, restaurant...)
+    - 417                       Nhà hàng bị khoá hoặc không khả dụng
+    - 418                       Tài khoản chưa được xác thực
     - 500                       Lỗi máy chủ nội bộ
 
