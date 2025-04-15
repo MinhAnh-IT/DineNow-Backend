@@ -106,7 +106,7 @@
             }
         }
         # Chú thích:
-            - status: Mã trạng thái HTTP (200 - OK)
+
             - message: Thông báo về kết quả của yêu cầu
             - data: chứa access token mới
                 + accessToken: Token truy cập (JWT) được sử dụng để xác thực các yêu cầu tiếp theo

@@ -1,6 +1,5 @@
 package com.vn.DineNow.services.user;
 
-import com.vn.DineNow.dtos.RestaurantDTO;
 import com.vn.DineNow.dtos.UserDTO;
 import com.vn.DineNow.entities.User;
 import com.vn.DineNow.enums.StatusCode;
@@ -9,12 +8,10 @@ import com.vn.DineNow.payload.request.user.UserUpdateDTO;
 import com.vn.DineNow.repositories.UserRepository;
 import com.vn.DineNow.mapper.UserMapper;
 import com.vn.DineNow.util.JwtService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Slf4j
 @Service
