@@ -1,7 +1,7 @@
 package com.vn.DineNow.mapper;
 
 import com.vn.DineNow.dtos.UserDTO;
-import com.vn.DineNow.dtos.UserGoogleDTO;
+import com.vn.DineNow.payload.response.auth.UserGoogleDTO;
 import com.vn.DineNow.entities.User;
 import com.vn.DineNow.payload.request.user.UserUpdateDTO;
 import org.mapstruct.*;

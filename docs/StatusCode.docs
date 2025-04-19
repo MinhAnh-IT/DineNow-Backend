@@ -1,6 +1,7 @@
     Trạng thái                  Mô tả
     - 200                       Thành công
     - 201                       Tạo mới thành công
+    - 204                       Xoá thành công
     - 401                       Địa chỉ email không hợp lệ
     - 402                       Token không hợp lệ hoặc hết hạn
     - 403                       Không có quyền truy cập
@@ -19,5 +20,10 @@
     - 416                       Tài nguyên đã tồn tại (user, restaurant...)
     - 417                       Nhà hàng bị khoá hoặc không khả dụng
     - 418                       Tài khoản chưa được xác thực
+    - 419                       Tên đã tồn tại
+    - 420                       Lỗi trong quá trình lưu ảnh (ví dụ: không đúng định dạng PNG, JPG, JPEG, GIF)
+    - 421                       Lỗi trong quá trình xoá ảnh để cập nhật
+    - 422                       Không tìm thấy mã ảnh
+    - 424
     - 500                       Lỗi máy chủ nội bộ
 
