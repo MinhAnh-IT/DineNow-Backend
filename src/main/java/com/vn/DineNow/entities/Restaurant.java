@@ -1,8 +1,11 @@
 package com.vn.DineNow.entities;
 
+import com.vn.DineNow.enums.RestaurantStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -16,17 +19,7 @@ import java.util.Set;
 public class Restaurant {
 
     @Id
-    @Column(nullable = false, updatable = false)
-    @SequenceGenerator(
-            name = "primary_sequence",
-            sequenceName = "primary_sequence",
-            allocationSize = 1,
-            initialValue = 10000
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "primary_sequence"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -45,16 +38,19 @@ public class Restaurant {
     @JoinColumn(name = "type_id")
     private RestaurantType type;
 
-    @Column(precision = 5, scale = 2)
-    private BigDecimal averageRating;
+    @Column(precision = 2, scale = 1)
+    private BigDecimal averageRating = BigDecimal.valueOf(0.0);;
 
     @Column(nullable = false)
-    private Boolean enabled = true;
+    @Enumerated(EnumType.STRING)
+    private RestaurantStatus status = RestaurantStatus.PENDING;
 
     @Column
+    @CreationTimestamp
     private OffsetDateTime createdAt;
 
     @Column
+    @UpdateTimestamp
     private OffsetDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,7 +1,7 @@
 package com.vn.DineNow.services.auth;
 
 import com.vn.DineNow.dtos.UserDTO;
-import com.vn.DineNow.dtos.UserGoogleDTO;
+import com.vn.DineNow.payload.response.auth.UserGoogleDTO;
 import com.vn.DineNow.entities.User;
 import com.vn.DineNow.enums.Role;
 import com.vn.DineNow.enums.SignWith;
@@ -22,7 +22,9 @@ import com.vn.DineNow.util.CookieUtils;
 import com.vn.DineNow.util.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,33 +35,34 @@ import java.util.concurrent.TimeUnit;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthServiceImpl implements IAuthService{
-    private final UserMapper userMapper;
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-    private final IRedisService redisService;
-    private final IEmailService emailService;
-    private final IGoogleAuthService googleAuthService;
+    final UserMapper userMapper;
+    final UserRepository userRepository;
+    final PasswordEncoder passwordEncoder;
+    final JwtService jwtService;
+    final IRedisService redisService;
+    final IEmailService emailService;
+    final IGoogleAuthService googleAuthService;
 
 
     @Value("${DineNow.key.refreshToken}")
-    private String keyRefreshToken;
+    String keyRefreshToken;
 
     @Value("${DineNow.jwt.refresh.expiration}")
-    private long refreshTokenExpire;
+    long refreshTokenExpire;
 
     @Value("${DineNow.cookie.isSecure}")
-    private boolean isSecure;
+    boolean isSecure;
 
     @Value("${DineNow.key.forgotPassword}")
-    private String keyForgotPassword;
+    String keyForgotPassword;
 
     @Value("${DineNow.key.verifyAccount}")
-    private String keyVerifyAccount;
+    String keyVerifyAccount;
 
     @Value("${DineNow.key.reset-password}")
-    private String keyResetPassword;
+    String keyResetPassword;
 
     @Override
     public UserDTO register(UserDTO userDTO) throws CustomException {

@@ -9,7 +9,7 @@ public enum StatusCode {
     OK(200, "Request successful and data returned."),
     CREATED(201, "Resource created successfully."),
     BAD_REQUEST(400, "Invalid request or missing parameters."),
-    INVALID_EMAIL(401, "Invalid %s format."),
+    DELETED(204, "Successfully deleted."),
     UNAUTHORIZED(405, "Authentication required."),
     UNAUTHORIZED_TOKEN(402, "Invalid or expired token."),
     FORBIDDEN(403, "Access forbidden."),
@@ -26,8 +26,15 @@ public enum StatusCode {
     INVALID_TOKEN(414, "Invalid token, or it has expired."),
     EMAIL_ERROR(415, "An error occurred while sending the email."),
     ALREADY_EXISTS(416, "Resource already exists"),
-    RESTAURANT_DISABLED(417, "The restaurant has been disabled or is currently unavailable."),
-    UNVERIFIED_ACCOUNT(418, "Account is not verified yet.");
+    RESTAURANT_NOT_APPROVED(417, "The restaurant is not approved or currently unavailable."),
+    UNVERIFIED_ACCOUNT(418, "Account is not verified yet."),
+    EXIST_NAME(419, "%s name must be unique per %s."),
+    IMAGE_UPLOAD_FAILED(420, "Failed to upload image: %s"),
+    IMAGE_DELETE_FAILED(421, "Failed to delete image: %s"),
+    IMAGE_NOT_FOUND(422, "Image with ID %s not found"),
+    INVALID_IMAGE_TYPE(423, "Invalid image type. Only PNG, JPG, JPEG, and GIF are allowed."),
+    RESTAURANT_NOT_FOUND(425, "Restaurant with ID %s not found");
+
 
     private final int code;
     private final String message;

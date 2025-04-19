@@ -1,4 +1,4 @@
-package com.vn.DineNow.dtos;
+package com.vn.DineNow.payload.response.auth;
 
 import com.vn.DineNow.enums.Role;
 import com.vn.DineNow.enums.SignWith;

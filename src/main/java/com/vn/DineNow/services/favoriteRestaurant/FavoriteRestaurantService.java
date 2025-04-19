@@ -4,6 +4,7 @@ import com.vn.DineNow.dtos.FavoriteRestaurantDTO;
 import com.vn.DineNow.entities.FavoriteRestaurant;
 import com.vn.DineNow.entities.Restaurant;
 import com.vn.DineNow.entities.User;
+import com.vn.DineNow.enums.RestaurantStatus;
 import com.vn.DineNow.enums.Role;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
@@ -13,7 +14,9 @@ import com.vn.DineNow.payload.response.restaurant.FavoriteRestaurantResponseDTO;
 import com.vn.DineNow.repositories.FavoriteRestaurantRepository;
 import com.vn.DineNow.repositories.RestaurantRepository;
 import com.vn.DineNow.repositories.UserRepository;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,12 +24,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FavoriteRestaurantService implements IFavoriteRestaurantService {
-    private final FavoriteRestaurantRepository favoriteRestaurantRepository;
-    private final UserRepository userRepository;
-    private final RestaurantMapper restaurantMapper;
-    private final FavoriteRestaurantMapper favoriteRestaurantMapper;
-    private final RestaurantRepository restaurantRepository;
+    FavoriteRestaurantRepository favoriteRestaurantRepository;
+    UserRepository userRepository;
+    RestaurantMapper restaurantMapper;
+    FavoriteRestaurantMapper favoriteRestaurantMapper;
+    RestaurantRepository restaurantRepository;
 
     @Override
     public List<FavoriteRestaurantResponseDTO> getListFavoriteRestaurantOfUser(long userID) throws CustomException {
@@ -35,7 +39,8 @@ public class FavoriteRestaurantService implements IFavoriteRestaurantService {
         if (!user.getRole().equals(Role.CUSTOMER)) {
             throw new CustomException(StatusCode.FORBIDDEN);
         }
-        List<FavoriteRestaurant> favorites = favoriteRestaurantRepository.findByUser(user, Role.CUSTOMER);
+        List<FavoriteRestaurant> favorites = favoriteRestaurantRepository
+                .findByUserAndRestaurantStatusAndUserRole(user, RestaurantStatus.APPROVED, Role.CUSTOMER);
 
         return favorites.stream()
                 .map(fav -> restaurantMapper.toFavoriteRestaurantDTO(fav.getRestaurant()))

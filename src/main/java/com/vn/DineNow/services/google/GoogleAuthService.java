@@ -6,16 +6,19 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class GoogleAuthService implements IGoogleAuthService {
 
     @Value("${DineNow.google.client.id}")
-    private String GOOGLE_CLIENT_ID;
+    String GOOGLE_CLIENT_ID;
 
     public GoogleIdToken.Payload verifyToken(String idToken) throws Exception {
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
