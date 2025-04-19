@@ -1,4 +1,4 @@
-package com.vn.DineNow.services.Redis;
+package com.vn.DineNow.services.redis;
 
 import java.util.concurrent.TimeUnit;
 

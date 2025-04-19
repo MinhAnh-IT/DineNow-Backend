@@ -1,0 +1,258 @@
+1. Đăng ký user mới : api/auth/register (Post)
+    * Request body:
+        {
+            "fullName": "Huỳnh Minh Anh",
+            "email": "hma.tech05@gmail.com",
+            "password": "MinhAnh123",
+            "phone": "0396899398",
+            "role": "ADMIN"
+        }
+        # Chú thích:
+            - fullName: Tên đầy đủ của người dùng
+
+            - email: Địa chỉ email của người dùng (Là địa chỉ email duy nhất trong hệ thống)
+
+            - password: Mật khẩu của người dùng
+                + Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt
+
+            - phone: Số điện thoại của người dùng
+                + Số điện thoại phải có định dạng hợp lệ (10 ký tự, bắt đầu bằng 0)
+
+            - role: Vai trò của người dùng (ADMIN, CUSTOMER, OWNER) -> Không cần thiết, mặc định là CUSTOMER
+
+    * Response:
+        {
+            "status": 201,
+            "message": "Resource created successfully.",
+            "data": {
+                "id": 2,
+                "fullName": "Huỳnh Minh Anh",
+                "email": "hma.tech05@gmail.com",
+                "phone": "0396899398",
+                "role": "CUSTOMER",
+                "createdAt": "2025-04-10T15:46:15.230332+07:00",
+                "updatedAt": "2025-04-10T15:46:15.230369+07:00",
+                "isVerified": null
+            }
+        }
+        # Chú thích:
+            - status: Mã trạng thái HTTP (201 - Created)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: Thông tin chi tiết về người dùng đã được tạo
+                + id: ID của người dùng (Tự động tăng)
+                + createdAt: Thời gian tạo tài khoản
+                + updatedAt: Thời gian cập nhật tài khoản
+                + isVerified: Trạng thái xác thực tài khoản (null nếu chưa xác thực)
+
+------------------------------------------------------------------------------------------------------------------------
+2. Đăng nhập : api/auth/login (Post)
+   * Request body:
+       {
+         "email": "hma.tech04@gmail.com",
+         "password": "MinhAnh123"
+       }
+
+       # Chú thích:
+           - email: Địa chỉ email của người dùng
+           - password: Mật khẩu của người dùng
+
+
+  * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data":{
+                "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            }
+        }
+
+        # Chú thích:
+            - status: Mã trạng thái HTTP (200 - OK)
+
+            - message: Thông báo về kết quả của yêu cầu
+
+            - data: Thông tin chi tiết về người dùng đã được tạo
+                + accessToken: Token truy cập (JWT) được sử dụng để xác thực các yêu cầu tiếp theo
+
+  * Lưu ý: Yêu cầu xác thực tài khoản trước khi đăng nhập
+
+------------------------------------------------------------------------------------------------------------------------
+3. Đăng xuất: api/auth/logout (Post)
+    * Request body: Không có
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": true || false
+        }
+        # Chú thích:
+            - status: Mã trạng thái HTTP (200 - OK)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: true hoặc false
+                + true: Đăng xuất thành công
+                + false: Đăng xuất không thành công
+
+        # Lưu ý:
+            + Khi người dùng đăng xuất, hệ thống sẽ xóa access token và refresh token của người dùng
+------------------------------------------------------------------------------------------------------------------------
+4. Làm mới access token: api/auth/refresh-token (Post)
+    * Request body: Không có
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIi..."
+            }
+        }
+        # Chú thích:
+
+            - message: Thông báo về kết quả của yêu cầu
+            - data: chứa access token mới
+                + accessToken: Token truy cập (JWT) được sử dụng để xác thực các yêu cầu tiếp theo
+
+------------------------------------------------------------------------------------------------------------------------
+5. Gửi OTP qua mail để xác thực tài khoản: api/auth/send-verification-otp (Post)
+    * Request body:
+        {
+            "email": "hma.tech04@gmail.com"
+        }
+        # Chú thích:
+            - email: Địa chỉ email của người dùng
+                + Địa chỉ mail của tài khoản đã được đăng ký cần xác thực
+
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": true
+        }
+        # Chú thích:
+            - status: Mã trạng thái HTTP (200 - OK)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: true hoặc false
+                + true: Gửi mail xác thực thành công
+                + false: Gửi mail xác thực không thành công
+
+------------------------------------------------------------------------------------------------------------------------
+6. Gửi OTP qua mail để đổi mật khẩu: api/auth/forgot-password (Post)
+    * Request body:
+        {
+            "email": "hma.tech04@gmail.com"
+        }
+        # Chú thích:
+            - email: Địa chỉ email của người dùng
+                + Địa chỉ mail của tài khoản đã được đăng ký cần xác thực
+
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": true
+        }
+        # Chú thích:
+            - status: Mã trạng thái HTTP (200 - OK)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: true hoặc false
+                + true: Gửi mail xác thực thành công
+                + false: Gửi mail xác thực không thành công
+
+------------------------------------------------------------------------------------------------------------------------
+7. Xác thực tài khoản thông qua OTP: api/auth/verify-account (Post)
+    * Request body:
+        {
+            "email": "hma.tech04@gmail.com",
+            "otp": "800901"
+        }
+        # Chú thích:
+            - email: Địa chỉ email của người dùng
+                + Địa chỉ mail của tài khoản đã được đăng ký cần xác thực
+            - otp: Mã OTP được gửi qua mail
+                + Mã OTP này sẽ được gửi qua mail cho người dùng
+                + Mã OTP này sẽ có thời gian sống là 5 phút
+
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": true
+        }
+        # Chú thích:
+            - status: Mã trạng thái HTTP (200 - OK)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: true hoặc false
+                + true: Xác thực tài khoản thành công
+                + false: Xác thực tài khoản không thành công
+
+------------------------------------------------------------------------------------------------------------------------
+8. Xác thực OTP đổi mật khẩu: api/auth/verify-reset-password-otp (Post)
+    * Request body:
+        {
+            "email": "hma.tech04@gmail.com",
+            "otp": "255224"
+        }
+        # Chú thích:
+            - email: Địa chỉ email của người dùng
+                + Địa chỉ mail của tài khoản đã được đăng ký cần xác thực
+            - otp: Mã OTP được gửi qua mail
+                + Mã OTP này sẽ được gửi qua mail cho người dùng
+                + Mã OTP này sẽ có thời gian sống là 5 phút
+
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": true
+        }
+        # Chú thích:
+            - status: Mã trạng thái HTTP (200 - OK)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: true hoặc false
+                + true: Xác thực tài khoản thành công
+                + false: Xác thực tài khoản không thành công
+        # Lưu ý:
+            + Nếu người dùng đã xác thực tài khoản thì không cần xác thực lại
+            + Nếu xác thực thành công hệ thống sẽ lưu lại để cho phép đổi mật khẩu ở bước tiếp theo với email đã xác thực
+
+------------------------------------------------------------------------------------------------------------------------
+9. Đổi mật khẩu: api/auth/reset-password (Post)
+    * Request body:
+        {
+            "email": "hma.tech04@gmail.com",
+            "newPassword": "Minhanh123@"
+        }
+        # Chú thích:
+            - email: Địa chỉ email của người dùng
+                + Địa chỉ mail của tài khoản đã được đăng ký cần xác thực
+            - newPassword: Mật khẩu mới của người dùng
+                + Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt
+
+        # lưu ý xác thực otp trước khi đổi mật khẩu
+
+------------------------------------------------------------------------------------------------------------------------
+10. Đăng nhập với google: api/auth/google-login (Post)
+    * Request body:
+           {
+             "idToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+           }
+
+           # Chú thích:
+               - idToken: Được lấy từ phía frontend với Oauth2 của gg
+
+
+      * Response:
+            {
+                "status": 200,
+                "message": "Request successful and data returned.",
+                "data":{
+                    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                }
+            }
+
+            # Chú thích:
+                - status: Mã trạng thái HTTP (200 - OK)
+
+                - message: Thông báo về kết quả của yêu cầu
+
+                - data: Thông tin chi tiết về người dùng đã được tạo
+                    + accessToken: Token truy cập (JWT) được sử dụng để xác thực các yêu cầu tiếp theo

@@ -30,6 +30,8 @@ public class MenuItemDTO {
 
     private Boolean available;
 
+    private String imageUrl;
+
     private OffsetDateTime createdAt;
 
     private OffsetDateTime updatedAt;

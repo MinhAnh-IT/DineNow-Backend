@@ -1,5 +1,6 @@
 package com.vn.DineNow.entities;
 
+import com.vn.DineNow.enums.Role;
 import com.vn.DineNow.enums.SignWith;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -27,17 +28,21 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
-    @Column(nullable = false, length = 20)
+    @Column(length = 10)
     private String phone;
 
     @Column(nullable = false)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column
     private Boolean isVerified;
+
+    @Column(nullable = false)
+    private Boolean enabled = true;
 
     @Column
     @Enumerated(EnumType.STRING)

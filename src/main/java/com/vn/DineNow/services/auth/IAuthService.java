@@ -2,6 +2,7 @@ package com.vn.DineNow.services.auth;
 
 import com.vn.DineNow.dtos.UserDTO;
 import com.vn.DineNow.exception.CustomException;
+import com.vn.DineNow.payload.request.auth.GoogleLoginRequest;
 import com.vn.DineNow.payload.request.auth.LoginRequest;
 import com.vn.DineNow.payload.request.auth.ResetPasswordRequest;
 import com.vn.DineNow.payload.request.auth.VerifyOTPRequest;
@@ -13,10 +14,12 @@ import jakarta.servlet.http.HttpServletResponse;
 public interface IAuthService {
     UserDTO register(UserDTO userDTO) throws CustomException;
     LoginResponse login(LoginRequest request, HttpServletResponse response) throws  CustomException;
-    LoginResponse refreshToken(String refreshToken);
-    boolean sendVerificationEmail(EmailRequest request);
-    boolean verifyOTP(VerifyOTPRequest request);
-    boolean forgotPassword(EmailRequest request);
-    boolean resetPassword(ResetPasswordRequest request);
-    boolean logout(HttpServletRequest request);
+    LoginResponse refreshToken(String refreshToken) throws CustomException;
+    boolean sendVerificationEmail(EmailRequest request)throws CustomException;
+    boolean verifyOTPForgotPassword(VerifyOTPRequest request) throws CustomException;
+    boolean verifyOTPVerifyAccount(VerifyOTPRequest request) throws CustomException;
+    boolean forgotPassword(EmailRequest request) throws CustomException;
+    boolean resetPassword(ResetPasswordRequest request) throws CustomException;
+    boolean logout(HttpServletRequest request, HttpServletResponse response);
+    LoginResponse LoginWithGoogle(GoogleLoginRequest request, HttpServletResponse response) throws CustomException;
 }
