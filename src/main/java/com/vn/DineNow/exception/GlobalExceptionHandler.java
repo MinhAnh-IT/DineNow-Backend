@@ -4,11 +4,11 @@ import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.payload.response.APIResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +24,6 @@ public class GlobalExceptionHandler {
         APIResponse<String> response = APIResponse.<String>builder()
                 .status(ex.getErrorCode().getCode())
                 .message(ex.getMessage())
-                .data(null)
                 .build();
         return ResponseEntity.ok(response);
     }
@@ -46,6 +45,16 @@ public class GlobalExceptionHandler {
                 .build();
         return ResponseEntity.ok(response);
     }
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<APIResponse<String>> handleNullPointerException(NullPointerException ex){
+        APIResponse<String> response = APIResponse.<String>builder()
+                .status(StatusCode.BAD_REQUEST.getCode())
+                .message("A null reference was accessed")
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<APIResponse<String>> handleConstraintViolationException(ConstraintViolationException ex) {
         String message = ex.getConstraintViolations().stream()
@@ -53,7 +62,7 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining("; "));
 
         APIResponse<String> response = APIResponse.<String>builder()
-                .status(StatusCode.RESTAURANT_DISABLED.getCode())
+                .status(StatusCode.RESTAURANT_NOT_APPROVED.getCode())
                 .message(message)
                 .build();
 

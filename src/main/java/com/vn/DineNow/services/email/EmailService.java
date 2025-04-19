@@ -4,7 +4,9 @@ import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,13 +21,14 @@ import org.thymeleaf.context.Context;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EmailService implements IEmailService {
 
-    private final JavaMailSender javaMailSender;
-    private final TemplateEngine templateEngine;
+    final JavaMailSender javaMailSender;
+    final TemplateEngine templateEngine;
 
     @Value("${DineNow.mail.sender_name}")
-    private String sender;
+    String sender;
 
     @Override
     @Async

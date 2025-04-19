@@ -10,7 +10,8 @@ import com.vn.DineNow.payload.response.restaurant.FavoriteRestaurantResponseDTO;
 import com.vn.DineNow.security.CustomUserDetails;
 import com.vn.DineNow.services.favoriteRestaurant.IFavoriteRestaurantService;
 import com.vn.DineNow.services.user.IUserService;
-import com.vn.DineNow.validation.ValidRestaurantEnabled;
+import com.vn.DineNow.validation.ValidRestaurantApprovedValidator;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -46,8 +47,10 @@ public class UserController {
     @RequireEnabledUser
     public ResponseEntity<APIResponse<List<FavoriteRestaurantResponseDTO>>> getFavoriteRestaurantsOfUser(
             @AuthenticationPrincipal CustomUserDetails userDetails) throws CustomException{
-        var listFav = favoriteRestaurantService.getListFavoriteRestaurantOfUser(userDetails.getUser().getId());
-        APIResponse<List<FavoriteRestaurantResponseDTO>> response = APIResponse.<List<FavoriteRestaurantResponseDTO>>builder()
+        var listFav = favoriteRestaurantService.getListFavoriteRestaurantOfUser(
+                userDetails.getUser().getId());
+        APIResponse<List<FavoriteRestaurantResponseDTO>> response = APIResponse.
+                <List<FavoriteRestaurantResponseDTO>>builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.OK.getMessage())
                 .data(listFav)
@@ -59,9 +62,11 @@ public class UserController {
     @RequireEnabledUser
     public  ResponseEntity<APIResponse<FavoriteRestaurantResponseDTO>> addFavResForUser(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @PathVariable @ValidRestaurantEnabled long restaurantID) throws CustomException{
-        var result = favoriteRestaurantService.addFavoriteRestaurantForUser(userDetails.getUser().getId(), restaurantID);
-        APIResponse<FavoriteRestaurantResponseDTO> response = APIResponse.<FavoriteRestaurantResponseDTO>builder()
+            @PathVariable @ValidRestaurantApprovedValidator long restaurantID) throws CustomException{
+        var result = favoriteRestaurantService.addFavoriteRestaurantForUser(
+                userDetails.getUser().getId(), restaurantID);
+        APIResponse<FavoriteRestaurantResponseDTO> response = APIResponse.
+                <FavoriteRestaurantResponseDTO>builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.OK.getMessage())
                 .data(result)
@@ -72,22 +77,25 @@ public class UserController {
     @DeleteMapping("/me/favorites/{restaurantID}")
     public ResponseEntity<APIResponse<Boolean>> removeFavorite(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @PathVariable @ValidRestaurantEnabled long restaurantID) throws CustomException{
-        var result = favoriteRestaurantService.removeFavorite(userDetails.getUser().getId(), restaurantID);
+            @PathVariable @ValidRestaurantApprovedValidator long restaurantID) throws CustomException{
+        var result = favoriteRestaurantService.removeFavorite(
+                userDetails.getUser().getId(), restaurantID);
         APIResponse<Boolean> response = APIResponse.<Boolean>builder()
-                .status(StatusCode.OK.getCode())
-                .message(StatusCode.OK.getMessage())
+                .status(StatusCode.DELETED.getCode())
+                .message(StatusCode.DELETED.getMessage())
                 .data(result)
                 .build();
         return  ResponseEntity.ok(response);
     }
 
     @PutMapping("/me")
+    @RequireEnabledUser
     public ResponseEntity<APIResponse<UserDTO>> updateUser(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestBody UserUpdateDTO userUpdateDTO
+            @RequestBody @Valid UserUpdateDTO userUpdateDTO
             ) throws CustomException{
-        var result = userService.updateUser(userDetails.getUser().getId(), userUpdateDTO);
+        var result = userService.updateUser(
+                userDetails.getUser().getId(), userUpdateDTO);
         APIResponse<UserDTO> response = APIResponse.<UserDTO>builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.OK.getMessage())

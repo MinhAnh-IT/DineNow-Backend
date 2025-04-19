@@ -6,11 +6,11 @@ import jakarta.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = RestaurantEnabledValidator.class)
+@Constraint(validatedBy = RestaurantApprovedValidator.class)
 @Target({ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidRestaurantEnabled {
-    String message() default "The restaurant has been disabled or is currently unavailable";
+public @interface ValidRestaurantApprovedValidator {
+    String message() default "The restaurant is not approved or currently unavailable.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

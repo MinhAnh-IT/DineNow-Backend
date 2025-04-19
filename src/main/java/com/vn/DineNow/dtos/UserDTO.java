@@ -1,8 +1,6 @@
 package com.vn.DineNow.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.Nulls;
 import com.vn.DineNow.enums.Role;
 import com.vn.DineNow.enums.SignWith;
 import jakarta.persistence.EnumType;
@@ -43,7 +41,7 @@ public class UserDTO {
     private String password;
 
     @NotNull
-    @Pattern(regexp = "^[0-9]{10}$", message = "Phone must be 10 digits")
+    @Pattern(regexp = "^0[0-9]{9}$", message = "Phone must be 10 digits and start with 0")
     private String phone;
 
     @Builder.Default

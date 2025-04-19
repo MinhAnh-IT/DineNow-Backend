@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface RestaurantTypeMapper {
+
     RestaurantTypeDTO toDTO(RestaurantType restaurantType);
 
     @Mapping(target = "restaurants", ignore = true)
