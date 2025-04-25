@@ -1,10 +1,12 @@
 package com.vn.DineNow.payload.request.menuItem;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -14,25 +16,26 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class MenuItemRequestDTO {
 
     @NotNull(message = "Name is required")
     @Size(max = 255, message = "Name must not exceed 255 characters")
-    private String name;
+    String name;
 
-    private String description;
+    String description;
 
     @NotNull(message = "Price is required")
-    @Digits(integer = 12, fraction = 2, message = "Price must be a valid decimal number with up to 12 digits and 2 decimal places")
+    @DecimalMin(value = "0.01", inclusive = true, message = "Fee per guest must be greater than 0")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private BigDecimal price;
+    BigDecimal price;
 
     @Builder.Default
-    private Boolean available = true;
+    Boolean available = true;
 
     @NotNull(message = "Category ID is required")
-    private Long category;
+    Long category;
 
     @NotNull(message = "Image file is required")
-    private MultipartFile imageUrl;
+    MultipartFile imageUrl;
 }

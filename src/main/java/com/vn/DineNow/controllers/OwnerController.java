@@ -10,29 +10,31 @@ import com.vn.DineNow.payload.request.restaurant.RestaurantUpdateDTO;
 import com.vn.DineNow.payload.response.APIResponse;
 import com.vn.DineNow.payload.response.menuItem.MenuItemResponseDTO;
 import com.vn.DineNow.payload.response.restaurant.RestaurantResponseDTO;
+import com.vn.DineNow.payload.response.restaurant.RestaurantSimpleResponseDTO;
 import com.vn.DineNow.security.CustomUserDetails;
-import com.vn.DineNow.services.menuItem.IMenuItemService;
-import com.vn.DineNow.services.restaurant.IRestaurantService;
+import com.vn.DineNow.services.owner.menuItem.OwnerMenuItemService;
+import com.vn.DineNow.services.owner.restaurant.OwnerRestaurantService;
 import com.vn.DineNow.validation.ValidRestaurantApprovedValidator;
 import io.lettuce.core.dynamic.annotation.Param;
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Block;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.PublicKey;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/owner")
 @RequiredArgsConstructor
 @Validated
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OwnerController {
-    private final IRestaurantService restaurantService;
-    private final IMenuItemService menuItemService;
+    OwnerRestaurantService restaurantService;
+    OwnerMenuItemService menuItemService;
 
     @PostMapping("/restaurants")
     @RequireEnabledUser
@@ -132,4 +134,17 @@ public class OwnerController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/restaurants")
+    @RequireEnabledUser
+    public ResponseEntity<APIResponse<List<RestaurantSimpleResponseDTO>>> getRestaurantByOwner(
+            @AuthenticationPrincipal CustomUserDetails userDetails) throws CustomException{
+        var result = restaurantService.getRestaurantByOwner(userDetails.getUser().getId());
+
+        APIResponse<List<RestaurantSimpleResponseDTO>> response = APIResponse.<List<RestaurantSimpleResponseDTO>>builder()
+                .status(StatusCode.OK.getCode())
+                .message(StatusCode.OK.getMessage())
+                .data(result)
+                .build();
+        return ResponseEntity.ok(response);
+    }
 }

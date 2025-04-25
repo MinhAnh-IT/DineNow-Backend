@@ -46,6 +46,9 @@ public class Restaurant {
     private RestaurantStatus status = RestaurantStatus.PENDING;
 
     @Column
+    private BigDecimal commissionFee;
+
+    @Column
     @CreationTimestamp
     private OffsetDateTime createdAt;
 

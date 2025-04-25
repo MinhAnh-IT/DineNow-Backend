@@ -8,8 +8,6 @@ import com.vn.DineNow.payload.response.menuItem.MenuItemResponseDTO;
 import com.vn.DineNow.payload.response.menuItem.MenuItemSimpleResponseDTO;
 import org.mapstruct.*;
 
-import java.lang.annotation.Target;
-
 @Mapper(componentModel = "spring")
 public interface MenuItemMapper {
 

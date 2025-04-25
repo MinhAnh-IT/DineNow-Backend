@@ -15,6 +15,7 @@ import java.util.Set;
 @Mapper(componentModel = "spring")
 public interface RestaurantMapper {
 
+    @Mapping(target = "commissionFee", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "foodCategories", ignore = true)
@@ -44,6 +45,7 @@ public interface RestaurantMapper {
     @Mapping(target = "thumbnailUrl", expression = "java(mapThumbnail(restaurant.getRestaurantRestaurantImages()))")
     RestaurantSimpleResponseDTO toSimpleDTO(Restaurant restaurant);
 
+    @Mapping(target = "commissionFee", ignore = true)
     @Mapping(target = "type", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "status", ignore = true)

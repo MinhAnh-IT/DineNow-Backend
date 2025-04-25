@@ -7,8 +7,8 @@ import com.vn.DineNow.payload.response.APIResponse;
 import com.vn.DineNow.payload.response.menuItem.MenuItemSimpleResponseDTO;
 import com.vn.DineNow.payload.response.restaurant.RestaurantResponseDTO;
 import com.vn.DineNow.payload.response.restaurant.RestaurantSimpleResponseDTO;
-import com.vn.DineNow.services.menuItem.IMenuItemService;
-import com.vn.DineNow.services.restaurant.RestaurantService;
+import com.vn.DineNow.services.customer.menuItem.CustomerMenuItemService;
+import com.vn.DineNow.services.customer.restaurant.CustomerRestaurantServiceImpl;
 import com.vn.DineNow.validation.ValidRestaurantApprovedValidator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +25,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RestaurantController {
-    RestaurantService restaurantService;
-    IMenuItemService menuItemService;
+    CustomerRestaurantServiceImpl restaurantService;
+    CustomerMenuItemService menuItemService;
 
     @GetMapping()
     public ResponseEntity<APIResponse<Page<RestaurantSimpleResponseDTO>>> getALLRestaurant(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size){
-        var result = restaurantService.getAllRestaurant(page, size);
+        var result = restaurantService.getAllRestaurantStatusApproved(page, size);
         APIResponse<Page<RestaurantSimpleResponseDTO>> response = APIResponse.<Page<RestaurantSimpleResponseDTO>>builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.CREATED.getMessage())
