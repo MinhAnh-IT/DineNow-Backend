@@ -5,7 +5,7 @@ import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.payload.response.APIResponse;
 import com.vn.DineNow.payload.response.menuItem.MenuItemResponseDTO;
 import com.vn.DineNow.payload.response.menuItem.MenuItemSimpleResponseDTO;
-import com.vn.DineNow.services.menuItem.IMenuItemService;
+import com.vn.DineNow.services.customer.menuItem.CustomerMenuItemService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MenuItemController {
-    IMenuItemService menuItemService;
+    CustomerMenuItemService menuItemService;
 
     @GetMapping()
     public ResponseEntity<APIResponse<Page<MenuItemSimpleResponseDTO>>> getAllSimpleMenuItem(
@@ -44,5 +44,4 @@ public class MenuItemController {
                 .build();
         return ResponseEntity.ok(response);
     }
-
 }

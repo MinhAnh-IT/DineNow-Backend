@@ -8,8 +8,8 @@ import com.vn.DineNow.payload.request.user.UserUpdateDTO;
 import com.vn.DineNow.payload.response.APIResponse;
 import com.vn.DineNow.payload.response.restaurant.FavoriteRestaurantResponseDTO;
 import com.vn.DineNow.security.CustomUserDetails;
-import com.vn.DineNow.services.favoriteRestaurant.IFavoriteRestaurantService;
-import com.vn.DineNow.services.user.IUserService;
+import com.vn.DineNow.services.customer.favoriteRestaurant.FavoriteRestaurantService;
+import com.vn.DineNow.services.customer.user.UserService;
 import com.vn.DineNow.validation.ValidRestaurantApprovedValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +26,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class UserController {
-    private final IUserService userService;
-    private final IFavoriteRestaurantService favoriteRestaurantService;
+    private final UserService userService;
+    private final FavoriteRestaurantService favoriteRestaurantService;
 
     @GetMapping("/me")
     @RequireEnabledUser

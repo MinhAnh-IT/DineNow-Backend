@@ -22,6 +22,9 @@ public class RestaurantType {
     @Column(columnDefinition = "text")
     private String description;
 
+    @Column
+    private String imageUrl;
+
     @OneToMany(mappedBy = "type")
     private Set<Restaurant> restaurants;
 }

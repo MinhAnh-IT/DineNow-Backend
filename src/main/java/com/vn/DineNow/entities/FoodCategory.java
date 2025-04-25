@@ -27,4 +27,8 @@ public class FoodCategory {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MenuItem> menuItems;
+
+    @ManyToOne
+    @JoinColumn(name = "main_category_id", nullable = false)
+    private MainCategory mainCategory;
 }

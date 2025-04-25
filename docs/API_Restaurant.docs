@@ -196,5 +196,8 @@
     **** Tương tự tạo nhà hàng (nếu không nhập ảnh thì mặc định là sẽ lấy ảnh cũ trước đó)
     **** Các trường để null mặc định sẽ lấy dữ liệu cũ ***
 
+------------------------------------------------------------------------------------------------------------------------
+6. Lấy danh sách nhà hàng của Owner: api/owner/restaurants   -   Get
+
 
 **** Lưu ý chung, các nhà hàng phải được chỉnh sửa bởi chính chủ của nhà hàng ****

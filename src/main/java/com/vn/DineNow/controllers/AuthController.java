@@ -10,7 +10,7 @@ import com.vn.DineNow.payload.request.auth.VerifyOTPRequest;
 import com.vn.DineNow.payload.request.common.EmailRequest;
 import com.vn.DineNow.payload.response.APIResponse;
 import com.vn.DineNow.payload.response.auth.LoginResponse;
-import com.vn.DineNow.services.auth.IAuthService;
+import com.vn.DineNow.services.common.auth.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Validated
 public class AuthController {
-    private final IAuthService authService;
+    private final AuthService authService;
 
     @PostMapping("/register")
     public ResponseEntity<APIResponse<UserDTO>> register(
