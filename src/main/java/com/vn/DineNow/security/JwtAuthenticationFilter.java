@@ -24,23 +24,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final CustomUserDetailsService userDetailsService;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.startsWith("/api/auth");
+    }
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
+            HttpServletResponse response,
+            FilterChain filterChain)
             throws ServletException, IOException {
+
         String token = jwtService.extractToken(request);
+        log.info("🧪 Incoming token: {}", token);
+        if (token != null && jwtService.validateToken(token)
+                && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-        if (token != null && jwtService.validateToken(token)) {
             Long userId = jwtService.getUserIdFromJWT(token);
-
             var userDetails = userDetailsService.loadUserById(userId);
 
             var authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities());
-
+                    userDetails,
+                    null,
+                    userDetails.getAuthorities()
+            );
+            log.info("ROLE(s) gán vào context: {}", userDetails.getAuthorities());
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
+            SecurityContextHolder.clearContext();
             SecurityContextHolder.getContext().setAuthentication(authentication);
+        }else{
+            log.warn("⚠️ Token không hợp lệ hoặc đã có authentication trong context!");
         }
 
         filterChain.doFilter(request, response);
