@@ -28,9 +28,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-
+/**
+ * Service implementation for authentication-related operations including registration,
+ * login (local and Google), refresh token, password management, and OTP verification.
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -43,7 +48,6 @@ public class AuthServiceImpl implements AuthService {
     final RedisService redisService;
     final EmailService emailService;
     final GoogleAuthService googleAuthService;
-
 
     @Value("${DineNow.key.refreshToken}")
     String keyRefreshToken;
@@ -63,9 +67,16 @@ public class AuthServiceImpl implements AuthService {
     @Value("${DineNow.key.reset-password}")
     String keyResetPassword;
 
+    /**
+     * Registers a new user with local sign-up method.
+     *
+     * @param userDTO the user information to register
+     * @return the registered user DTO
+     * @throws CustomException if the email or phone number already exists
+     */
     @Override
     public UserDTO register(UserDTO userDTO) throws CustomException {
-        if (userRepository.existsByEmail(userDTO.getEmail(),SignWith.LOCAL)) {
+        if (userRepository.existsByEmail(userDTO.getEmail(), SignWith.LOCAL)) {
             throw new CustomException(StatusCode.EXIST_EMAIL, userDTO.getEmail());
         }
         if (userRepository.existsByPhone(userDTO.getPhone())) {
@@ -80,157 +91,180 @@ public class AuthServiceImpl implements AuthService {
         return userMapper.toDTO(user);
     }
 
-
+    /**
+     * Authenticates a user with email and password.
+     *
+     * @param request the login request containing email and password
+     * @param response the HTTP response to set the refresh token cookie
+     * @return a login response containing an access token
+     * @throws CustomException if login fails or user account is disabled
+     */
     @Override
-    public LoginResponse login(LoginRequest request, HttpServletResponse response) throws CustomException{
-        if(!userRepository.existsByEmail(request.getEmail(), SignWith.LOCAL))
-            throw new CustomException(StatusCode.NOT_FOUND, "username", request.getEmail());
+    public LoginResponse login(LoginRequest request, HttpServletResponse response) throws CustomException {
+        if (!userRepository.existsByEmail(request.getEmail(), SignWith.LOCAL)) {
+            throw new CustomException(StatusCode.NOT_FOUND, "user", request.getEmail());
+        }
         User user = userRepository.findByEmailAndProvider(request.getEmail(), SignWith.LOCAL);
-        if (user.getIsVerified() == null){
+        if (user.getIsVerified() == null) {
             throw new CustomException(StatusCode.UNVERIFIED_ACCOUNT);
         }
-        var isPasswordMatch = passwordEncoder.matches(request.getPassword(), user.getPassword());
-        if (!isPasswordMatch) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomException(StatusCode.LOGIN_FAILED);
         }
-        String accessToken = jwtService.generateAccessToken(userMapper.toDTO(user));
-        String refreshToken = jwtService.generateRefreshToken(userMapper.toDTO(user));
-
-        // Check status of user
-        boolean isEnabled = user.getEnabled();
-        if (!isEnabled) {
+        if (!user.getEnabled()) {
             throw new CustomException(StatusCode.ACCOUNT_DISABLED);
         }
-        // Store refresh token in Redis
-        String refreshTokenKey = keyRefreshToken + user.getId();
-        redisService.saveObject(refreshTokenKey, refreshToken, refreshTokenExpire, TimeUnit.DAYS);
 
-        // Set refresh token in cookie
+        String accessToken = jwtService.generateAccessToken(userMapper.toDTO(user));
+        String refreshToken = jwtService.generateRefreshToken(userMapper.toDTO(user));
+        String refreshTokenKey = keyRefreshToken + user.getId();
+
+        redisService.saveObject(refreshTokenKey, refreshToken, refreshTokenExpire, TimeUnit.DAYS);
         CookieUtils.addRefreshTokenCookie(response, refreshToken, isSecure, (int) refreshTokenExpire);
+
         return LoginResponse.builder()
                 .accessToken(accessToken)
                 .build();
     }
 
+    /**
+     * Refreshes the access token using a valid refresh token.
+     *
+     * @param refreshToken the refresh token
+     * @return a new login response with a new access token
+     * @throws CustomException if the refresh token is invalid or expired
+     */
     @Override
-    public LoginResponse refreshToken(String refreshToken) throws CustomException{
+    public LoginResponse refreshToken(String refreshToken) throws CustomException {
         long userId = jwtService.getUserIdFromJWT(refreshToken);
-        UserDTO user = userMapper.toDTO(userRepository.findById(userId).orElseThrow(
-                () -> new CustomException(StatusCode.NOT_FOUND, "user", String.valueOf(userId))
-        ));
+        UserDTO user = userMapper.toDTO(userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "user", String.valueOf(userId))));
 
-        // Check status account
-        if (!user.getEnabled()){
+        if (!user.getEnabled()) {
             throw new CustomException(StatusCode.ACCOUNT_DISABLED);
         }
 
-        // Get refresh token from redis for validation
-        String refreshTokenKey = keyRefreshToken + jwtService.getUserIdFromJWT(refreshToken);
-        String redisRefreshToken = redisService.getObject(refreshTokenKey, String.class);
-
-        // Validate the refresh token
+        String redisRefreshToken = redisService.getObject(keyRefreshToken + userId, String.class);
         if (redisRefreshToken == null || !redisRefreshToken.equals(refreshToken)) {
             throw new CustomException(StatusCode.UNAUTHORIZED_TOKEN);
         }
 
-        // regenerate access token
         String newAccessToken = jwtService.generateAccessToken(user);
         return LoginResponse.builder()
                 .accessToken(newAccessToken)
                 .build();
     }
 
+    /**
+     * Sends a verification email with OTP for account verification.
+     *
+     * @param request the email request
+     * @return true if the email was sent successfully
+     * @throws CustomException if user not found or email sending fails
+     */
     @Override
-    public boolean sendVerificationEmail(EmailRequest request) throws CustomException{
+    public boolean sendVerificationEmail(EmailRequest request) throws CustomException {
         User user = userRepository.findByEmailAndProvider(request.getEmail(), SignWith.LOCAL);
         if (user == null) {
-            throw new CustomException(StatusCode.NOT_FOUND, "username", request.getEmail());
+            throw new CustomException(StatusCode.NOT_FOUND, "user", request.getEmail());
         }
-        if (!user.getEnabled()){
+        if (!user.getEnabled()) {
             throw new CustomException(StatusCode.ACCOUNT_DISABLED);
         }
 
-        // Generate OTP
         String otp = generateOTP();
-        String redisKey = keyVerifyAccount + request.getEmail();
-        redisService.saveObject(redisKey, otp, 5, TimeUnit.MINUTES);
+        redisService.saveObject(keyVerifyAccount + request.getEmail(), otp, 5, TimeUnit.MINUTES);
 
-        // Send OTP email
         try {
-            String subject = "Xac thực tài khoản";
-            String templateName = "verify-account";
-            String to = request.getEmail();
-            emailService.sendEmail(to, subject, templateName, otp);
+            emailService.sendEmail(request.getEmail(), "Xác thực tài khoản", "verify-account", otp);
         } catch (CustomException e) {
             throw new CustomException(StatusCode.EMAIL_ERROR, e);
         }
         return true;
     }
 
+    /**
+     * Verifies the OTP for forgot password flow.
+     *
+     * @param request the OTP verification request
+     * @return true if verification successful
+     * @throws CustomException if OTP is invalid
+     */
     @Override
-    public boolean verifyOTPForgotPassword(VerifyOTPRequest request) throws CustomException{
-        String redisKey = keyForgotPassword + request.getEmail();
-        String redisOtp = redisService.getObject(redisKey, String.class);
+    public boolean verifyOTPForgotPassword(VerifyOTPRequest request) throws CustomException {
+        String redisOtp = redisService.getObject(keyForgotPassword + request.getEmail(), String.class);
         if (redisOtp == null) {
             throw new CustomException(StatusCode.INVALID_OTP);
         }
         if (redisOtp.equals(request.getOtp())) {
-            // OTP is valid, proceed with password reset
-            String keyReset = keyResetPassword + request.getEmail();
-            redisService.saveObject(keyReset, true, 5, TimeUnit.MINUTES);
-            redisService.deleteObject(redisKey);
+            redisService.saveObject(keyResetPassword + request.getEmail(), true, 5, TimeUnit.MINUTES);
+            redisService.deleteObject(keyForgotPassword + request.getEmail());
             return true;
         }
         return false;
     }
 
+    /**
+     * Verifies the OTP for account verification flow.
+     *
+     * @param request the OTP verification request
+     * @return true if verification successful
+     * @throws CustomException if OTP is invalid
+     */
     @Override
     public boolean verifyOTPVerifyAccount(VerifyOTPRequest request) throws CustomException {
-        String redisKey = keyVerifyAccount + request.getEmail();
-        String redisOtp = redisService.getObject(redisKey, String.class);
+        String redisOtp = redisService.getObject(keyVerifyAccount + request.getEmail(), String.class);
         if (redisOtp == null) {
             throw new CustomException(StatusCode.INVALID_OTP);
         }
         if (redisOtp.equals(request.getOtp())) {
-            // OTP is valid, proceed with account verification
             User user = userRepository.findByEmailAndProvider(request.getEmail(), SignWith.LOCAL);
             user.setIsVerified(true);
             userRepository.save(user);
-            redisService.deleteObject(redisKey);
+            redisService.deleteObject(keyVerifyAccount + request.getEmail());
             return true;
         }
         return false;
     }
 
+    /**
+     * Initiates the forgot password process by sending OTP.
+     *
+     * @param request the email request
+     * @return true if OTP was sent successfully
+     * @throws CustomException if user not found or email sending fails
+     */
     @Override
-    public boolean forgotPassword(EmailRequest request) throws CustomException{
+    public boolean forgotPassword(EmailRequest request) throws CustomException {
         User user = userRepository.findByEmailAndProvider(request.getEmail(), SignWith.LOCAL);
         if (user == null) {
-            throw new CustomException(StatusCode.NOT_FOUND, "username", request.getEmail());
+            throw new CustomException(StatusCode.NOT_FOUND, "user", request.getEmail());
         }
-        if (!user.getEnabled()){
+        if (!user.getEnabled()) {
             throw new CustomException(StatusCode.ACCOUNT_DISABLED);
         }
-        // Generate OTP
+
         String otp = generateOTP();
-        String redisKey = keyForgotPassword + request.getEmail();
-        redisService.saveObject(redisKey, otp, 5, TimeUnit.MINUTES);
-        // Send OTP email
+        redisService.saveObject(keyForgotPassword + request.getEmail(), otp, 5, TimeUnit.MINUTES);
+
         try {
-            String subject = "Xác thực quên mật khẩu";
-            String templateName = "reset-password";
-            String to = request.getEmail();
-            emailService.sendEmail(to, subject, templateName, otp);
+            emailService.sendEmail(request.getEmail(), "Xác thực quên mật khẩu", "reset-password", otp);
         } catch (CustomException e) {
             throw new CustomException(StatusCode.EMAIL_ERROR, e);
         }
         return true;
     }
 
+    /**
+     * Resets user's password after OTP verification.
+     *
+     * @param request the reset password request
+     * @return true if password reset successfully
+     * @throws CustomException if reset token is invalid or expired
+     */
     @Override
-    public boolean resetPassword(ResetPasswordRequest request) throws CustomException{
-        String redisKey = keyResetPassword + request.getEmail();
-        Boolean isReset = redisService.getObject(redisKey, Boolean.class);
+    public boolean resetPassword(ResetPasswordRequest request) throws CustomException {
+        Boolean isReset = redisService.getObject(keyResetPassword + request.getEmail(), Boolean.class);
         if (isReset == null) {
             throw new CustomException(StatusCode.RESET_TOKEN_EXPIRED);
         }
@@ -238,36 +272,47 @@ public class AuthServiceImpl implements AuthService {
             User user = userRepository.findByEmailAndProvider(request.getEmail(), SignWith.LOCAL);
             user.setPassword(passwordEncoder.encode(request.getNewPassword()));
             userRepository.save(user);
-            redisService.deleteObject(redisKey);
+            redisService.deleteObject(keyResetPassword + request.getEmail());
             return true;
         }
         return false;
     }
 
+    /**
+     * Logs out the user by deleting refresh token from Redis and clearing the cookie.
+     *
+     * @param request the HTTP request
+     * @param response the HTTP response
+     * @return true if logout successful
+     */
     @Override
     public boolean logout(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = CookieUtils.getCookieValue(request, "refreshToken");
         if (refreshToken != null) {
-            String redisKey = keyRefreshToken + jwtService.getUserIdFromJWT(refreshToken);
-            redisService.deleteObject(redisKey);
+            redisService.deleteObject(keyRefreshToken + jwtService.getUserIdFromJWT(refreshToken));
             CookieUtils.deleteCookie(request, response, "refreshToken");
             return true;
         }
         return false;
     }
 
+    /**
+     * Authenticates a user via Google login.
+     *
+     * @param request the Google login request containing ID token
+     * @param response the HTTP response to set refresh token cookie
+     * @return a login response containing an access token
+     * @throws CustomException if login fails
+     */
     @Override
     public LoginResponse LoginWithGoogle(GoogleLoginRequest request, HttpServletResponse response) throws CustomException {
-        User user = null;
-
         try {
             if (request.getIdToken() == null || request.getIdToken().isBlank()) {
                 throw new CustomException(StatusCode.INVALID_TOKEN);
             }
-
             var payload = googleAuthService.verifyToken(request.getIdToken());
             String email = payload.getEmail();
-            user = userRepository.findByEmailAndProvider(email, SignWith.GOOGLE);
+            User user = userRepository.findByEmailAndProvider(email, SignWith.GOOGLE);
 
             if (user != null && !user.getEnabled()) {
                 throw new CustomException(StatusCode.ACCOUNT_DISABLED);
@@ -275,26 +320,19 @@ public class AuthServiceImpl implements AuthService {
 
             if (user == null) {
                 String name = (String) payload.get("name");
-                UserGoogleDTO userDTO = UserGoogleDTO.builder()
-                        .email(email)
-                        .fullName(name)
-                        .build();
-                user = userMapper.toEntityFromGoogle(userDTO);
+                user = userMapper.toEntityFromGoogle(UserGoogleDTO.builder().email(email).fullName(name).build());
                 user = userRepository.save(user);
             }
 
             String accessToken = jwtService.generateAccessToken(userMapper.toDTO(user));
             String refreshToken = jwtService.generateRefreshToken(userMapper.toDTO(user));
 
-            String refreshTokenKey = keyRefreshToken + user.getId();
-            redisService.saveObject(refreshTokenKey, refreshToken, refreshTokenExpire, TimeUnit.DAYS);
-
+            redisService.saveObject(keyRefreshToken + user.getId(), refreshToken, refreshTokenExpire, TimeUnit.DAYS);
             CookieUtils.addRefreshTokenCookie(response, refreshToken, isSecure, (int) refreshTokenExpire);
 
             return LoginResponse.builder()
                     .accessToken(accessToken)
                     .build();
-
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {
@@ -303,6 +341,11 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    /**
+     * Generates a random 6-digit OTP code.
+     *
+     * @return the generated OTP code
+     */
     private String generateOTP() {
         int otp = (int) (Math.random() * 900000) + 100000;
         return String.valueOf(otp);

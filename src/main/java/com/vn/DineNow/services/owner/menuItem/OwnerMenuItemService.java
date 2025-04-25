@@ -10,7 +10,7 @@ import java.util.List;
 public interface OwnerMenuItemService {
     MenuItemResponseDTO addNewMenuItem(long owner, long restaurantId, MenuItemRequestDTO menuItemRequestDTO)
             throws CustomException;
-    MenuItemResponseDTO updateMenuItem(long menuItemId, MenuItemUpdateDTO menuItemUpdateDTO) throws CustomException;
+    MenuItemResponseDTO updateMenuItem(long ownerId, long menuItemId, MenuItemUpdateDTO menuItemUpdateDTO) throws CustomException;
     boolean deleteMenuItem(long ownerId, long menuItemId) throws CustomException;
     List<MenuItemResponseDTO> GetAllMenuItemForRestaurant(long ownerId, long restaurantId) throws CustomException;
     boolean updateMenuItemAvailability(long ownerId, long menuItemId, boolean available) throws CustomException;

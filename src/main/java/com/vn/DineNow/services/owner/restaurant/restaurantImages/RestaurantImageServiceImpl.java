@@ -17,6 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Service implementation for managing restaurant images including saving,
+ * retrieving, validating, and deleting image files associated with restaurants.
+ */
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Service
@@ -26,6 +30,13 @@ public class RestaurantImageServiceImpl implements RestaurantImageService {
     final RestaurantImageRepository restaurantImageRepository;
     final FileService fileService;
 
+    /**
+     * Saves multiple image files for a given restaurant.
+     *
+     * @param restaurantId the ID of the restaurant
+     * @param images       list of MultipartFile images to be saved
+     * @throws CustomException if the restaurant is not found or image upload fails
+     */
     @Override
     @Transactional
     public void saveImages(Long restaurantId, List<MultipartFile> images) throws CustomException {
@@ -47,6 +58,12 @@ public class RestaurantImageServiceImpl implements RestaurantImageService {
         }
     }
 
+    /**
+     * Retrieves public image URLs of all images associated with a restaurant.
+     *
+     * @param restaurantId the ID of the restaurant
+     * @return list of publicly accessible image URLs
+     */
     @Override
     public List<String> getImageUrlsByRestaurantId(Long restaurantId) {
         return restaurantImageRepository.findByRestaurantId(restaurantId).stream()
@@ -54,6 +71,12 @@ public class RestaurantImageServiceImpl implements RestaurantImageService {
                 .toList();
     }
 
+    /**
+     * Deletes a specific image by its ID from both the file system and the database.
+     *
+     * @param imageId the ID of the image to delete
+     * @throws CustomException if the image is not found or deletion fails
+     */
     @Override
     @Transactional
     public void deleteImage(Long imageId) throws CustomException {
@@ -69,6 +92,12 @@ public class RestaurantImageServiceImpl implements RestaurantImageService {
         restaurantImageRepository.delete(image);
     }
 
+    /**
+     * Deletes all images associated with a specific restaurant.
+     *
+     * @param restaurantId the ID of the restaurant
+     * @throws CustomException if any image file deletion fails
+     */
     @Override
     @Transactional
     public void deleteImagesByRestaurantId(Long restaurantId) throws CustomException {
@@ -83,6 +112,12 @@ public class RestaurantImageServiceImpl implements RestaurantImageService {
         restaurantImageRepository.deleteAll(images);
     }
 
+    /**
+     * Validates an uploaded image file for format and size.
+     *
+     * @param image the uploaded image file
+     * @throws CustomException if the image is empty, has an invalid extension, or exceeds size limits
+     */
     @Override
     public void validateImageFile(MultipartFile image) throws CustomException {
         if (image.isEmpty()) {
@@ -103,7 +138,4 @@ public class RestaurantImageServiceImpl implements RestaurantImageService {
             throw new CustomException(StatusCode.INVALID_IMAGE_TYPE, "File exceeds 5MB limit");
         }
     }
-
-
-
 }

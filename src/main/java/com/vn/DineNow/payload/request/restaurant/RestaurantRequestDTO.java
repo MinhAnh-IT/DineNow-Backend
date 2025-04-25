@@ -30,6 +30,9 @@ public class RestaurantRequestDTO {
     @NotNull(message = "Restaurant type is required")
     private Long typeId;
 
+    @NotNull(message = "Restaurant tier is required")
+    private Long restaurantTierId;
+
     @NotNull(message = "images is required")
     private List<MultipartFile> images;
 }

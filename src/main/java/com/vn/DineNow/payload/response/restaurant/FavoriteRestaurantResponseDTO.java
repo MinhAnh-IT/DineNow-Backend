@@ -13,4 +13,5 @@ public class FavoriteRestaurantResponseDTO {
     private String thumbnailUrl;
     private Double averageRating;
     private RestaurantTypeDTO type;
+    private String restaurantTierName;
 }

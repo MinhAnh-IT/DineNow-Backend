@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "restaurant_tiers")
@@ -22,4 +23,7 @@ public class RestaurantTiers {
 
     @Column
     String description;
+
+    @OneToMany(mappedBy = "restaurantTier")
+    List<Restaurant> restaurants;
 }

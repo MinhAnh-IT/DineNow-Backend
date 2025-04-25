@@ -1,5 +1,7 @@
 package com.vn.DineNow.payload.response.foodCategory;
 
+import com.vn.DineNow.entities.MainCategory;
+import com.vn.DineNow.payload.response.mainCategory.MainCategoryResponse;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,11 +18,7 @@ public class FoodCategoryResponseDTO {
 
     String description;
 
-    Long restaurantId;
-
     String restaurantName;
-
-    Long mainCategoryId;
 
     String mainCategoryName;
 }
