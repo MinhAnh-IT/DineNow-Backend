@@ -49,9 +49,8 @@ public class Reservation {
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "table_id", nullable = false)
-    private DiningTable table;
+    @Column(nullable = false)
+    private Integer numberOfChild;
 
     @OneToMany(mappedBy = "reservation")
     private Set<Order> reservationOrders;

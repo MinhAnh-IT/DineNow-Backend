@@ -18,9 +18,6 @@ public class FoodCategoryRequest {
     @NotBlank(message = "Food category description must not be blank")
     String description;
 
-    @NotNull(message = "Restaurant ID is required")
-    long restaurantId;
-
     @NotNull(message = "Main category ID is required")
-    long mainCategoryId;
+    Long mainCategoryId;
 }

@@ -26,10 +26,15 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+/**
+ * Service implementation for restaurant owners to manage their restaurants,
+ * including creation, update, and retrieval of their owned restaurants.
+ */
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OwnerRestaurantServiceImpl implements OwnerRestaurantService {
+
     final RestaurantRepository restaurantRepository;
     final RestaurantMapper restaurantMapper;
     final UserRepository userRepository;
@@ -40,6 +45,15 @@ public class OwnerRestaurantServiceImpl implements OwnerRestaurantService {
     @Value("${DineNow.key.cache-restaurant}")
     String keyRedis;
 
+    /**
+     * Creates a new restaurant associated with the given owner.
+     *
+     * @param ownerID    the ID of the owner creating the restaurant
+     * @param requestDTO the restaurant creation request data
+     * @return the newly created restaurant as a DTO
+     * @throws CustomException if the owner is not found, not authorized, the name already exists,
+     *                         the restaurant type does not exist, or image saving fails
+     */
     @Override
     public RestaurantResponseDTO createRestaurant(long ownerID, RestaurantRequestDTO requestDTO) throws CustomException {
         User owner = userRepository.findById(ownerID)
@@ -50,7 +64,7 @@ public class OwnerRestaurantServiceImpl implements OwnerRestaurantService {
         }
 
         if (restaurantRepository.existsByNameAndOwner(requestDTO.getName(), owner)) {
-            throw new CustomException(StatusCode.EXIST_NAME, "Restaurant", "owner");
+            throw new CustomException(StatusCode.EXIST_NAME, requestDTO.getName(), String.format("restaurants of %s", owner));
         }
 
         Restaurant restaurant = restaurantMapper.toEntity(requestDTO);
@@ -76,20 +90,33 @@ public class OwnerRestaurantServiceImpl implements OwnerRestaurantService {
         return responseDTO;
     }
 
+    /**
+     * Updates the information of an existing restaurant owned by the given owner.
+     *
+     * @param owner               the ID of the owner making the update
+     * @param restaurantId        the ID of the restaurant to update
+     * @param restaurantUpdateDTO the update request containing new values
+     * @return the updated restaurant as a response DTO
+     * @throws CustomException if the restaurant or type is not found, unauthorized, or image validation fails
+     */
     @Override
     public RestaurantResponseDTO updateRestaurant(long owner, long restaurantId, RestaurantUpdateDTO restaurantUpdateDTO)
             throws CustomException {
-        // Check if the restaurant exists and the user is the owner
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "restaurant", String.valueOf(restaurantId)));
-        if(restaurant.getOwner().getId() != owner){
+
+        if (restaurant.getOwner().getId() != owner) {
             throw new CustomException(StatusCode.FORBIDDEN);
         }
 
-        // Update basic fields from request DTO
+        if(restaurantUpdateDTO.getName() != null
+            && !restaurant.getName().equals(restaurantUpdateDTO.getName())
+            && restaurantRepository.existsByNameAndOwner(restaurantUpdateDTO.getName(), restaurant.getOwner())){
+            throw new CustomException(StatusCode.EXIST_NAME, restaurantUpdateDTO.getName(), String.format("restaurants of %s", restaurant.getOwner().getFullName()));
+        }
+
         restaurantMapper.updateRestaurantFromRequest(restaurantUpdateDTO, restaurant);
 
-        // Update restaurant type if a new typeId is provided
         if (restaurantUpdateDTO.getTypeId() != null) {
             restaurant.setType(
                     restaurantTypeRepository.findById(restaurantUpdateDTO.getTypeId())
@@ -97,25 +124,24 @@ public class OwnerRestaurantServiceImpl implements OwnerRestaurantService {
             );
         }
 
-        // Replace restaurant images if a new image list is provided
-        for (MultipartFile image : restaurantUpdateDTO.getImages()){
+        // Validate images before saving
+        for (MultipartFile image : restaurantUpdateDTO.getImages()) {
             restaurantImageService.validateImageFile(image);
         }
-        if (restaurantUpdateDTO.getImages() != null){
+
+        if (restaurantUpdateDTO.getImages() != null) {
             restaurantImageService.deleteImagesByRestaurantId(restaurantId);
             restaurantImageService.saveImages(restaurantId, restaurantUpdateDTO.getImages());
         }
 
-        // Save the updated restaurant to the database
         restaurantRepository.save(restaurant);
 
-        // Convert to DTO and add image URLs
         RestaurantResponseDTO responseDTO = restaurantMapper.toDTO(restaurant);
         responseDTO.setImageUrls(restaurantImageService.getImageUrlsByRestaurantId(restaurant.getId()));
 
-        // Update restaurant info in Redis cache
-        String key = keyRedis + String.valueOf(restaurantId);
-        if (redisService.objectExists(key)){
+        // Update cached data in Redis
+        String key = keyRedis + restaurantId;
+        if (redisService.objectExists(key)) {
             redisService.deleteObject(key);
             redisService.saveObject(key, responseDTO, 20, TimeUnit.MINUTES);
         }
@@ -123,11 +149,17 @@ public class OwnerRestaurantServiceImpl implements OwnerRestaurantService {
         return responseDTO;
     }
 
+    /**
+     * Retrieves all restaurants owned by the specified owner.
+     *
+     * @param ownerId the ID of the owner
+     * @return list of simplified restaurant response DTOs
+     * @throws CustomException if the owner is not found
+     */
     @Override
     public List<RestaurantSimpleResponseDTO> getRestaurantByOwner(long ownerId) throws CustomException {
-        User owner = userRepository.findById(ownerId).orElseThrow(
-                () -> new CustomException(StatusCode.NOT_FOUND, "owner", String.valueOf(ownerId))
-        );
+        User owner = userRepository.findById(ownerId)
+                .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "owner", String.valueOf(ownerId)));
 
         var restaurants = restaurantRepository.findAllByOwner(owner);
 

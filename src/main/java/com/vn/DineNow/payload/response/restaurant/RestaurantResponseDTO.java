@@ -23,6 +23,8 @@ public class RestaurantResponseDTO {
 
     private String phone;
 
+    private String restaurantTierName;
+
     private String description;
 
     private RestaurantTypeDTO type;

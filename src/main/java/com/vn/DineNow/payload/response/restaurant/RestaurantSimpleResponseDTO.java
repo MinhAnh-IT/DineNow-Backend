@@ -10,6 +10,7 @@ public class RestaurantSimpleResponseDTO {
     private String name;
     private String address;
     private Double averageRating;
+    private String restaurantTierName;
     private String thumbnailUrl;
     private String typeName;
 }

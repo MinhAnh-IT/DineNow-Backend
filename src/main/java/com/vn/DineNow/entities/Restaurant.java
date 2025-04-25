@@ -45,8 +45,9 @@ public class Restaurant {
     @Enumerated(EnumType.STRING)
     private RestaurantStatus status = RestaurantStatus.PENDING;
 
-    @Column
-    private BigDecimal commissionFee;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tier_id", nullable = false)
+    private RestaurantTiers restaurantTier;
 
     @Column
     @CreationTimestamp
@@ -64,9 +65,6 @@ public class Restaurant {
     private Set<RestaurantImage> restaurantRestaurantImages;
 
     @OneToMany(mappedBy = "restaurant")
-    private Set<DiningTable> restaurantDiningTables;
-
-    @OneToMany(mappedBy = "restaurant")
     private Set<Reservation> restaurantReservations;
 
     @OneToMany(mappedBy = "restaurant")
@@ -80,6 +78,4 @@ public class Restaurant {
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FoodCategory> foodCategories;
-
-
 }

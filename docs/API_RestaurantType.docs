@@ -1,0 +1,73 @@
+1. Tạo loại nhà hàng mới: api/admin/restaurant-types - Post
+    * Request body: kiểu data-form
+        name: tên loại nhà hàng
+        description: mô tả loại nhà hàng
+        imageUrl (kiểu file): ảnh của nhà hàng
+
+    * Response body: kiểu json
+        {
+            "status": 201,
+            "message": "Resource created successfully.",
+            "data": {
+                "id": 4,
+                "name": "Quán nhậu 1",
+                "description": "Quán nhậu vỉa hè",
+                "imageUrl": "http://localhost:8080/uploads/5920d70d-fe75-4a7a-90dc-2b5c46e237bf_mo-quan-nhau-binh-dan-can-nhung-gi.jpg"
+            }
+        }
+
+
+------------------------------------------------------------------------------------------------------------------------
+2. Lấy danh sách loại nhà hàng: api/admin/restaurant-types - Get
+    * Response body: kiểu json
+        {
+            "status": 200,
+            "message": "Resource retrieved successfully.",
+            "data": [
+                {
+                    "id": 1,
+                    "name": "Quán nhậu",
+                    "description": "Quán nhậu vỉa hè",
+                    "imageUrl": "http://localhost:8080/uploads/5920d70d-fe75-4a7a-90dc-2b5c46e237bf_mo-quan-nhau-binh-dan-can-nhung-gi.jpg"
+                },
+                {
+                    "id": 2,
+                    "name": "Nhà hàng",
+                    "description": "Nhà hàng sang trọng",
+                    "imageUrl": null
+                }
+            ]
+        }
+
+
+------------------------------------------------------------------------------------------------------------------------
+3. Sửa loại nhà hàng: api/admin/restaurant-types/id - Put
+    * Request body: kiểu data-form  ||  id = id của loại nhà hàng
+        name: tên loại nhà hàng
+        description: mô tả loại nhà hàng
+        imageUrl (kiểu file): ảnh của nhà hàng
+
+    * Response body: kiểu json
+        {
+            "status": 200,
+            "message": "Resource updated successfully.",
+            "data": {
+                "id": 1,
+                "name": "Quán nhậu",
+                "description": "Quán nhậu vỉa hè",
+                "imageUrl": null
+            }
+        }
+
+
+------------------------------------------------------------------------------------------------------------------------
+4. Xóa loại nhà hàng: api/admin/restaurant-types/id - Delete
+    * Request body: không có || id = id của loại nhà hàng
+
+    * Response body:
+        {
+            "status": 204,
+            "message": "Successfully deleted.",
+            "data": true
+        }
+        # 204 = Successfully deleted
