@@ -196,5 +196,56 @@
     **** Tương tự tạo nhà hàng (nếu không nhập ảnh thì mặc định là sẽ lấy ảnh cũ trước đó)
     **** Các trường để null mặc định sẽ lấy dữ liệu cũ ***
 
+------------------------------------------------------------------------------------------------------------------------
+6. Lấy danh sách nhà hàng của Owner: api/owner/restaurants   -   Get
+
+
+------------------------------------------------------------------------------------------------------------------------
+7. Lấy danh sách nhà hàng của owner: api/owner/restaurants
+    * Request: không có tham số
+
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": [
+                {
+                    "id": 101,
+                    "name": "Nhà Hàng Hải Nam",
+                    "address": "Nguyễn trãi, Quận 1, Tp.Hồ Chí Minh",
+                    "averageRating": 0.0,
+                    "thumbnailUrl": "http://localhost:8080/uploads/2fecd45b-52a4-421f-bb49-9c63a724cb15_anhquanan3.jpg",
+                    "typeName": "Quán nhậu vỉa hè"
+                },
+                {
+                    "id": 102,
+                    "name": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                    "address": "123 Lê Văn Việt, Q.9",
+                    "averageRating": 0.0,
+                    "thumbnailUrl": "http://localhost:8080/uploads/75e3465d-7e25-4c7f-bbbf-476270fa934a_anh2.png",
+                    "typeName": "Quán nhậu"
+                },
+                {
+                    "id": 103,
+                    "name": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 3",
+                    "address": "123 Lê Văn Việt, Q.9",
+                    "averageRating": 0.0,
+                    "thumbnailUrl": "http://localhost:8080/uploads/4df932fb-018e-4b6c-bda9-aee3ab3bdb13_anhquanan2.jpg",
+                    "typeName": "Quán nhậu"
+                },
+                {
+                    "id": 104,
+                    "name": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 1",
+                    "address": "123 Lê Văn Việt, Q.9",
+                    "averageRating": 0.0,
+                    "thumbnailUrl": "http://localhost:8080/uploads/0aae4030-2189-43a9-82bf-1062cfcfd74d_anhquanan3.jpg",
+                    "typeName": "Quán nhậu"
+                }
+            ]
+        }
+        # Chú thích: Dữ liệu được trả về dưới dạng simple
+
+
+
 
 **** Lưu ý chung, các nhà hàng phải được chỉnh sửa bởi chính chủ của nhà hàng ****

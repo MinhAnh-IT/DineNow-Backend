@@ -10,7 +10,7 @@ import com.vn.DineNow.payload.request.auth.VerifyOTPRequest;
 import com.vn.DineNow.payload.request.common.EmailRequest;
 import com.vn.DineNow.payload.response.APIResponse;
 import com.vn.DineNow.payload.response.auth.LoginResponse;
-import com.vn.DineNow.services.auth.IAuthService;
+import com.vn.DineNow.services.common.auth.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -20,13 +20,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/auth")
+@RequestMapping("api/auth/")
 @RequiredArgsConstructor
 @Validated
 public class AuthController {
-    private final IAuthService authService;
+    private final AuthService authService;
 
-    @PostMapping("/register")
+    @PostMapping("register")
     public ResponseEntity<APIResponse<UserDTO>> register(
             @Valid @RequestBody UserDTO userDTO) throws CustomException {
         UserDTO registeredUser = authService.register(userDTO);
@@ -38,7 +38,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/login")
+    @PostMapping("login")
     public ResponseEntity<APIResponse<LoginResponse>> loginLocal(
             @Valid @RequestBody LoginRequest request, HttpServletResponse httpServletResponse) throws CustomException {
         LoginResponse loginResponse = authService.login(request, httpServletResponse);
@@ -50,7 +50,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/refresh-token")
+    @PostMapping("refresh-token")
     public ResponseEntity<APIResponse<LoginResponse>> refreshAccessToken(
             @CookieValue(value = "refreshToken", required = false) String refreshToken) throws CustomException{
         LoginResponse loginResponse = authService.refreshToken(refreshToken);
@@ -62,7 +62,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/send-verification-otp")
+    @PostMapping("send-verification-otp")
     public ResponseEntity<APIResponse<Boolean>> sendVerificationEmail(
             @Valid @RequestBody EmailRequest request) throws CustomException {
         boolean isSent = authService.sendVerificationEmail(request);
@@ -74,7 +74,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/forgot-password")
+    @PostMapping("forgot-password")
     public ResponseEntity<APIResponse<Boolean>> forgotPassword(
             @Valid @RequestBody EmailRequest request) throws CustomException {
         boolean isSent = authService.forgotPassword(request);
@@ -86,7 +86,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/verify-reset-password-otp")
+    @PostMapping("verify-reset-password-otp")
     public ResponseEntity<APIResponse<Boolean>> verifyOTPForgotPassword(
             @Valid @RequestBody VerifyOTPRequest request) throws CustomException {
         boolean isVerified = authService.verifyOTPForgotPassword(request);
@@ -98,7 +98,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/verify-account")
+    @PostMapping("verify-account")
     public ResponseEntity<APIResponse<Boolean>> verifyAccount(
             @Valid @RequestBody VerifyOTPRequest request) throws CustomException {
         boolean isVerified = authService.verifyOTPVerifyAccount(request);
@@ -110,7 +110,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/reset-password")
+    @PostMapping("reset-password")
     public ResponseEntity<APIResponse<Boolean>> resetPassword(
             @Valid @RequestBody ResetPasswordRequest request) throws CustomException {
         boolean isReset = authService.resetPassword(request);
@@ -122,7 +122,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/logout")
+    @PostMapping("logout")
     public ResponseEntity<APIResponse<Boolean>> logout(HttpServletRequest request, HttpServletResponse response) {
         boolean isLoggedOut = authService.logout(request, response);
         APIResponse<Boolean> apiResponse = APIResponse.<Boolean>builder()
@@ -133,7 +133,7 @@ public class AuthController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @PostMapping("/google-login")
+    @PostMapping("google-login")
     public ResponseEntity<APIResponse<LoginResponse>> loginWithGoogle(
             @RequestBody GoogleLoginRequest request, HttpServletResponse httpServletResponse) throws CustomException{
         LoginResponse loginResponse = authService.LoginWithGoogle(request, httpServletResponse);

@@ -18,7 +18,6 @@ public interface RestaurantMapper {
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "foodCategories", ignore = true)
-    @Mapping(target = "restaurantDiningTables", ignore = true)
     @Mapping(target = "owner", ignore = true)
     @Mapping(target = "restaurantFavoriteRestaurants", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
@@ -27,23 +26,27 @@ public interface RestaurantMapper {
     @Mapping(target = "restaurantRestaurantImages", ignore = true)
     @Mapping(target = "restaurantReviews", ignore = true)
     @Mapping(target = "type.id", source = "typeId")
+    @Mapping(target = "restaurantTier.id", source = "restaurantTierId") // <-- thêm ánh xạ này
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "averageRating", ignore = true)
     Restaurant toEntity(RestaurantRequestDTO requestDTO);
 
     @Mapping(target = "imageUrls", ignore = true)
     @Mapping(source = "type", target = "type")
+    @Mapping(source = "restaurantTier.name", target = "restaurantTierName")
     RestaurantResponseDTO toDTO(Restaurant restaurant);
-
 
     @Mapping(target = "thumbnailUrl", expression = "java(mapThumbnail(restaurant.getRestaurantRestaurantImages()))")
     @Mapping(source = "type", target = "type")
+    @Mapping(source = "restaurantTier.name", target = "restaurantTierName")
     FavoriteRestaurantResponseDTO toFavoriteRestaurantDTO(Restaurant restaurant);
 
     @Mapping(source = "type.name", target = "typeName")
+    @Mapping(source = "restaurantTier.name", target = "restaurantTierName")
     @Mapping(target = "thumbnailUrl", expression = "java(mapThumbnail(restaurant.getRestaurantRestaurantImages()))")
     RestaurantSimpleResponseDTO toSimpleDTO(Restaurant restaurant);
 
+    @Mapping(target = "restaurantTier", ignore = true)
     @Mapping(target = "type", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "status", ignore = true)
@@ -52,7 +55,6 @@ public interface RestaurantMapper {
     @Mapping(target = "restaurantReservations", ignore = true)
     @Mapping(target = "restaurantMenuItems", ignore = true)
     @Mapping(target = "restaurantFavoriteRestaurants", ignore = true)
-    @Mapping(target = "restaurantDiningTables", ignore = true)
     @Mapping(target = "owner", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "foodCategories", ignore = true)
@@ -60,7 +62,6 @@ public interface RestaurantMapper {
     @Mapping(target = "averageRating", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateRestaurantFromRequest(RestaurantUpdateDTO dto, @MappingTarget Restaurant restaurant);
-
 
     default String mapThumbnail(Set<RestaurantImage> images) {
         if (images != null && !images.isEmpty()) {

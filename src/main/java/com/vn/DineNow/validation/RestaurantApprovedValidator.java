@@ -30,6 +30,4 @@ public class RestaurantApprovedValidator implements ConstraintValidator<ValidRes
 
         return true;
     }
-
-
 }

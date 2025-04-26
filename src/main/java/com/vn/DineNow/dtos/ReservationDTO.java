@@ -34,6 +34,5 @@ public class ReservationDTO {
     private Long restaurant;
 
     @NotNull
-    private Long table;
-
+    private Integer numberOfChild;
 }

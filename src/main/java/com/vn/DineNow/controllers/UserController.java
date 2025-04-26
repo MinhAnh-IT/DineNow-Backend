@@ -8,8 +8,8 @@ import com.vn.DineNow.payload.request.user.UserUpdateDTO;
 import com.vn.DineNow.payload.response.APIResponse;
 import com.vn.DineNow.payload.response.restaurant.FavoriteRestaurantResponseDTO;
 import com.vn.DineNow.security.CustomUserDetails;
-import com.vn.DineNow.services.favoriteRestaurant.IFavoriteRestaurantService;
-import com.vn.DineNow.services.user.IUserService;
+import com.vn.DineNow.services.customer.favoriteRestaurant.FavoriteRestaurantService;
+import com.vn.DineNow.services.customer.user.UserService;
 import com.vn.DineNow.validation.ValidRestaurantApprovedValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +22,14 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/users/")
 @RequiredArgsConstructor
 @Validated
 public class UserController {
-    private final IUserService userService;
-    private final IFavoriteRestaurantService favoriteRestaurantService;
+    private final UserService userService;
+    private final FavoriteRestaurantService favoriteRestaurantService;
 
-    @GetMapping("/me")
+    @GetMapping("me")
     @RequireEnabledUser
     public ResponseEntity<APIResponse<UserDTO>> getUserDetail(
             @AuthenticationPrincipal CustomUserDetails userDetails)
@@ -43,7 +43,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/me/favorites")
+    @GetMapping("me/favorites")
     @RequireEnabledUser
     public ResponseEntity<APIResponse<List<FavoriteRestaurantResponseDTO>>> getFavoriteRestaurantsOfUser(
             @AuthenticationPrincipal CustomUserDetails userDetails) throws CustomException{
@@ -58,7 +58,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/me/favorites/{restaurantID}")
+    @PostMapping("me/favorites/{restaurantID}")
     @RequireEnabledUser
     public  ResponseEntity<APIResponse<FavoriteRestaurantResponseDTO>> addFavResForUser(
             @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -74,7 +74,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/me/favorites/{restaurantID}")
+    @DeleteMapping("me/favorites/{restaurantID}")
     public ResponseEntity<APIResponse<Boolean>> removeFavorite(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable @ValidRestaurantApprovedValidator long restaurantID) throws CustomException{
@@ -88,7 +88,7 @@ public class UserController {
         return  ResponseEntity.ok(response);
     }
 
-    @PutMapping("/me")
+    @PutMapping("me")
     @RequireEnabledUser
     public ResponseEntity<APIResponse<UserDTO>> updateUser(
             @AuthenticationPrincipal CustomUserDetails userDetails,
