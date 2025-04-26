@@ -1,0 +1,112 @@
+1. Tạo loại món ăn mới: api/owner/food-categories - Post
+    * Request body:
+        {
+            "name": "Cháo",
+            "description": "Các món như bún, phở ...",
+            "mainCategoryId": "2"
+        }
+        # Chú thích:
+            - name: tên loại món ăn
+            - description: mô tả loại món ăn
+            - mainCategoryId: id của loại món ăn chính
+
+    * Response body: kiểu json
+        {
+            "status": 201,
+            "message": "Resource created successfully.",
+            "data": {
+                "id": 9,
+                "name": "Cháo",
+                "description": "Các món như bún, phở ...",
+                "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 1",
+                "mainCategoryName": "Korean Cuisine"
+            }
+        }
+        # Chú thích:
+            - status: Trạng thái (201 - tạo mới thành công)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: thông tin loại món ăn vừa được tạo mới
+                - id: id của loại món ăn
+                - name: tên loại món ăn
+                - description: mô tả loại món ăn
+                - restaurantName: tên nhà hàng
+                - mainCategoryName: tên loại món ăn chính
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+2. Lấy danh sách loại món ăn: api/owner/food-categories - Get
+    * Response body: kiểu json
+        {
+            "status": 200,
+            "message": "Resource retrieved successfully.",
+            "data": [
+                {
+                    "id": 1,
+                    "name": "Bún",
+                    "description": "Các món như bún, phở ...",
+                    "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 1",
+                    "mainCategoryName": "Korean Cuisine"
+                },
+                {
+                    "id": 2,
+                    "name": "Cơm",
+                    "description": "Các món như cơm tấm, cơm chiên ...",
+                    "restaurantName": null,
+                    "mainCategoryName": null
+                }
+            ]
+        }
+        # Chú thích:
+            - status: Trạng thái (200 - thành công)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: danh sách loại món ăn
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+3. Sửa loại món ăn: api/owner/food-categories/id - Put
+    * Request body:
+        {
+            "name": "Bún",
+            "description": "Các món như bún, phở ...",
+            "mainCategoryId": "2"
+        }
+        # Chú thích: (Nếu trường nào không được truyền vào thì sẽ không thay đổi)
+            - name: tên loại món ăn
+            - description: mô tả loại món ăn
+            - mainCategoryId: id của loại món ăn chính
+
+    * Response body: kiểu json
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "id": 1,
+                "name": "Món khô",
+                "description": "Các món như bún, phở ...",
+                "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 1",
+                "mainCategoryName": "Vietnamese Cuisine"
+            }
+        }
+        # Chú thích:
+            - status: Trạng thái (200 - thành công)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: thông tin loại món ăn vừa được sửa
+                - id: id của loại món ăn
+                - name: tên loại món ăn
+                - description: mô tả loại món ăn
+                - restaurantName: tên nhà hàng
+                - mainCategoryName: tên loại món ăn chính
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+4. Xoá loại món ăn: api/owner/food-categories/id - Delete
+    * Request: ì = id của loại món ăn
+    * Response body: kiểu json
+        {
+            "status": 204,
+            "message": "Resource deleted successfully."
+        }
+        # Chú thích:
+            - status: Trạng thái (204 - xoá thành công)
+            - message: Thông báo về kết quả của yêu cầu
+
+

@@ -1,0 +1,96 @@
+1. Tạo loại món ăn chính: api/admin/main-categories - Post
+    * Request body:
+        {
+            "name": "Món chính",
+            "description": "Các món ăn chính trong thực đơn"
+        }
+        # Chú thích:
+            - name: tên loại món ăn chính
+            - description: mô tả loại món ăn chính
+
+    * Response body: kiểu json
+        {
+            "status": 201,
+            "message": "Resource created successfully.",
+            "data": {
+                "id": 1,
+                "name": "Món chính",
+                "description": "Các món ăn chính trong thực đơn"
+            }
+        }
+        # Chú thích:
+            - status: Trạng thái (201 - tạo mới thành công)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: thông tin loại món ăn chính vừa được tạo mới
+                - id: id của loại món ăn chính
+                - name: tên loại món ăn chính
+                - description: mô tả loại món ăn chính
+
+
+------------------------------------------------------------------------------------------------------------------------
+2. Lấy danh sách loại món ăn chính: api/admin/main-categories - Get
+    * Response body: kiểu json
+        {
+            "status": 200,
+            "message": "Resource retrieved successfully.",
+            "data": [
+                {
+                    "id": 1,
+                    "name": "Món chính",
+                    "description": "Các món ăn chính trong thực đơn"
+                },
+                {
+                    "id": 2,
+                    "name": "Món tráng miệng",
+                    "description": "Các món tráng miệng sau bữa ăn"
+                }
+            ]
+        }
+        # Chú thích:
+            - status: Trạng thái (200 - thành công)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: danh sách loại món ăn chính
+                - id: id của loại món ăn chính
+                - name: tên loại món ăn chính
+                - description: mô tả loại món ăn chính
+
+------------------------------------------------------------------------------------------------------------------------
+3. Sửa loại món ăn chính: api/admin/main-categories/id - Put
+    * Request body:
+        {
+            "name": "Món chính",
+            "description": "Các món ăn chính trong thực đơn"
+        }
+        # Chú thích: Các trường không truyền vào sẽ không thay đổi
+            - name: tên loại món ăn chính
+            - description: mô tả loại món ăn chính
+    * Response body: kiểu json
+        {
+            "status": 200,
+            "message": "Resource updated successfully.",
+            "data": {
+                "id": 1,
+                "name": "Món chính",
+                "description": "Các món ăn chính trong thực đơn"
+            }
+        }
+        # Chú thích:
+            - status: Trạng thái (200 - thành công)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: thông tin loại món ăn chính vừa được cập nhật
+                - id: id của loại món ăn chính
+                - name: tên loại món ăn chính
+                - description: mô tả loại món ăn chính
+
+------------------------------------------------------------------------------------------------------------------------
+4. Xoá loại món ăn chính: api/admin/main-categories/id - Delete
+    * Request: không có || id = id của loại món ăn chính
+    * Response body: kiểu json
+        {
+            "status": 204,
+            "message": "Resource deleted successfully."
+        }
+        # Chú thích:
+            - status: Trạng thái (204 - xoá thành công)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: không có

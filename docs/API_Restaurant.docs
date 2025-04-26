@@ -4,31 +4,34 @@
         - address : 123, abc, Q1, HCM
         - phone : 0396899397   -> theo patern số điện thoại 10 số, bắt đầu từ 0
         - typeId : 1   -> Id của loại nhà hàng
+        - description : Nhà hàng chuyên món ăn Hàn Quốc
+        - restaurantTierId : 1   -> id của loại nhà hàng
         - images : (chứa file ảnh)
 
     * Response:
         {
-            "status": 200,
-            "message": "Request successful and data returned.",
+            "status": 201,
+            "message": "Resource created successfully.",
             "data": {
-                "id": 104,
+                "id": 1,
                 "name": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 1",
                 "address": "123 Lê Văn Việt, Q.9",
                 "phone": "0909123456",
+                "restaurantTierName": null,
                 "description": "Quán chuyên món gà tiềm",
                 "type": {
                     "id": 1,
-                    "name": "Bổ dưỡng",
-                    "description": "Quán ăn tốt cho sức khoẻ"
+                    "name": "Quán nhậu",
+                    "description": "Quán nhậu vỉa hè"
                 },
                 "averageRating": "0.0",
                 "status": "PENDING",
-                "createdAt": "2025-04-18T17:43:00+07:00",
-                "updatedAt": "2025-04-18T17:43:00+07:00",
+                "createdAt": "2025-04-25T23:07:31+07:00",
+                "updatedAt": "2025-04-25T23:07:31+07:00",
                 "imageUrls": [
-                    "http://localhost:8080/uploads/d3a0a4d7-0cec-4ccc-8e4d-08509258dedc_anhquanan2.jpg",
-                    "http://localhost:8080/uploads/0aae4030-2189-43a9-82bf-1062cfcfd74d_anhquanan3.jpg",
-                    "http://localhost:8080/uploads/a99ed98c-745e-4ede-ba47-6a98c1fd50f1_anh2.png"
+                    "http://localhost:8080/uploads/898bc3e3-ef39-420b-b7fd-c36333a3cc61_anhquanan2.jpg",
+                    "http://localhost:8080/uploads/0ff07804-b2d2-4a8c-be04-f3eb6d708630_anhquanan3.jpg",
+                    "http://localhost:8080/uploads/8c82cd26-554f-4b75-96d0-1c7f8b0609cd_anh2.png"
                 ]
             }
         }
