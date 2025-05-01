@@ -7,6 +7,7 @@ import com.vn.DineNow.payload.request.restaurant.RestaurantUpdateDTO;
 import com.vn.DineNow.payload.response.restaurant.FavoriteRestaurantResponseDTO;
 import com.vn.DineNow.payload.response.restaurant.RestaurantResponseDTO;
 import com.vn.DineNow.payload.response.restaurant.RestaurantSimpleResponseDTO;
+import com.vn.DineNow.payload.response.restaurant.RestaurantSimpleResponseForAdmin;
 import org.mapstruct.*;
 
 import java.nio.file.Path;
@@ -45,6 +46,12 @@ public interface RestaurantMapper {
     @Mapping(source = "restaurantTier.name", target = "restaurantTierName")
     @Mapping(target = "thumbnailUrl", expression = "java(mapThumbnail(restaurant.getRestaurantRestaurantImages()))")
     RestaurantSimpleResponseDTO toSimpleDTO(Restaurant restaurant);
+
+    @Mapping(source = "type.name", target = "typeName")
+    @Mapping(source = "restaurantTier.name", target = "restaurantTierName")
+    @Mapping(target = "thumbnailUrl", expression = "java(mapThumbnail(restaurant.getRestaurantRestaurantImages()))")
+    RestaurantSimpleResponseForAdmin toSimpleDTOForAdmin(Restaurant restaurant);
+
 
     @Mapping(target = "restaurantTier", ignore = true)
     @Mapping(target = "type", ignore = true)

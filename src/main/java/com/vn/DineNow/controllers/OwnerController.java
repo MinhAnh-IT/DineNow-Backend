@@ -1,6 +1,7 @@
 package com.vn.DineNow.controllers;
 
 import com.vn.DineNow.annotation.RequireEnabledUser;
+import com.vn.DineNow.enums.OrderStatus;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.payload.request.foodCategory.FoodCategoryRequest;
@@ -12,11 +13,14 @@ import com.vn.DineNow.payload.request.restaurant.RestaurantUpdateDTO;
 import com.vn.DineNow.payload.response.APIResponse;
 import com.vn.DineNow.payload.response.foodCategory.FoodCategoryResponseDTO;
 import com.vn.DineNow.payload.response.menuItem.MenuItemResponseDTO;
+import com.vn.DineNow.payload.response.order.OrderResponse;
 import com.vn.DineNow.payload.response.restaurant.RestaurantResponseDTO;
 import com.vn.DineNow.payload.response.restaurant.RestaurantSimpleResponseDTO;
 import com.vn.DineNow.security.CustomUserDetails;
+import com.vn.DineNow.services.customer.order.CustomerOrderService;
 import com.vn.DineNow.services.owner.foodCategory.FoodCategoryService;
 import com.vn.DineNow.services.owner.menuItem.OwnerMenuItemService;
+import com.vn.DineNow.services.owner.order.OwnerOrderService;
 import com.vn.DineNow.services.owner.restaurant.OwnerRestaurantService;
 import com.vn.DineNow.validation.ValidRestaurantApprovedValidator;
 import io.lettuce.core.dynamic.annotation.Param;
@@ -30,6 +34,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/owner")
@@ -40,6 +45,8 @@ public class OwnerController {
     OwnerRestaurantService restaurantService;
     OwnerMenuItemService menuItemService;
     FoodCategoryService foodCategoryService;
+    CustomerOrderService customerOrderService;
+    OwnerOrderService ownerOrderService;
 
     @PostMapping("/restaurants")
     @RequireEnabledUser
@@ -214,4 +221,44 @@ public class OwnerController {
     }
 
 
+    @GetMapping("/orders/{orderId}")
+    public ResponseEntity<APIResponse<?>> getOrderDetail(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable long orderId) throws Exception {
+        var result = ownerOrderService.getOrderDetail(orderId, userDetails.getId());
+        APIResponse<?> response = APIResponse.<Object>builder()
+                .status(StatusCode.OK.getCode())
+                .message(StatusCode.OK.getMessage())
+                .data(result)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/restaurant/{restaurantId}/orders")
+    public ResponseEntity<APIResponse<List<?>>> getAllOrderByStatuses(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable long restaurantId,
+            @RequestParam(name = "status") Set<OrderStatus> statuses) throws CustomException {
+        var result = ownerOrderService.getAllOrderByStatuses(userDetails.getId(), restaurantId, statuses);
+        APIResponse<List<?>> response = APIResponse.<List<?>>builder()
+                .status(StatusCode.OK.getCode())
+                .message(StatusCode.OK.getMessage())
+                .data(result)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/orders/{orderId}/status")
+    public ResponseEntity<APIResponse<Boolean>> updateOrderStatus(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable long orderId,
+            @RequestBody OrderStatus status) throws Exception {
+        var result = ownerOrderService.updateOrderStatus(userDetails.getId(), orderId, status);
+        APIResponse<Boolean> response = APIResponse.<Boolean>builder()
+                .status(StatusCode.OK.getCode())
+                .message(StatusCode.OK.getMessage())
+                .data(result)
+                .build();
+        return ResponseEntity.ok(response);
+    }
 }

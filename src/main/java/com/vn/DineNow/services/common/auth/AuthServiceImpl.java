@@ -1,6 +1,7 @@
 package com.vn.DineNow.services.common.auth;
 
-import com.vn.DineNow.dtos.UserDTO;
+import com.vn.DineNow.payload.request.user.UserForGenerateToken;
+import com.vn.DineNow.payload.request.user.UserCreateRequest;
 import com.vn.DineNow.payload.response.auth.UserGoogleDTO;
 import com.vn.DineNow.entities.User;
 import com.vn.DineNow.enums.Role;
@@ -14,6 +15,7 @@ import com.vn.DineNow.payload.request.auth.ResetPasswordRequest;
 import com.vn.DineNow.payload.request.auth.VerifyOTPRequest;
 import com.vn.DineNow.payload.request.common.EmailRequest;
 import com.vn.DineNow.payload.response.auth.LoginResponse;
+import com.vn.DineNow.payload.response.user.UserResponse;
 import com.vn.DineNow.repositories.UserRepository;
 import com.vn.DineNow.services.common.email.EmailService;
 import com.vn.DineNow.services.common.cache.RedisService;
@@ -29,7 +31,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -75,20 +76,21 @@ public class AuthServiceImpl implements AuthService {
      * @throws CustomException if the email or phone number already exists
      */
     @Override
-    public UserDTO register(UserDTO userDTO) throws CustomException {
+    public UserResponse register(UserCreateRequest userDTO) throws CustomException {
         if (userRepository.existsByEmail(userDTO.getEmail(), SignWith.LOCAL)) {
             throw new CustomException(StatusCode.EXIST_EMAIL, userDTO.getEmail());
         }
         if (userRepository.existsByPhone(userDTO.getPhone())) {
             throw new CustomException(StatusCode.EXIST_PHONE, userDTO.getPhone());
         }
-        userDTO.setEnabled(true);
-        userDTO.setRole(Role.CUSTOMER);
-        userDTO.setProvider(SignWith.LOCAL);
+
         var user = userMapper.toEntity(userDTO);
+        user.setEnabled(true);
+        user.setRole(Role.CUSTOMER);
+        user.setProvider(SignWith.LOCAL);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-        return userMapper.toDTO(user);
+        return userMapper.toResponseDTO(user);
     }
 
     /**
@@ -115,8 +117,8 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException(StatusCode.ACCOUNT_DISABLED);
         }
 
-        String accessToken = jwtService.generateAccessToken(userMapper.toDTO(user));
-        String refreshToken = jwtService.generateRefreshToken(userMapper.toDTO(user));
+        String accessToken = jwtService.generateAccessToken(userMapper.toUserDetailsForGenerateToken(user));
+        String refreshToken = jwtService.generateRefreshToken(userMapper.toUserDetailsForGenerateToken(user));
         String refreshTokenKey = keyRefreshToken + user.getId();
 
         redisService.saveObject(refreshTokenKey, refreshToken, refreshTokenExpire, TimeUnit.DAYS);
@@ -137,10 +139,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponse refreshToken(String refreshToken) throws CustomException {
         long userId = jwtService.getUserIdFromJWT(refreshToken);
-        UserDTO user = userMapper.toDTO(userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "user", String.valueOf(userId))));
+        User userDetails = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "user", String.valueOf(userId)));
+        UserForGenerateToken user = userMapper.toUserDetailsForGenerateToken(userDetails);
 
-        if (!user.getEnabled()) {
+        if (!userDetails.getEnabled()) {
             throw new CustomException(StatusCode.ACCOUNT_DISABLED);
         }
 
@@ -324,8 +327,8 @@ public class AuthServiceImpl implements AuthService {
                 user = userRepository.save(user);
             }
 
-            String accessToken = jwtService.generateAccessToken(userMapper.toDTO(user));
-            String refreshToken = jwtService.generateRefreshToken(userMapper.toDTO(user));
+            String accessToken = jwtService.generateAccessToken(userMapper.toUserDetailsForGenerateToken(user));
+            String refreshToken = jwtService.generateRefreshToken(userMapper.toUserDetailsForGenerateToken(user));
 
             redisService.saveObject(keyRefreshToken + user.getId(), refreshToken, refreshTokenExpire, TimeUnit.DAYS);
             CookieUtils.addRefreshTokenCookie(response, refreshToken, isSecure, (int) refreshTokenExpire);

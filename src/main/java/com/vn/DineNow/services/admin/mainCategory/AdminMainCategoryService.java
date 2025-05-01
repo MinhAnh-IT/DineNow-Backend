@@ -6,7 +6,7 @@ import com.vn.DineNow.payload.request.mainCategory.MainCategoryUpdateRequest;
 import com.vn.DineNow.payload.response.mainCategory.MainCategoryResponse;
 import java.util.List;
 
-public interface MainCategoryService {
+public interface AdminMainCategoryService {
     MainCategoryResponse createMainCategory(MainCategoryRequest mainCategoryDTO) throws CustomException;
     MainCategoryResponse updateMainCategory(Long id, MainCategoryUpdateRequest mainCategoryDTO) throws CustomException;
     List<MainCategoryResponse> getAllMainCategories() throws CustomException;

@@ -25,8 +25,6 @@ public interface MenuItemMapper {
     @Mapping(target = "typeName", source = "category.name")
     MenuItemSimpleResponseDTO toSimpleDTO(MenuItem menuItem);
 
-
-
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "restaurant", ignore = true)
     @Mapping(target = "menuItemOrderItems", ignore = true)

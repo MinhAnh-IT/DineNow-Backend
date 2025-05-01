@@ -1,10 +1,14 @@
 package com.vn.DineNow.enums;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public enum StatusCode {
     OK(200, "Request successful and data returned."),
     CREATED(201, "Resource created successfully."),
@@ -33,11 +37,14 @@ public enum StatusCode {
     IMAGE_DELETE_FAILED(421, "Failed to delete image: %s"),
     IMAGE_NOT_FOUND(422, "Image with ID %s not found"),
     INVALID_IMAGE_TYPE(423, "Invalid image type. Only PNG, JPG, JPEG, and GIF are allowed."),
-    RESTAURANT_NOT_FOUND(425, "Restaurant with ID %s not found");
+    RESTAURANT_NOT_FOUND(425, "Restaurant with ID %s not found"),
+    INVALID_ACTION(426, "Invalid action. %s"),
+    INVALID_ENTITY(427, "Invalid entity. %s"),
+    RUNTIME_EXCEPTION(500, "Unexpected runtime exception occurred.");
 
 
-    private final int code;
-    private final String message;
+    int code;
+    String message;
 
     public String getMessage(Object... args) {
         return String.format(message, args);

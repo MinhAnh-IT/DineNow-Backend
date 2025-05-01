@@ -1,0 +1,319 @@
+1. Tạo đơn hàng mới: api/customers/orders/restaurant/3
+    * Request body: 3 = id của nhà hàng
+    {
+      "reservationTime": "2025-05-01T11:30:00+07:00",
+      "numberOfPeople": 3,
+      "numberOfChild": 0,
+      "numberPhone":"0386299573",
+      "orderItems": [
+        {
+          "menuItemId": 1,
+          "quantity": 3
+        },
+        {
+          "menuItemId": 2,
+          "quantity": 5
+        }
+
+      ]
+    }
+    # Chú thích:
+        reservationTime: Thời gian nhận bàn dự kiến
+        numberOfPeople: Số người lớn
+        numberOfChild: Số trẻ em
+        numberPhone: Số điện thoại liên hệ của đơn hàng, có thể khác với số điện thoại tạo tài khoản
+        orderItems: Danh sách món ăn trong đơn hàng
+            + menuItemId: id của món ăn
+            + quantity: Số lượng món ăn
+
+    * Response:
+        {
+            "status": 201,
+            "message": "Resource created successfully.",
+            "data": {
+                "id": 2,
+                "totalPrice": 1240000,
+                "status": "PENDING",
+                "menuItems": [
+                    {
+                        "menuItemId": 1,
+                        "menuItemName": "Súp bào ngư - vi cá",
+                        "menuItemPrice": 80000,
+                        "totalPrice": 240000.00,
+                        "quantity": 3,
+                        "menuItemImageUrl": "http://localhost:8080/uploads/ce097435-269b-4bc7-8b65-fd6324b288e6_ga-ham-thuoc-bac.jpg"
+                    },
+                    {
+                        "menuItemId": 2,
+                        "menuItemName": "Yến sào",
+                        "menuItemPrice": 200000,
+                        "totalPrice": 1000000.00,
+                        "quantity": 5,
+                        "menuItemImageUrl": "http://localhost:8080/uploads/4913fd67-3883-4f6e-aba7-f8cfe79a8d32_yen-sao.jpeg"
+                    }
+                ],
+                "reservationSimpleResponse": {
+                    "numberOfPeople": 3,
+                    "numberOfChild": 0,
+                    "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                    "reservationTime": "2025-05-01T11:30:00+07:00"
+                }
+            }
+        }
+        # Chú thích:
+            status: Trạng thái của đơn hàng
+            message: Thông báo trả về
+            data: Thông tin chi tiết của đơn hàng
+                + id: id của đơn hàng
+                + totalPrice: Tổng tiền của đơn hàng
+                + status: Trạng thái của đơn hàng
+                + menuItems: Danh sách món ăn trong đơn hàng
+                    * menuItemId: id của món ăn
+                    * menuItemName: Tên món ăn
+                    * menuItemPrice: Giá món ăn
+                    * totalPrice: Tổng tiền của món ăn (giá món ăn * số lượng)
+                    * quantity: Số lượng món ăn
+                    * menuItemImageUrl: Hình ảnh món ăn
+                + reservationSimpleResponse: Thông tin đặt bàn
+                    * numberOfPeople: Số người lớn
+                    * numberOfChild: Số trẻ em
+                    * restaurantName: Tên nhà hàng
+                    * reservationTime: Thời gian nhận bàn dự kiến
+
+
+------------------------------------------------------------------------------------------------------------------------
+2. Lấy tất cả đơn đặt của người dùng: api/customers/orders
+    * Request body: Không có
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": [
+                {
+                    "id": 1,
+                    "totalPrice": 1240000,
+                    "status": "PENDING",
+                    "menuItems": [
+                        {
+                            "menuItemId": 2,
+                            "menuItemName": "Yến sào",
+                            "menuItemPrice": 200000,
+                            "totalPrice": 1000000.00,
+                            "quantity": 5,
+                            "menuItemImageUrl": "http://localhost:8080/uploads/4913fd67-3883-4f6e-aba7-f8cfe79a8d32_yen-sao.jpeg"
+                        },
+                        {
+                            "menuItemId": 1,
+                            "menuItemName": "Súp bào ngư - vi cá",
+                            "menuItemPrice": 80000,
+                            "totalPrice": 240000.00,
+                            "quantity": 3,
+                            "menuItemImageUrl": "http://localhost:8080/uploads/ce097435-269b-4bc7-8b65-fd6324b288e6_ga-ham-thuoc-bac.jpg"
+                        }
+                    ],
+                    "reservationSimpleResponse": {
+                        "numberOfPeople": 3,
+                        "numberOfChild": 0,
+                        "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                        "reservationTime": "2025-05-01T11:30:00+07:00"
+                    }
+                },
+                {
+                    "id": 2,
+                    "totalPrice": 1240000,
+                    "status": "PENDING",
+                    "menuItems": [
+                        {
+                            "menuItemId": 2,
+                            "menuItemName": "Yến sào",
+                            "menuItemPrice": 200000,
+                            "totalPrice": 1000000.00,
+                            "quantity": 5,
+                            "menuItemImageUrl": "http://localhost:8080/uploads/4913fd67-3883-4f6e-aba7-f8cfe79a8d32_yen-sao.jpeg"
+                        },
+                        {
+                            "menuItemId": 1,
+                            "menuItemName": "Súp bào ngư - vi cá",
+                            "menuItemPrice": 80000,
+                            "totalPrice": 240000.00,
+                            "quantity": 3,
+                            "menuItemImageUrl": "http://localhost:8080/uploads/ce097435-269b-4bc7-8b65-fd6324b288e6_ga-ham-thuoc-bac.jpg"
+                        }
+                    ],
+                    "reservationSimpleResponse": {
+                        "numberOfPeople": 3,
+                        "numberOfChild": 0,
+                        "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                        "reservationTime": "2025-05-01T11:30:00+07:00"
+                    }
+                }
+            ]
+        }
+        # Chú thích:
+            status: Trạng thái của đơn hàng
+            message: Thông báo trả về
+            data: Danh sách đơn hàng của người dùng
+                + id: id của đơn hàng
+                + totalPrice: Tổng tiền của đơn hàng
+                + status: Trạng thái của đơn hàng
+                + menuItems: Danh sách món ăn trong đơn hàng
+                    * menuItemId: id của món ăn
+                    * menuItemName: Tên món ăn
+                    * menuItemPrice: Giá món ăn
+                    * totalPrice: Tổng tiền của món ăn (giá món ăn * số lượng)
+                    * quantity: Số lượng món ăn
+
+------------------------------------------------------------------------------------------------------------------------
+3. Lấy đơn đặt của người dùng bởi nhà hàng: api/customers/orders/restaurant/3
+    * Request body: 3 = id của nhà hàng
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": [
+                {
+                    "id": 1,
+                    "totalPrice": 1240000,
+                    "status": "PENDING",
+                    "menuItems": [
+                        {
+                            "menuItemId": 2,
+                            "menuItemName": "Yến sào",
+                            "menuItemPrice": 200000,
+                            "totalPrice": 1000000.00,
+                            "quantity": 5,
+                            "menuItemImageUrl": "http://localhost:8080/uploads/4913fd67-3883-4f6e-aba7-f8cfe79a8d32_yen-sao.jpeg"
+                        },
+                        {
+                            "menuItemId": 1,
+                            "menuItemName": "Súp bào ngư - vi cá",
+                            "menuItemPrice": 80000,
+                            "totalPrice": 240000.00,
+                            "quantity": 3,
+                            "menuItemImageUrl": "http://localhost:8080/uploads/ce097435-269b-4bc7-8b65-fd6324b288e6_ga-ham-thuoc-bac.jpg"
+                        }
+                    ],
+                    "reservationSimpleResponse": {
+                        "numberOfPeople": 3,
+                        "numberOfChild": 0,
+                        "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                        "reservationTime": "2025-05-01T11:30:00+07:00"
+                    }
+                },
+                {
+                    "id": 2,
+                    "totalPrice": 1240000,
+                    "status": "PENDING",
+                    "menuItems": [
+                        {
+                            "menuItemId": 2,
+                            "menuItemName": "Yến sào",
+                            "menuItemPrice": 200000,
+                            "totalPrice": 1000000.00,
+                            "quantity": 5,
+                            "menuItemImageUrl": "http://localhost:8080/uploads/4913fd67-3883-4f6e-aba7-f8cfe79a8d32_yen-sao.jpeg"
+                        },
+                        {
+                            "menuItemId": 1,
+                            "menuItemName": "Súp bào ngư - vi cá",
+                            "menuItemPrice": 80000,
+                            "totalPrice": 240000.00,
+                            "quantity": 3,
+                            "menuItemImageUrl": "http://localhost:8080/uploads/ce097435-269b-4bc7-8b65-fd6324b288e6_ga-ham-thuoc-bac.jpg"
+                        }
+                    ],
+                    "reservationSimpleResponse": {
+                        "numberOfPeople": 3,
+                        "numberOfChild": 0,
+                        "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                        "reservationTime": "2025-05-01T11:30:00+07:00"
+                    }
+                }
+            ]
+        }
+        # Chú thích:
+            status: Trạng thái của đơn hàng
+            message: Thông báo trả về
+            data: Danh sách đơn hàng của người dùng
+                + id: id của đơn hàng
+                + totalPrice: Tổng tiền của đơn hàng
+                + status: Trạng thái của đơn hàng
+                + menuItems: Danh sách món ăn trong đơn hàng
+                    * menuItemId: id của món ăn
+                    * menuItemName: Tên món ăn
+                    * menuItemPrice: Giá món ăn
+                    * totalPrice: Tổng tiền của món ăn (giá món ăn * số lượng)
+                    * quantity: Số lượng món ăn
+
+------------------------------------------------------------------------------------------------------------------------
+4. Lấy đơn đặt của người dùng bởi trạng thái PENDING và PAID: api/customers/orders/status?status=PENDING&status=PAID
+    * Request: lưu ý PENDING, PAID là trạng thái đơn hàng và được viết hoa hoàn toàn
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": [
+                {
+                    "id": 1,
+                    "totalPrice": 1240000,
+                    "status": "PENDING",
+                    "menuItems": [
+                        {
+                            "menuItemId": 1,
+                            "menuItemName": "Súp bào ngư - vi cá",
+                            "menuItemPrice": 80000,
+                            "totalPrice": 240000.00,
+                            "quantity": 3,
+                            "menuItemImageUrl": "http://localhost:8080/uploads/ce097435-269b-4bc7-8b65-fd6324b288e6_ga-ham-thuoc-bac.jpg"
+                        },
+                        {
+                            "menuItemId": 2,
+                            "menuItemName": "Yến sào",
+                            "menuItemPrice": 200000,
+                            "totalPrice": 1000000.00,
+                            "quantity": 5,
+                            "menuItemImageUrl": "http://localhost:8080/uploads/4913fd67-3883-4f6e-aba7-f8cfe79a8d32_yen-sao.jpeg"
+                        }
+                    ],
+                    "reservationSimpleResponse": {
+                        "numberOfPeople": 3,
+                        "numberOfChild": 0,
+                        "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                        "reservationTime": "2025-05-01T11:30:00+07:00"
+                    }
+                }
+            ]
+        }
+        # Chú thích:
+            status: Trạng thái của đơn hàng
+            message: Thông báo trả về
+            data: Danh sách đơn hàng của người dùng
+                + id: id của đơn hàng
+                + totalPrice: Tổng tiền của đơn hàng
+                + status: Trạng thái của đơn hàng
+                + menuItems: Danh sách món ăn trong đơn hàng
+                    * menuItemId: id của món ăn
+                    * menuItemName: Tên món ăn
+                    * menuItemPrice: Giá món ăn
+                    * totalPrice: Tổng tiền của món ăn (giá món ăn * số lượng)
+                    * quantity: Số lượng món ăn
+
+------------------------------------------------------------------------------------------------------------------------
+5. Huỷ đơn đặt: api/customers/orders/cancel/1  -  Put  => Lưu ý chỉ được huỷ khi nhà hàng chưa confirmed
+    * Request body: 1 = id của đơn hàng
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": true
+        }
+        # Chú thích:
+            status: Trạng thái của đơn hàng
+            message: Thông báo trả về
+            data: true nếu huỷ thành công, false nếu huỷ không thành công
+
+
+
+
+
+==> Các API trên dành cho người dùng (Customer)

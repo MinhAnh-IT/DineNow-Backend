@@ -19,11 +19,18 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class MainCategoryServiceImpl implements MainCategoryService {
+public class AdminMainCategoryServiceImpl implements AdminMainCategoryService {
     MainCategoryRepository mainCategoryRepository;
     MainCategoryMapper mainCategoryMapper;
 
 
+    /**
+     * Creates a new main category.
+     *
+     * @param mainCategoryDTO the main category request data
+     * @return the created main category response
+     * @throws CustomException if the name already exists
+     */
     @Override
     public MainCategoryResponse createMainCategory(MainCategoryRequest mainCategoryDTO) throws CustomException {
         if (mainCategoryRepository.existsByName(mainCategoryDTO.getName())){
@@ -34,6 +41,14 @@ public class MainCategoryServiceImpl implements MainCategoryService {
         return mainCategoryMapper.toDto(mainCategory);
     }
 
+    /**
+     * Updates an existing main category by ID.
+     *
+     * @param id                the ID of the main category to update
+     * @param mainCategoryDTO   the main category update request data
+     * @return the updated main category response
+     * @throws CustomException if the main category is not found or name already exists
+     */
     @Override
     public MainCategoryResponse updateMainCategory(Long id, MainCategoryUpdateRequest mainCategoryDTO) throws CustomException {
         MainCategory mainCategory = mainCategoryRepository.findById(id).orElseThrow(
@@ -50,6 +65,12 @@ public class MainCategoryServiceImpl implements MainCategoryService {
         return mainCategoryMapper.toDto(mainCategory);
     }
 
+    /**
+     * Retrieves all main categories.
+     *
+     * @return a list of main category responses
+     * @throws CustomException if any error occurs
+     */
     @Override
     public List<MainCategoryResponse> getAllMainCategories() throws CustomException {
         List<MainCategory> mainCategories = mainCategoryRepository.findAll();
@@ -58,6 +79,13 @@ public class MainCategoryServiceImpl implements MainCategoryService {
                 .toList();
     }
 
+    /**
+     * Deletes a main category by ID.
+     *
+     * @param id the ID of the main category to delete
+     * @return true if the deletion was successful, false otherwise
+     * @throws CustomException if the main category is not found or in use
+     */
     @Override
     public boolean deleteMainCategory(Long id) throws CustomException {
         MainCategory mainCategory = mainCategoryRepository.findById(id).orElseThrow(

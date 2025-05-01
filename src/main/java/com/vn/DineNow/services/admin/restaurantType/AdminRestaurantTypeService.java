@@ -7,7 +7,7 @@ import com.vn.DineNow.payload.response.RestaurantTypeResponse.RestaurantTypeResp
 
 import java.util.List;
 
-public interface RestaurantTypeService {
+public interface AdminRestaurantTypeService {
     RestaurantTypeResponse createRestaurantType(RestaurantTypeRequest request) throws CustomException;
     RestaurantTypeResponse updateRestaurantType(long id, RestaurantTypeUpdateRequest request) throws CustomException;
     List<RestaurantTypeResponse> getAllRestaurantType()  throws CustomException;

@@ -1,4 +1,4 @@
-package com.vn.DineNow.dtos;
+package com.vn.DineNow.payload.request.favoriteRestaurant;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 @Builder
-public class FavoriteRestaurantDTO {
+public class FavoriteRestaurantRequest {
 
     private Long id;
 
