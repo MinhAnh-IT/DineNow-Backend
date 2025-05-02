@@ -3,6 +3,7 @@ package com.vn.DineNow.services.owner.restaurant;
 import com.vn.DineNow.entities.Restaurant;
 import com.vn.DineNow.entities.RestaurantTiers;
 import com.vn.DineNow.entities.User;
+import com.vn.DineNow.enums.RestaurantStatus;
 import com.vn.DineNow.enums.Role;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
@@ -172,5 +173,45 @@ public class OwnerRestaurantServiceImpl implements OwnerRestaurantService {
         return restaurants.stream()
                 .map(restaurantMapper::toSimpleDTO)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Updates the status of a restaurant owned by the specified owner.
+     *
+     * @param ownerId      the ID of the owner
+     * @param restaurantId the ID of the restaurant to update
+     * @param status       the new status to set
+     * @return true if the operation was successful; false otherwise
+     * @throws CustomException if the restaurant is not found, unauthorized, or if the status transition is not allowed
+     */
+    @Override
+    public boolean updateRestaurantStatus(long ownerId, long restaurantId, RestaurantStatus status) throws CustomException {
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "restaurant", String.valueOf(restaurantId)));
+        if (restaurant.getOwner().getId() != ownerId) {
+            throw new CustomException(StatusCode.FORBIDDEN);
+        }
+        if (isTransitionAllowed(restaurant.getStatus(), status)) {
+            restaurant.setStatus(status);
+            restaurantRepository.save(restaurant);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the transition between two restaurant statuses is allowed.
+     *
+     * @param current the current status of the restaurant
+     * @param target  the target status to transition to
+     * @return true if the transition is allowed; false otherwise
+     */
+    private boolean isTransitionAllowed(RestaurantStatus current, RestaurantStatus target) {
+        return switch (current) {
+            case APPROVED -> target == RestaurantStatus.SUSPENDED;
+            case SUSPENDED -> target == RestaurantStatus.APPROVED;
+            default -> false;
+        };
     }
 }

@@ -6,7 +6,7 @@ import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.mapper.RestaurantTypeMapper;
 import com.vn.DineNow.payload.request.restaurantType.RestaurantTypeRequest;
 import com.vn.DineNow.payload.request.restaurantType.RestaurantTypeUpdateRequest;
-import com.vn.DineNow.payload.response.RestaurantTypeResponse.RestaurantTypeResponse;
+import com.vn.DineNow.payload.response.restaurantType.RestaurantTypeResponse;
 import com.vn.DineNow.repositories.RestaurantTypeRepository;
 import com.vn.DineNow.services.common.fileService.FileService;
 import lombok.AccessLevel;

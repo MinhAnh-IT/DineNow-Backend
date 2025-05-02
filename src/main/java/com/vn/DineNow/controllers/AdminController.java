@@ -1,5 +1,7 @@
 package com.vn.DineNow.controllers;
 
+import com.vn.DineNow.enums.OrderStatus;
+import com.vn.DineNow.enums.RestaurantStatus;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.payload.request.mainCategory.MainCategoryRequest;
@@ -8,13 +10,14 @@ import com.vn.DineNow.payload.request.restaurantType.RestaurantTypeRequest;
 import com.vn.DineNow.payload.request.restaurantType.RestaurantTypeUpdateRequest;
 import com.vn.DineNow.payload.request.user.UserCreateRequest;
 import com.vn.DineNow.payload.response.APIResponse;
-import com.vn.DineNow.payload.response.RestaurantTypeResponse.RestaurantTypeResponse;
+import com.vn.DineNow.payload.response.order.OrderResponse;
+import com.vn.DineNow.payload.response.restaurantType.RestaurantTypeResponse;
 import com.vn.DineNow.payload.response.mainCategory.MainCategoryResponse;
-import com.vn.DineNow.payload.response.restaurant.RestaurantSimpleResponseDTO;
 import com.vn.DineNow.payload.response.restaurant.RestaurantSimpleResponseForAdmin;
 import com.vn.DineNow.payload.response.user.UserDetailsResponse;
 import com.vn.DineNow.payload.response.user.UserResponse;
 import com.vn.DineNow.services.admin.mainCategory.AdminMainCategoryService;
+import com.vn.DineNow.services.admin.order.AdminOrderService;
 import com.vn.DineNow.services.admin.restaurant.AdminRestaurantService;
 import com.vn.DineNow.services.admin.restaurantType.AdminRestaurantTypeService;
 import com.vn.DineNow.services.admin.user.AdminUserService;
@@ -22,7 +25,6 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +41,7 @@ public class AdminController {
     AdminRestaurantTypeService restaurantTypeService;
     AdminMainCategoryService mainCategoryService;
     AdminRestaurantService adminRestaurantService;
-
+    AdminOrderService adminOrderService;
 
     @GetMapping("users")
     public ResponseEntity<APIResponse<List<UserResponse>>> getAllUsers() {
@@ -167,10 +169,25 @@ public class AdminController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("restaurants/approve/{restaurantID}")
-    public ResponseEntity<APIResponse<Boolean>> approveRestaurant(
-            @PathVariable long restaurantID) throws CustomException {
-        var result = adminRestaurantService.approveRestaurant(restaurantID);
+    @GetMapping("restaurants")
+    public ResponseEntity<APIResponse<List<RestaurantSimpleResponseForAdmin>>> getAllRestaurantsByStatus(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam RestaurantStatus status) throws CustomException {
+        var result = adminRestaurantService.getAllRestaurantsByStatus(status, page, size);
+        APIResponse<List<RestaurantSimpleResponseForAdmin>> response = APIResponse.<List<RestaurantSimpleResponseForAdmin>>builder()
+                .status(StatusCode.OK.getCode())
+                .message(StatusCode.OK.getMessage())
+                .data(result)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("restaurants/{restaurantID}")
+    public ResponseEntity<APIResponse<Boolean>> updateRestaurantStatus(
+            @PathVariable long restaurantID,
+            @RequestParam RestaurantStatus status) throws CustomException {
+        var result = adminRestaurantService.updateRestaurantStatus(restaurantID, status);
         APIResponse<Boolean> response = APIResponse.<Boolean>builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.OK.getMessage())
@@ -178,12 +195,11 @@ public class AdminController {
                 .build();
         return ResponseEntity.ok(response);
     }
-
-    @PutMapping("restaurants/reject/{restaurantID}")
-    public ResponseEntity<APIResponse<Boolean>> rejectRestaurant(
+    @GetMapping("restaurants/{restaurantID}")
+    public ResponseEntity<APIResponse<?>> getRestaurantDetails(
             @PathVariable long restaurantID) throws CustomException {
-        var result = adminRestaurantService.rejectRestaurant(restaurantID);
-        APIResponse<Boolean> response = APIResponse.<Boolean>builder()
+        var result = adminRestaurantService.getRestaurantDetails(restaurantID);
+        APIResponse<?> response = APIResponse.builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.OK.getMessage())
                 .data(result)
@@ -191,25 +207,13 @@ public class AdminController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("restaurants/block/{restaurantID}")
-    public ResponseEntity<APIResponse<Boolean>> blockRestaurant(
-            @PathVariable long restaurantID) throws CustomException {
-        var result = adminRestaurantService.blockRestaurant(restaurantID);
-        APIResponse<Boolean> response = APIResponse.<Boolean>builder()
-                .status(StatusCode.OK.getCode())
-                .message(StatusCode.OK.getMessage())
-                .data(result)
-                .build();
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("restaurants/pending")
-    public ResponseEntity<APIResponse<List<RestaurantSimpleResponseForAdmin>>> getAllPendingRestaurants(
+    @GetMapping("orders/status")
+    public ResponseEntity<APIResponse<List<OrderResponse>>> getAllOrdersByStatus(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) throws CustomException {
-        var result = adminRestaurantService.getAllPendingRestaurants(page, size);
-        APIResponse<List<RestaurantSimpleResponseForAdmin>> response = APIResponse.
-                <List<RestaurantSimpleResponseForAdmin>>builder()
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam OrderStatus status) throws CustomException {
+        var result = adminOrderService.getAllOrdersByStatus(status, page, size);
+        APIResponse<List<OrderResponse>> response = APIResponse.<List<OrderResponse>>builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.OK.getMessage())
                 .data(result)
@@ -217,53 +221,24 @@ public class AdminController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("restaurants/approved")
-    public ResponseEntity<APIResponse<List<RestaurantSimpleResponseForAdmin>>> getAllApprovedRestaurants(
+    @GetMapping("orders/{orderID}")
+    public ResponseEntity<APIResponse<?>> getOrderDetails(
+            @PathVariable long orderID) throws CustomException {
+        var result = adminOrderService.getOrderDetails(orderID);
+        APIResponse<?> response = APIResponse.builder()
+                .status(StatusCode.OK.getCode())
+                .message(StatusCode.OK.getMessage())
+                .data(result)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("orders")
+    public ResponseEntity<APIResponse<List<OrderResponse>>> getAllOrders(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) throws CustomException {
-        var result = adminRestaurantService.getAllApprovedRestaurants(page, size);
-        APIResponse<List<RestaurantSimpleResponseForAdmin>> response = APIResponse.
-                <List<RestaurantSimpleResponseForAdmin>>builder()
-                .status(StatusCode.OK.getCode())
-                .message(StatusCode.OK.getMessage())
-                .data(result)
-                .build();
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("restaurants/blocked")
-    public ResponseEntity<APIResponse<List<RestaurantSimpleResponseForAdmin>>> getAllBlockedRestaurants(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) throws CustomException {
-        var result = adminRestaurantService.getAllBlockedRestaurants(page, size);
-        APIResponse<List<RestaurantSimpleResponseForAdmin>> response = APIResponse.
-                <List<RestaurantSimpleResponseForAdmin>>builder()
-                .status(StatusCode.OK.getCode())
-                .message(StatusCode.OK.getMessage())
-                .data(result)
-                .build();
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("restaurants/rejected")
-    public ResponseEntity<APIResponse<List<RestaurantSimpleResponseForAdmin>>> getAllRejectedRestaurants(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) throws CustomException {
-        var result = adminRestaurantService.getAllRejectedRestaurants(page, size);
-        APIResponse<List<RestaurantSimpleResponseForAdmin>> response = APIResponse.
-                <List<RestaurantSimpleResponseForAdmin>>builder()
-                .status(StatusCode.OK.getCode())
-                .message(StatusCode.OK.getMessage())
-                .data(result)
-                .build();
-        return ResponseEntity.ok(response);
-    }
-
-    @PutMapping("restaurants/unblock/{restaurantID}")
-    public ResponseEntity<APIResponse<Boolean>> unblockRestaurant(
-            @PathVariable long restaurantID) throws CustomException {
-        var result = adminRestaurantService.unblockRestaurant(restaurantID);
-        APIResponse<Boolean> response = APIResponse.<Boolean>builder()
+            @RequestParam(defaultValue = "10") int size) throws CustomException {
+        var result = adminOrderService.getAllOrder(page, size);
+        APIResponse<List<OrderResponse>> response = APIResponse.<List<OrderResponse>>builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.OK.getMessage())
                 .data(result)

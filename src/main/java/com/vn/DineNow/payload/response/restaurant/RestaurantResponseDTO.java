@@ -1,7 +1,7 @@
 package com.vn.DineNow.payload.response.restaurant;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.vn.DineNow.dtos.RestaurantTypeDTO;
+import com.vn.DineNow.payload.response.restaurantType.RestaurantTypeSimple;
 import com.vn.DineNow.enums.RestaurantStatus;
 import lombok.*;
 
@@ -16,22 +16,14 @@ import java.util.List;
 @AllArgsConstructor
 public class RestaurantResponseDTO {
     private Long id;
-
     private String name;
-
     private String address;
-
     private String phone;
-
     private String restaurantTierName;
-
     private String description;
-
-    private RestaurantTypeDTO type;
-
+    private RestaurantTypeSimple type;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private BigDecimal averageRating;
-
     private RestaurantStatus status;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")

@@ -196,10 +196,3 @@
     - PENDING -> CONFIRMED
     - PAID -> COMPLETED
 
-
-
-
-**** Lưu ý:
-    - Các api này chỉ dành cho người dùng có quyền owner
-    - Chỉ thao tác được với các đơn hàng của nhà hàng mà người dùng đang quản lý
-

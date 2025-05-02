@@ -3,7 +3,7 @@ package com.vn.DineNow.services.admin.restaurantType;
 import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.payload.request.restaurantType.RestaurantTypeRequest;
 import com.vn.DineNow.payload.request.restaurantType.RestaurantTypeUpdateRequest;
-import com.vn.DineNow.payload.response.RestaurantTypeResponse.RestaurantTypeResponse;
+import com.vn.DineNow.payload.response.restaurantType.RestaurantTypeResponse;
 
 import java.util.List;
 
