@@ -1,0 +1,198 @@
+1. Các API sau dùng để quản lý đơn hàng của người dùng
+    - GET api/owner/restaurant/3/orders?status=PENDING -> Lấy danh sách đơn hàng của nhà hàng có id = 3 với trạng thái là PENDING
+    - GET api/owner/restaurant/3/orders?status=COMPLETED -> Lấy danh sách đơn hàng của nhà hàng có id = 3 với trạng thái là COMPLETED
+    - GET api/owner/restaurant/3/orders?status=CONFIRMED&status=PAID -> Lấy danh sách đơn hàng của nhà hàng có id = 3 với trạng thái là CONFIRMED và PAID
+    - GET api/owner/restaurant/3/orders?status=CANCELLED&status=FAILED -> Lấy danh sách đơn hàng của nhà hàng có id = 3 với trạng thái là CANCELLED và FAILED
+
+    * Response:
+        - Dạng response dto cơ bản:
+            {
+                "status": 200,
+                "message": "Request successful and data returned.",
+                "data": [
+                    {
+                        "id": 2,
+                        "status": "FAILED",
+                        "totalPrice": 1240000,
+                        "reservation": {
+                            "id": 2,
+                            "numberOfPeople": 3,
+                            "numberOfChild": 0,
+                            "customerName": "Huỳnh Minh Anh",
+                            "numberPhone": "0386299573",
+                            "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                            "reservationTime": "2025-05-01T11:30:00+07:00"
+                        },
+                        "totalItems": 2
+                    }
+                ]
+            }
+            # Chú thích:
+                - status: Trạng thái của request
+                - message: Thông báo của request
+                - data: Dữ liệu trả về
+                    - id: id của đơn hàng
+                    - status: Trạng thái của đơn hàng
+                    - totalPrice: Tổng giá trị của đơn hàng
+                    - totalItems: Tổng số lượng món ăn trong đơn hàng
+                    - reservation: Thông tin đặt bàn
+                        - id: id của đặt bàn
+                        - numberOfPeople: Số lượng người lớn
+                        - numberOfChild: Số lượng trẻ em
+                        - customerName: Tên khách hàng
+                        - numberPhone: Số điện thoại khách hàng
+                        - restaurantName: Tên nhà hàng
+                        - reservationTime: Thời gian đặt bàn
+
+            ==> Các api sử dụng:
+                + api/owner/restaurant/3/orders?status=COMPLETED
+                + api/owner/restaurant/3/orders?status=CONFIRMED&status=PAID
+                + api/owner/restaurant/3/orders?status=CANCELLED&status=FAILED
+
+
+        - Dạng response dto phục vụ cho api: api/owner/restaurant/3/orders?status=PENDING
+            {
+                "status": 200,
+                "message": "Request successful and data returned.",
+                "data": [
+                    {
+                        "id": 1,
+                        "totalPrice": 1240000,
+                        "status": "PENDING",
+                        "menuItems": [
+                            {
+                                "menuItemId": 1,
+                                "menuItemName": "Súp bào ngư - vi cá",
+                                "menuItemPrice": 80000,
+                                "totalPrice": 240000.00,
+                                "quantity": 3,
+                                "menuItemImageUrl": "http://localhost:8080/uploads/ce097435-269b-4bc7-8b65-fd6324b288e6_ga-ham-thuoc-bac.jpg"
+                            },
+                            {
+                                "menuItemId": 2,
+                                "menuItemName": "Yến sào",
+                                "menuItemPrice": 200000,
+                                "totalPrice": 1000000.00,
+                                "quantity": 5,
+                                "menuItemImageUrl": "http://localhost:8080/uploads/4913fd67-3883-4f6e-aba7-f8cfe79a8d32_yen-sao.jpeg"
+                            }
+                        ],
+                        "reservationSimpleResponse": {
+                            "numberOfPeople": 3,
+                            "numberOfChild": 0,
+                            "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                            "reservationTime": "2025-05-01T11:30:00+07:00"
+                        }
+                    }
+                ]
+            }
+            # Chú thích:
+                - status: Trạng thái của request
+                - message: Thông báo của request
+                - data: Dữ liệu trả về
+                    - id: id của đơn hàng
+                    - totalPrice: Tổng giá trị của đơn hàng
+                    - status: Trạng thái của đơn hàng
+                    - menuItems: Danh sách món ăn trong đơn hàng
+                        - menuItemId: id của món ăn
+                        - menuItemName: Tên của món ăn
+                        - menuItemPrice: Giá của món ăn
+                        - totalPrice: Tổng giá trị của món ăn trong đơn hàng
+                        - quantity: Số lượng món ăn trong đơn hàng
+                        - menuItemImageUrl: Hình ảnh của món ăn
+                    - reservationSimpleResponse: Thông tin đặt bàn
+                        - numberOfPeople: Số lượng người lớn
+                        - numberOfChild: Số lượng trẻ em
+                        - restaurantName: Tên nhà hàng
+                        - reservationTime: Thời gian đặt bàn
+
+
+------------------------------------------------------------------------------------------------------------------------
+2. Lấy thông tin chi tiết của đơn đặt: api/owner/orders/2
+    * Request: 2 = id của đơn hàng
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "id": 2,
+                "status": "FAILED",
+                "totalPrice": 1240000,
+                "menuItems": [
+                    {
+                        "menuItemId": 1,
+                        "menuItemName": "Súp bào ngư - vi cá",
+                        "menuItemPrice": 80000,
+                        "totalPrice": 240000.00,
+                        "quantity": 3,
+                        "menuItemImageUrl": "http://localhost:8080/uploads/ce097435-269b-4bc7-8b65-fd6324b288e6_ga-ham-thuoc-bac.jpg"
+                    },
+                    {
+                        "menuItemId": 2,
+                        "menuItemName": "Yến sào",
+                        "menuItemPrice": 200000,
+                        "totalPrice": 1000000.00,
+                        "quantity": 5,
+                        "menuItemImageUrl": "http://localhost:8080/uploads/4913fd67-3883-4f6e-aba7-f8cfe79a8d32_yen-sao.jpeg"
+                    }
+                ],
+                "reservation": {
+                    "id": 2,
+                    "numberOfPeople": 3,
+                    "numberOfChild": 0,
+                    "customerName": "Huỳnh Minh Anh",
+                    "numberPhone": "0386299573",
+                    "customerEmail": "hma2004.it@gmail.com",
+                    "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                    "restaurantAddress": "123 Lê Văn Việt, Q.9",
+                    "reservationTime": "2025-05-01T11:30:00+07:00"
+                }
+            }
+        }
+        # Chú thích:
+            - status: Trạng thái của request
+            - message: Thông báo của request
+            - data: Dữ liệu trả về
+                - id: id của đơn hàng
+                - totalPrice: Tổng giá trị của đơn hàng
+                - status: Trạng thái của đơn hàng
+                - menuItems: Danh sách món ăn trong đơn hàng
+                    - menuItemId: id của món ăn
+                    - menuItemName: Tên của món ăn
+                    - menuItemPrice: Giá của món ăn
+                    - totalPrice: Tổng giá trị của món ăn trong đơn hàng
+                    - quantity: Số lượng món ăn trong đơn hàng
+                    - menuItemImageUrl: Hình ảnh của món ăn
+                - reservation: Thông tin đặt bàn
+                    - id: id của đặt bàn
+                    - numberOfPeople: Số lượng người lớn
+                    - numberOfChild: Số lượng trẻ em
+                    - customerName: Tên khách hàng
+                    - numberPhone: Số điện thoại khách hàng
+                    - customerEmail: Email khách hàng
+                    - restaurantName: Tên nhà hàng
+                    - restaurantAddress: Địa chỉ nhà hàng
+                    - reservationTime: Thời gian đặt bàn
+
+    ==> Phục vụ cho các đơn hàng ở trạng thái:
+        - completed
+        - confirmed
+        - paid
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+3. Cập nhật trạng thái đơn hàng: api/owner/orders/1/status
+    * Request: 1 = id của đơn hàng ||  lưu ý chỉ truyền string không phải json
+         "COMPLETED"
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": true
+        }
+
+==> Trạng thái đơn hàng chỉ được cập nhật từ:
+    - PENDING -> CANCELLED
+    - PENDING -> CONFIRMED
+    - PAID -> COMPLETED
+

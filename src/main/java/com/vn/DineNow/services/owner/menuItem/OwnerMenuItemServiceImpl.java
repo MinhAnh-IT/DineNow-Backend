@@ -1,9 +1,6 @@
 package com.vn.DineNow.services.owner.menuItem;
 
-import com.vn.DineNow.entities.FoodCategory;
-import com.vn.DineNow.entities.MenuItem;
-import com.vn.DineNow.entities.Restaurant;
-import com.vn.DineNow.entities.User;
+import com.vn.DineNow.entities.*;
 import com.vn.DineNow.enums.Role;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
@@ -11,10 +8,7 @@ import com.vn.DineNow.mapper.MenuItemMapper;
 import com.vn.DineNow.payload.request.menuItem.MenuItemRequestDTO;
 import com.vn.DineNow.payload.request.menuItem.MenuItemUpdateDTO;
 import com.vn.DineNow.payload.response.menuItem.MenuItemResponseDTO;
-import com.vn.DineNow.repositories.FoodCategoryRepository;
-import com.vn.DineNow.repositories.MenuItemRepository;
-import com.vn.DineNow.repositories.RestaurantRepository;
-import com.vn.DineNow.repositories.UserRepository;
+import com.vn.DineNow.repositories.*;
 import com.vn.DineNow.services.common.fileService.FileService;
 import com.vn.DineNow.services.common.cache.RedisService;
 import lombok.AccessLevel;
@@ -44,6 +38,7 @@ public class OwnerMenuItemServiceImpl implements OwnerMenuItemService {
     final MenuItemRepository menuItemRepository;
     final MenuItemMapper menuItemMapper;
     final RedisService redisService;
+    final MenuItemReviewRepository reviewRepository;
 
     @Value("${DineNow.key.cache-item}")
     String keyRedis;
@@ -238,5 +233,24 @@ public class OwnerMenuItemServiceImpl implements OwnerMenuItemService {
         } catch (Exception e) {
             throw new CustomException(StatusCode.BAD_REQUEST);
         }
+    }
+
+    @Override
+    public void updateAvgRating(MenuItem menuItem) throws CustomException {
+        var reviews = reviewRepository.findAllByMenuItem(menuItem);
+
+        if (reviews.isEmpty()) {
+            menuItem.setAverageRating(0.0);
+        } else {
+            double avgRating = reviews.stream()
+                    .mapToDouble(MenuItemReview::getRating)
+                    .average()
+                    .orElse(0.0);
+
+            double rounded = Math.floor(avgRating * 10 + 0.5) / 10.0;
+
+            menuItem.setAverageRating(rounded);
+        }
+        menuItemRepository.save(menuItem);
     }
 }

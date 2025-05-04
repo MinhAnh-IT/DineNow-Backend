@@ -1,0 +1,121 @@
+1. Lấy danh sách món ăn của nhà hàng ở trạng thái phục vụ (available = true): api/restaurants/102/menu   -  Get
+    * Request: 102 = id của nhà hàng
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": [
+                {
+                    "id": 104,
+                    "name": "Súp bào ngư",
+                    "description": "Ngon, bổ dưỡng",
+                    "price": "80000.00",
+                    "imageUrl": "http://localhost:8080/uploads/8b1e4a49-e9af-416e-a78b-7ddf8e07fb1c_ga-ham-thuoc-bac.jpg",
+                    "typeName": "Món Chính"
+                },
+                {
+                    "id": 105,
+                    "name": "Súp bào ngư - vi cá",
+                    "description": "Ngon, bổ dưỡng",
+                    "price": "80000.00",
+                    "imageUrl": "http://localhost:8080/uploads/1994eecc-5ddc-4173-a220-cfe515beb34a_ga-ham-thuoc-bac.jpg",
+                    "typeName": "Món Chính"
+                }
+            ]
+        }
+        # Chú thích: Dữ liệu được trả theo kiểu simple
+            - typeName: Loại của món ăn
+
+------------------------------------------------------------------------------------------------------------------------
+2. Lấy tất cả các món ăn ở trạng thái phục vụ (available = true): /api/menu-items?page=0&size=10  -  Get (Phân trang)
+    * Request:
+        - page = 0 (mặc định nếu không truyền)
+        - size = 20 (mặc định nếu không truyền)
+
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "content": [
+                    {
+                        "id": 101,
+                        "name": "Gà ác ngũ trảo",
+                        "description": "Ngon, bổ dưỡng",
+                        "price": "100000.00",
+                        "imageUrl": "http://localhost:8080/uploads/3a60618f-070f-4205-b031-a9e94bfba6fd_ga-ham-thuoc-bac (1).jpg",
+                        "typeName": "Món Khai Vị"
+                    },
+                    {
+                        "id": 102,
+                        "name": "Gà hầm thuốc bắc - chi nhánh 2",
+                        "description": "Ngon, bổ dưỡng",
+                        "price": "80000.00",
+                        "imageUrl": "http://localhost:8080/uploads/aaa7807c-c88c-43fb-9930-a9404923b7a6_ga-ham-thuoc-bac.jpg",
+                        "typeName": "Món Khai Vị"
+                    },
+                    {
+                        "id": 104,
+                        "name": "Súp bào ngư",
+                        "description": "Ngon, bổ dưỡng",
+                        "price": "80000.00",
+                        "imageUrl": "http://localhost:8080/uploads/8b1e4a49-e9af-416e-a78b-7ddf8e07fb1c_ga-ham-thuoc-bac.jpg",
+                        "typeName": "Món Chính"
+                    }
+                ],
+                "pageable": {
+                    "pageNumber": 0,
+                    "pageSize": 20,
+                    "sort": {
+                        "empty": true,
+                        "unsorted": true,
+                        "sorted": false
+                    },
+                    "offset": 0,
+                    "unpaged": false,
+                    "paged": true
+                },
+                "last": true,
+                "totalPages": 1,
+                "totalElements": 3,
+                "first": true,
+                "size": 20,
+                "number": 0,
+                "sort": {
+                    "empty": true,
+                    "unsorted": true,
+                    "sorted": false
+                },
+                "numberOfElements": 3,
+                "empty": false
+            }
+        }
+        # Chú thích: Dữ liệu được trả về dưới dạng cở bản ở mục Content, nhằm hiển thị ở trang tất cả món của người dùng
+
+-----------------------------------------------------------------------------------------------------------------
+6. Lấy chi tiết món ăn thông qua id: api/menu-items/101   -    Get
+    * Request body: Không có
+        - 101 = id của món ăn
+
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "id": 101,
+                "name": "Gà ác ngũ trảo",
+                "description": "Ngon, bổ dưỡng",
+                "price": "100000.00",
+                "available": true,
+                "imageUrl": "http://localhost:8080/uploads/3a60618f-070f-4205-b031-a9e94bfba6fd_ga-ham-thuoc-bac (1).jpg",
+                "createdAt": "2025-04-18T10:34:52Z",
+                "updatedAt": "2025-04-18T16:27:01Z",
+                "category": {
+                    "id": 1,
+                    "name": "Món Khai Vị",
+                    "description": "Các món ăn nhẹ dùng trước bữa chính"
+                }
+            }
+        }
+        # Chú thích: API trả về thông tin chi tiết của nhà hàng
+

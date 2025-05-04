@@ -1,6 +1,5 @@
 package com.vn.DineNow.payload.response.restaurant;
 
-import com.vn.DineNow.dtos.RestaurantTypeDTO;
 import lombok.*;
 
 @Getter
@@ -12,6 +11,6 @@ public class FavoriteRestaurantResponseDTO {
     private String address;
     private String thumbnailUrl;
     private Double averageRating;
-    private RestaurantTypeDTO type;
+    private String typeName;
     private String restaurantTierName;
 }

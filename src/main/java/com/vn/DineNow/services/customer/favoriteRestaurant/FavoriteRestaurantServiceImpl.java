@@ -1,6 +1,6 @@
 package com.vn.DineNow.services.customer.favoriteRestaurant;
 
-import com.vn.DineNow.dtos.FavoriteRestaurantDTO;
+import com.vn.DineNow.payload.request.favoriteRestaurant.FavoriteRestaurantRequest;
 import com.vn.DineNow.entities.FavoriteRestaurant;
 import com.vn.DineNow.entities.Restaurant;
 import com.vn.DineNow.entities.User;
@@ -87,7 +87,7 @@ public class FavoriteRestaurantServiceImpl implements FavoriteRestaurantService 
         }
 
         // Build DTO and convert to entity for saving
-        FavoriteRestaurantDTO favoriteRestaurantDTO = FavoriteRestaurantDTO.builder()
+        FavoriteRestaurantRequest favoriteRestaurantDTO = FavoriteRestaurantRequest.builder()
                 .user(userID)
                 .restaurant(restaurantID)
                 .build();

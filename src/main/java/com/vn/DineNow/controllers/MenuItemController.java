@@ -44,4 +44,32 @@ public class MenuItemController {
                 .build();
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/main-category/{mainCategoryId}")
+    public ResponseEntity<APIResponse<?>> getAllMenuItemByMainCategory(
+            @PathVariable long mainCategoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) throws CustomException{
+        var result = menuItemService.GetAllMenuItemAvailableTrueByMainCategory(mainCategoryId, page, size);
+        APIResponse<?> response = APIResponse.builder()
+                .status(StatusCode.OK.getCode())
+                .message(StatusCode.OK.getMessage())
+                .data(result)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<APIResponse<?>> getAllMenuItemByCategory(
+            @PathVariable long categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) throws CustomException{
+        var result = menuItemService.GetAllMenuItemAvailableTrueByCategory(categoryId, page, size);
+        APIResponse<?> response = APIResponse.builder()
+                .status(StatusCode.OK.getCode())
+                .message(StatusCode.OK.getMessage())
+                .data(result)
+                .build();
+        return ResponseEntity.ok(response);
+    }
 }

@@ -1,17 +1,10 @@
 package com.vn.DineNow.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
 import java.util.Set;
@@ -20,6 +13,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@Table(name = "reservations")
 public class Reservation {
 
     @Id
@@ -33,13 +27,15 @@ public class Reservation {
     private Integer numberOfPeople;
 
     @Column
-    private String status;
-
-    @Column
+    @CreationTimestamp
     private OffsetDateTime createdAt;
 
     @Column
+    @UpdateTimestamp
     private OffsetDateTime updatedAt;
+
+    @Column
+    private String numberPhone;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
@@ -49,13 +45,16 @@ public class Reservation {
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "number_of_children")
     private Integer numberOfChild;
 
-    @OneToMany(mappedBy = "reservation")
-    private Set<Order> reservationOrders;
+    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Order reservationOrder;
 
     @OneToMany(mappedBy = "reservation")
     private Set<Payment> reservationPayments;
+
+    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private Review review;
 
 }

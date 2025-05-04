@@ -1,0 +1,153 @@
+
+1. Lấy danh sách nhà hàng theo dữ liệu đơn giản và được phân trang: /api/restaurants?page=0&size=5   -   Get
+    * Request: 2 tham số mặc định page = 0 và size = 20 nếu để trống
+        - page : trang hiện tại muốn lấy
+        - size : Dữ liệu cần có của một trang
+
+    * Response:
+        {
+            "status": 200,
+            "message": "Resource created successfully.",
+            "data": {
+                "content": [
+                    {
+                        "id": 101,
+                        "name": "Nhà Hàng Hải Yến  ",
+                        "address": "Nguyễn trãi, Quận 1, Tp.Hồ Chí Minh",
+                        "averageRating": 0.0,
+                        "thumbnailUrl": "http://localhost:8080/uploads/de2017f0-eb48-4a70-8693-727add4608a4_anhquanan3.jpg",
+                        "typeName": "Nhà hàng cao cấp"
+                    },
+                    {
+                        "id": 102,
+                        "name": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                        "address": "123 Lê Văn Việt, Q.9",
+                        "averageRating": 0.0,
+                        "thumbnailUrl": "http://localhost:8080/uploads/ebda6cc6-8e9e-4fb8-aa73-543a5e639925_anhquanan3.jpg",
+                        "typeName": "Bổ dưỡng"
+                    },
+                    {
+                        "id": 103,
+                        "name": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 3",
+                        "address": "123 Lê Văn Việt, Q.9",
+                        "averageRating": 0.0,
+                        "thumbnailUrl": "http://localhost:8080/uploads/1f89e507-0c9e-4893-b6d4-6a2864e743a3_anh2.png",
+                        "typeName": "Bổ dưỡng"
+                    }
+                ],
+                "pageable": {
+                    "pageNumber": 0,
+                    "pageSize": 5,
+                    "sort": {
+                        "empty": true,
+                        "unsorted": true,
+                        "sorted": false
+                    },
+                    "offset": 0,
+                    "unpaged": false,
+                    "paged": true
+                },
+                "last": true,
+                "totalPages": 1,
+                "totalElements": 3,
+                "first": true,
+                "size": 5,
+                "number": 0,
+                "sort": {
+                    "empty": true,
+                    "unsorted": true,
+                    "sorted": false
+                },
+                "numberOfElements": 3,
+                "empty": false
+            }
+        }
+        # Chú thích: Đây là dữ liệu khi được trả về theo kiểu phân trang, nội dung nhà hàng cần thiết nằm ở mục "Content".
+            API mục đích dùng để hiển thị các nhà hàng ở trang tất cả nhà hàng...
+            - thumbnailUrl: Mặc định lấy ảnh đầu tiền từ danh sách ảnh của nhà hàng lúc tạo
+
+
+------------------------------------------------------------------------------------------------------------------------
+2. Lấy chi tiết một nhà hàng: /api/restaurants/101   - Get
+    * Request: 101 => id của nhà hàng
+    * Response: Thông tin chi tiết cả một nhà hàng, bao gồm loại nhà hàng và ảnh của nhà hàng...
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "id": 101,
+                "name": "Nhà Hàng Hải Nam",
+                "address": "Nguyễn trãi, Quận 1, Tp.Hồ Chí Minh",
+                "phone": "0268799565",
+                "description": "Nhà hàng tiệc cưới",
+                "type": {
+                    "id": 2,
+                    "name": "Nhà hàng cao cấp",
+                    "description": "Dịch vụ 5 sao"
+                },
+                "averageRating": "0.00",
+                "status": "APPROVED",
+                "createdAt": "2025-04-16T09:52:20Z",
+                "updatedAt": "2025-04-17T17:44:20Z",
+                "imageUrls": [
+                    "http://localhost:8080/uploads/f6553f7d-2b7e-4627-92ec-e3029d120500_anhquanan2.jpg",
+                    "http://localhost:8080/uploads/f8db23e1-ab91-4a8e-8a88-93b14fb69618_anhquanan3.jpg"
+                ]
+            }
+        }
+
+------------------------------------------------------------------------------------------------------------------------
+3. Tìm kiếm nhà hàng theo tên và thành phố có phân trang: api/restaurants/search  -  Get
+    * Request: page, size là tham số truyền vào: mặc đinh page = 0, size = 10 nếu để trống
+        {
+            "province": "quận 1",
+            "restaurantName": "Hải "
+        }
+        # Chú thích:
+            - province: tên thành phố hoặc quận...
+            - restaurantName: tên của nhà hàng, hoặc cụm từ mà tên nhà hàng chứa
+
+            ** Lưu ý: dữ liệu được truy xuất kiểu contains %n%, nếu để trống sẽ lấy tất cả
+
+    * Response: Dữ liệu trả về kiểu simple, và chứa ở mục "content"
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "content": [
+                    {
+                        "id": 101,
+                        "name": "Nhà Hàng Hải Nam",
+                        "address": "Nguyễn trãi, Quận 1, Tp.Hồ Chí Minh",
+                        "averageRating": 0.0,
+                        "thumbnailUrl": "http://localhost:8080/uploads/f6553f7d-2b7e-4627-92ec-e3029d120500_anhquanan2.jpg",
+                        "typeName": "Nhà hàng cao cấp"
+                    }
+                ],
+                "pageable": {
+                    "pageNumber": 0,
+                    "pageSize": 3,
+                    "sort": {
+                        "empty": true,
+                        "unsorted": true,
+                        "sorted": false
+                    },
+                    "offset": 0,
+                    "unpaged": false,
+                    "paged": true
+                },
+                "last": true,
+                "totalPages": 1,
+                "totalElements": 1,
+                "first": true,
+                "size": 3,
+                "number": 0,
+                "sort": {
+                    "empty": true,
+                    "unsorted": true,
+                    "sorted": false
+                },
+                "numberOfElements": 1,
+                "empty": false
+            }
+        }

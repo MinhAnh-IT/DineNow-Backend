@@ -1,0 +1,109 @@
+1. Tạo nhà hàng mới: /api/owner/restaurants  - Post
+    * Request body: (Dạng form-data)
+        - name : Nhà Hàng A   -> Nhà hàng cùng chủ, không được trùng tên
+        - address : 123, abc, Q1, HCM
+        - phone : 0396899397   -> theo patern số điện thoại 10 số, bắt đầu từ 0
+        - typeId : 1   -> Id của loại nhà hàng
+        - description : Nhà hàng chuyên món ăn Hàn Quốc
+        - restaurantTierId : 1   -> id của loại nhà hàng
+        - images : (chứa file ảnh)
+
+    * Response:
+        {
+            "status": 201,
+            "message": "Resource created successfully.",
+            "data": {
+                "id": 1,
+                "name": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 1",
+                "address": "123 Lê Văn Việt, Q.9",
+                "phone": "0909123456",
+                "restaurantTierName": null,
+                "description": "Quán chuyên món gà tiềm",
+                "type": {
+                    "id": 1,
+                    "name": "Quán nhậu",
+                    "description": "Quán nhậu vỉa hè"
+                },
+                "averageRating": "0.0",
+                "status": "PENDING",
+                "createdAt": "2025-04-25T23:07:31+07:00",
+                "updatedAt": "2025-04-25T23:07:31+07:00",
+                "imageUrls": [
+                    "http://localhost:8080/uploads/898bc3e3-ef39-420b-b7fd-c36333a3cc61_anhquanan2.jpg",
+                    "http://localhost:8080/uploads/0ff07804-b2d2-4a8c-be04-f3eb6d708630_anhquanan3.jpg",
+                    "http://localhost:8080/uploads/8c82cd26-554f-4b75-96d0-1c7f8b0609cd_anh2.png"
+                ]
+            }
+        }
+        # chú thích:
+            - status: mặc định là PENDING
+            - averageRating: mới tạo nhà hàng sao hiện tại là 0
+            - createdAt, updatedAt: tự cập nhật bởi hệ thống
+
+------------------------------------------------------------------------------------------------------------------------
+2. Cập nhật nhà hàng: api/owner/restaurants/101  -  Put
+    **** Tương tự tạo nhà hàng nhưng không cho cập nhật restaurantTierId
+     => nếu không nhập ảnh thì mặc định là sẽ lấy ảnh cũ trước đó
+    **** Các trường để null mặc định sẽ lấy dữ liệu cũ ***
+
+------------------------------------------------------------------------------------------------------------------------
+3. Lấy danh sách nhà hàng của owner: api/owner/restaurants - Get
+    * Request: không có tham số
+
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": [
+                {
+                    "id": 101,
+                    "name": "Nhà Hàng Hải Nam",
+                    "address": "Nguyễn trãi, Quận 1, Tp.Hồ Chí Minh",
+                    "averageRating": 0.0,
+                    "thumbnailUrl": "http://localhost:8080/uploads/2fecd45b-52a4-421f-bb49-9c63a724cb15_anhquanan3.jpg",
+                    "typeName": "Quán nhậu vỉa hè"
+                },
+                {
+                    "id": 102,
+                    "name": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                    "address": "123 Lê Văn Việt, Q.9",
+                    "averageRating": 0.0,
+                    "thumbnailUrl": "http://localhost:8080/uploads/75e3465d-7e25-4c7f-bbbf-476270fa934a_anh2.png",
+                    "typeName": "Quán nhậu"
+                },
+                {
+                    "id": 103,
+                    "name": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 3",
+                    "address": "123 Lê Văn Việt, Q.9",
+                    "averageRating": 0.0,
+                    "thumbnailUrl": "http://localhost:8080/uploads/4df932fb-018e-4b6c-bda9-aee3ab3bdb13_anhquanan2.jpg",
+                    "typeName": "Quán nhậu"
+                },
+                {
+                    "id": 104,
+                    "name": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 1",
+                    "address": "123 Lê Văn Việt, Q.9",
+                    "averageRating": 0.0,
+                    "thumbnailUrl": "http://localhost:8080/uploads/0aae4030-2189-43a9-82bf-1062cfcfd74d_anhquanan3.jpg",
+                    "typeName": "Quán nhậu"
+                }
+            ]
+        }
+        # Chú thích: Dữ liệu được trả về dưới dạng simple
+
+------------------------------------------------------------------------------------------------------------------------
+4. Tạm khoá/mở nhà hàng: api/owner/restaurants/5/status?status=APPROVED
+    * Request: 5 = id của nhà hàng
+        - status: "APPROVED" || "SUSPENDED"
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": true
+        }
+
+    - Trạng thái có thể chuyển đổi:
+        + APPROVED -> SUSPENDED
+        + SUSPENDED -> APPROVED
+
+

@@ -71,4 +71,37 @@ public class EmailServiceImpl implements EmailService {
             throw new CustomException(StatusCode.EMAIL_ERROR, e);
         }
     }
+
+    @Override
+    @Async
+    public void sendEmailOwnerAccountCreated(String to, String subject, String templateName, String userName, String password) throws CustomException {
+        try {
+            // Prepare data model for Thymeleaf template
+            Context context = new Context();
+            context.setVariable("username", userName);
+            context.setVariable("password", password);
+
+            // Generate HTML email content from template
+            String htmlContent = templateEngine.process(templateName, context);
+
+            MimeMessage message = javaMailSender.createMimeMessage();
+
+            // true = multipart message, UTF-8 encoding
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            // Create a custom sender name in "From" field
+            InternetAddress fromAddress = new InternetAddress("testproject610@gmail.com", sender, "UTF-8");
+            helper.setFrom(fromAddress);
+
+            helper.setTo(to);
+            helper.setSubject(subject);
+
+            // Send HTML as email body
+            helper.setText(htmlContent, true);
+
+            javaMailSender.send(message);
+        } catch (Exception e) {
+            throw new CustomException(StatusCode.EMAIL_ERROR, e);
+        }
+    }
 }

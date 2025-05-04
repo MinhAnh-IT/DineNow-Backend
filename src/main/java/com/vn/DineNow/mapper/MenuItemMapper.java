@@ -11,6 +11,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface MenuItemMapper {
 
+    @Mapping(target = "averageRating", ignore = true)
     @Mapping(target = "restaurant", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
@@ -25,8 +26,7 @@ public interface MenuItemMapper {
     @Mapping(target = "typeName", source = "category.name")
     MenuItemSimpleResponseDTO toSimpleDTO(MenuItem menuItem);
 
-
-
+    @Mapping(target = "averageRating", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "restaurant", ignore = true)
     @Mapping(target = "menuItemOrderItems", ignore = true)

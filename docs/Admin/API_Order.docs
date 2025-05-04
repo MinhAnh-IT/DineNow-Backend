@@ -1,0 +1,115 @@
+1. Lấy danh sách toàn bộ order: api/admin/orders - Get  (Có phân trang)
+       * Request body: mặc định page = 0, size = 10
+       * Response:
+            {
+                "status": 200,
+                "message": "Request successful and data returned.",
+                "data": [
+                    {
+                        "id": 1,
+                        "status": "PENDING",
+                        "totalPrice": 1240000,
+                        "reservation": {
+                            "id": 1,
+                            "numberOfPeople": 3,
+                            "numberOfChild": 0,
+                            "customerName": "Huỳnh Minh Anh",
+                            "numberPhone": "0386299573",
+                            "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                            "reservationTime": "2025-05-01T11:30:00+07:00"
+                        },
+                        "totalItems": 2
+                    },
+                    {
+                        "id": 2,
+                        "status": "FAILED",
+                        "totalPrice": 1240000,
+                        "reservation": {
+                            "id": 2,
+                            "numberOfPeople": 3,
+                            "numberOfChild": 0,
+                            "customerName": "Huỳnh Minh Anh",
+                            "numberPhone": "0386299573",
+                            "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                            "reservationTime": "2025-05-01T11:30:00+07:00"
+                        },
+                        "totalItems": 2
+                    }
+                ]
+            }
+
+
+------------------------------------------------------------------------------------------------------------------------
+2. Lấy thông tin chi tiết của order: api/admin/orders/1 - Get
+    * Request body: không có
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "id": 1,
+                "status": "PENDING",
+                "totalPrice": 1240000,
+                "menuItems": [
+                    {
+                        "menuItemId": 2,
+                        "menuItemName": "Yến sào",
+                        "menuItemPrice": 200000,
+                        "totalPrice": 1000000.00,
+                        "quantity": 5,
+                        "menuItemImageUrl": "http://localhost:8080/uploads/4913fd67-3883-4f6e-aba7-f8cfe79a8d32_yen-sao.jpeg"
+                    },
+                    {
+                        "menuItemId": 1,
+                        "menuItemName": "Súp bào ngư - vi cá",
+                        "menuItemPrice": 80000,
+                        "totalPrice": 240000.00,
+                        "quantity": 3,
+                        "menuItemImageUrl": "http://localhost:8080/uploads/ce097435-269b-4bc7-8b65-fd6324b288e6_ga-ham-thuoc-bac.jpg"
+                    }
+                ],
+                "reservation": {
+                    "id": 1,
+                    "numberOfPeople": 3,
+                    "numberOfChild": 0,
+                    "customerName": "Huỳnh Minh Anh",
+                    "numberPhone": "0386299573",
+                    "customerEmail": "hma2004.it@gmail.com",
+                    "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                    "restaurantAddress": "123 Lê Văn Việt, Q.9",
+                    "reservationTime": "2025-05-01T11:30:00+07:00"
+                }
+            }
+        }
+
+-------------------------------------------------------------------------------------------------------------------------
+3. Lấy danh sách order theo trạng thái: api/admin/orders/status?status=PENDING - Get
+    * Request body: không có
+        - status: trạng thái của order
+            - PENDING
+            - APPROVED
+            - REJECTED
+            - FAILED
+            - COMPLETED
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": [
+                {
+                    "id": 1,
+                    "status": "PENDING",
+                    "totalPrice": 1240000,
+                    "reservation": {
+                        "id": 1,
+                        "numberOfPeople": 3,
+                        "numberOfChild": 0,
+                        "customerName": "Huỳnh Minh Anh",
+                        "numberPhone": "0386299573",
+                        "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                        "reservationTime": "2025-05-01T11:30:00+07:00"
+                    },
+                    "totalItems": 2
+                }
+            ]
+        }
