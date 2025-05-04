@@ -1,7 +1,7 @@
 package com.vn.DineNow.payload.response.order;
 
 import com.vn.DineNow.enums.OrderStatus;
-import com.vn.DineNow.payload.request.OrderItem.OrderItemSimpleResponse;
+import com.vn.DineNow.payload.request.orderItem.OrderItemSimpleResponse;
 import com.vn.DineNow.payload.response.reservation.ReservationSimpleResponse;
 import lombok.AccessLevel;
 import lombok.Getter;

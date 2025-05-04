@@ -1,5 +1,7 @@
 package com.vn.DineNow.repositories;
 
+import com.vn.DineNow.entities.FoodCategory;
+import com.vn.DineNow.entities.MainCategory;
 import com.vn.DineNow.entities.MenuItem;
 import com.vn.DineNow.entities.Restaurant;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
     List<MenuItem> findAllByRestaurantAndAvailableTrue(Restaurant restaurant);
     Page<MenuItem> findAllByAvailableTrue(Pageable pageable);
     List<MenuItem> findAllByRestaurant(Restaurant restaurant);
-
+    Page<MenuItem> findAllByCategory_MainCategoryAndAvailableTrue(MainCategory mainCategory, Pageable pageable);
+    Page<MenuItem> findAllByCategoryAndAvailableTrue(FoodCategory category, Pageable pageable);
 
 }

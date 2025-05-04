@@ -1,6 +1,6 @@
 package com.vn.DineNow.mapper;
 
-import com.vn.DineNow.dtos.PaymentDTO;
+import com.vn.DineNow.payload.request.payment.PaymentDTO;
 import com.vn.DineNow.entities.Payment;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

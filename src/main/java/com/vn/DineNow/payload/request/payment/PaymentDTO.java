@@ -1,4 +1,4 @@
-package com.vn.DineNow.dtos;
+package com.vn.DineNow.payload.request.payment;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Digits;

@@ -7,10 +7,7 @@ import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.mapper.MenuItemMapper;
 import com.vn.DineNow.payload.response.menuItem.MenuItemResponseDTO;
 import com.vn.DineNow.payload.response.menuItem.MenuItemSimpleResponseDTO;
-import com.vn.DineNow.repositories.FoodCategoryRepository;
-import com.vn.DineNow.repositories.MenuItemRepository;
-import com.vn.DineNow.repositories.RestaurantRepository;
-import com.vn.DineNow.repositories.UserRepository;
+import com.vn.DineNow.repositories.*;
 import com.vn.DineNow.services.common.fileService.FileService;
 import com.vn.DineNow.services.common.cache.RedisService;
 import lombok.AccessLevel;
@@ -36,11 +33,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CustomerMenuItemServiceImpl implements CustomerMenuItemService {
-    final UserRepository userRepository;
     final RestaurantRepository restaurantRepository;
     final MenuItemMapper menuItemMapper;
     final FileService fileService;
     final FoodCategoryRepository foodCategoryRepository;
+    final MainCategoryRepository mainCategoryRepository;
     final MenuItemRepository menuItemRepository;
     final RedisService redisService;
 
@@ -122,5 +119,55 @@ public class CustomerMenuItemServiceImpl implements CustomerMenuItemService {
         redisService.saveObject(key, dto, 20, TimeUnit.MINUTES);
 
         return dto;
+    }
+
+    /**
+     * Retrieves all available menu items for a specific main category.
+     *
+     * @param mainCategoryId the ID of the main category
+     * @param page page number (zero-based)
+     * @param size number of records per page
+     * @return list of simple menu item DTOs
+     * @throws CustomException if main category is not found
+     */
+    @Override
+    public List<MenuItemSimpleResponseDTO> GetAllMenuItemAvailableTrueByMainCategory(long mainCategoryId, int page, int size)
+            throws CustomException {
+        var mainCategory = mainCategoryRepository.findById(mainCategoryId)
+                .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "main category", String.valueOf(mainCategoryId)));
+        Pageable pageable = PageRequest.of(page, size);
+        var menuItems = menuItemRepository.findAllByCategory_MainCategoryAndAvailableTrue(mainCategory, pageable);
+
+        return menuItems.stream()
+                .map(menuItem -> {
+                    var dto = menuItemMapper.toSimpleDTO(menuItem);
+                    dto.setImageUrl(fileService.getPublicFileUrl(dto.getImageUrl()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Retrieves all available menu items for a specific food category.
+     *
+     * @param categoryId the ID of the food category
+     * @param page page number (zero-based)
+     * @param size number of records per page
+     * @return list of simple menu item DTOs
+     * @throws CustomException if food category is not found
+     */
+    @Override
+    public List<MenuItemSimpleResponseDTO> GetAllMenuItemAvailableTrueByCategory(long categoryId, int page, int size) throws CustomException {
+        var category = foodCategoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "category", String.valueOf(categoryId)));
+        Pageable pageable = PageRequest.of(page, size);
+        var menuItems = menuItemRepository.findAllByCategoryAndAvailableTrue(category, pageable);
+        return menuItems.stream()
+                .map(menuItem -> {
+                    var dto = menuItemMapper.toSimpleDTO(menuItem);
+                    dto.setImageUrl(fileService.getPublicFileUrl(dto.getImageUrl()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 }

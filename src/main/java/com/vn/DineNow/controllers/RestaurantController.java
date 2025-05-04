@@ -13,7 +13,6 @@ import com.vn.DineNow.validation.ValidRestaurantApprovedValidator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,11 +28,11 @@ public class RestaurantController {
     CustomerMenuItemService menuItemService;
 
     @GetMapping()
-    public ResponseEntity<APIResponse<Page<RestaurantSimpleResponseDTO>>> getALLRestaurant(
+    public ResponseEntity<APIResponse<?> >getALLRestaurant(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size){
         var result = restaurantService.getAllRestaurantStatusApproved(page, size);
-        APIResponse<Page<RestaurantSimpleResponseDTO>> response = APIResponse.<Page<RestaurantSimpleResponseDTO>>builder()
+        APIResponse<?> response = APIResponse.builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.CREATED.getMessage())
                 .data(result)
@@ -54,12 +53,12 @@ public class RestaurantController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<APIResponse<Page<RestaurantSimpleResponseDTO>>> searchRestaurant(
+    public ResponseEntity<APIResponse<?>> searchRestaurant(
             @RequestBody SearchRestaurantDTO request,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) throws CustomException{
         var result = restaurantService.searchRestaurant(request, page, size);
-        APIResponse<Page<RestaurantSimpleResponseDTO>> response = APIResponse.<Page<RestaurantSimpleResponseDTO>>builder()
+        APIResponse<?> response = APIResponse.builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.OK.getMessage())
                 .data(result)
@@ -79,6 +78,18 @@ public class RestaurantController {
         return ResponseEntity.ok(response);
     }
 
-
-
+    @GetMapping("/type/{typeId}")
+    public ResponseEntity<APIResponse<List<RestaurantSimpleResponseDTO>>> getAllRestaurantByTypeId(
+            @PathVariable long typeId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) throws CustomException {
+        var result = restaurantService.getAllRestaurantByTypeId(typeId, page, size);
+        APIResponse<List<RestaurantSimpleResponseDTO>> response = APIResponse.<List<RestaurantSimpleResponseDTO>>builder()
+                .status(StatusCode.OK.getCode())
+                .message(StatusCode.OK.getMessage())
+                .data(result)
+                .build();
+        return ResponseEntity.ok(response);
+    }
 }
+

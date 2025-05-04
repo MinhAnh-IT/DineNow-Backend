@@ -1,17 +1,21 @@
 package com.vn.DineNow.mapper;
 
-import com.vn.DineNow.dtos.ReviewDTO;
 import com.vn.DineNow.entities.Review;
+import com.vn.DineNow.payload.request.review.ReviewRequestDTO;
+import com.vn.DineNow.payload.response.review.ReviewResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ReviewMapper {
-    @Mapping(source = "restaurant", target = "restaurant.id")
-    @Mapping(source = "customer", target = "customer.id")
-    Review toEntity(ReviewDTO reviewDTO);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "restaurant.id", ignore = true)
+    @Mapping(target = "customer.id", ignore = true)
+    Review toEntity(ReviewRequestDTO reviewDTO);
 
-    @Mapping(source = "restaurant.id", target = "restaurant")
-    @Mapping(source = "customer.id", target = "customer")
-    ReviewDTO toDTO(Review review);
+
+    @Mapping(target = "reviewerName", source = "customer.fullName")
+    @Mapping(target = "reviewDate", source = "createdAt")
+    ReviewResponse toDTO(Review review);
 }

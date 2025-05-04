@@ -3,10 +3,11 @@ package com.vn.DineNow.services.customer.orderItem;
 import com.vn.DineNow.entities.MenuItem;
 import com.vn.DineNow.entities.Order;
 import com.vn.DineNow.entities.OrderItem;
+import com.vn.DineNow.entities.User;
+import com.vn.DineNow.enums.OrderStatus;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
-import com.vn.DineNow.payload.request.OrderItem.OrderItemRequest;
-import com.vn.DineNow.payload.response.OrderItem.OrderItemResponse;
+import com.vn.DineNow.payload.request.orderItem.OrderItemRequest;
 import com.vn.DineNow.repositories.MenuItemRepository;
 import com.vn.DineNow.repositories.OrderItemRepository;
 import com.vn.DineNow.repositories.OrderRepository;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -67,5 +69,12 @@ public class CustomerOrderItemServiceImpl implements CustomerOrderItemService{
             totalPrice += itemTotalPrice;
         }
         return totalPrice;
+    }
+
+    @Override
+    public Optional<OrderItem> getOrderItemIfCustomerAteButNotReviewed(User customer, MenuItem menuItem) {
+        return orderItemRepository.findTopByOrder_Reservation_CustomerAndMenuItemAndOrder_StatusAndReviewIsNull(
+                customer, menuItem, OrderStatus.COMPLETED
+        );
     }
 }

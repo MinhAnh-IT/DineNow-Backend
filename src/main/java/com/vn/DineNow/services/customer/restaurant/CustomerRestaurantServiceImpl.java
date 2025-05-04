@@ -10,16 +10,17 @@ import com.vn.DineNow.payload.response.restaurant.RestaurantResponseDTO;
 import com.vn.DineNow.payload.response.restaurant.RestaurantSimpleResponseDTO;
 import com.vn.DineNow.repositories.RestaurantRepository;
 import com.vn.DineNow.services.common.cache.RedisService;
+import com.vn.DineNow.services.customer.reservation.CustomerReservationService;
 import com.vn.DineNow.services.owner.restaurant.restaurantImages.RestaurantImageService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,6 +35,7 @@ public class CustomerRestaurantServiceImpl implements CustomerRestaurantService 
     final RestaurantImageService restaurantImageService;
     final RestaurantMapper restaurantMapper;
     final RedisService redisService;
+    final CustomerReservationService reservationService;
 
     @Value("${DineNow.key.cache-restaurant}")
     String keyRedis;
@@ -46,10 +48,20 @@ public class CustomerRestaurantServiceImpl implements CustomerRestaurantService 
      * @return paginated list of simplified restaurant DTOs
      */
     @Override
-    public Page<RestaurantSimpleResponseDTO> getAllRestaurantStatusApproved(int page, int size) {
+    public List<RestaurantSimpleResponseDTO> getAllRestaurantStatusApproved(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         var restaurants = restaurantRepository.findAllByStatus(RestaurantStatus.APPROVED, pageable);
-        return restaurants.map(restaurantMapper::toSimpleDTO);
+
+        return restaurants.stream().map(restaurant -> {
+            var restaurantDTO = restaurantMapper.toSimpleDTO(restaurant);
+            try {
+                restaurantDTO.setReservationCount(
+                        reservationService.getTotalReservationByRestaurantId(restaurantDTO.getId()));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            return restaurantDTO;
+        }).toList();
     }
 
     /**
@@ -92,7 +104,7 @@ public class CustomerRestaurantServiceImpl implements CustomerRestaurantService 
      * @throws CustomException if a search failure occurs
      */
     @Override
-    public Page<RestaurantSimpleResponseDTO> searchRestaurant(SearchRestaurantDTO searchRestaurantDTO, int page, int size)
+    public List<RestaurantSimpleResponseDTO> searchRestaurant(SearchRestaurantDTO searchRestaurantDTO, int page, int size)
             throws CustomException {
         String province = searchRestaurantDTO.getProvince();
         String restaurantName = searchRestaurantDTO.getRestaurantName();
@@ -106,6 +118,15 @@ public class CustomerRestaurantServiceImpl implements CustomerRestaurantService 
         var restaurants = restaurantRepository.searchRestaurantByCityAndName(
                 province.trim(), restaurantName.trim(), pageable);
 
-        return restaurants.map(restaurantMapper::toSimpleDTO);
+        return restaurants.map(restaurantMapper::toSimpleDTO).stream().toList();
+    }
+
+    @Override
+    public List<RestaurantSimpleResponseDTO> getAllRestaurantByTypeId(long typeId, int page, int size) throws CustomException {
+        Pageable pageable = PageRequest.of(page, size);
+        var restaurants = restaurantRepository.findAllByType_Id(typeId, pageable);
+        return restaurants.stream()
+                .map(restaurantMapper::toSimpleDTO)
+                .toList();
     }
 }

@@ -15,7 +15,7 @@ public class MenuItemSimpleResponseDTO {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private BigDecimal price;
-
+    private double averageRating;
     private String imageUrl;
     private String typeName;
 }

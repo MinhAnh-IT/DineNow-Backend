@@ -22,8 +22,7 @@ public class RestaurantResponseDTO {
     private String restaurantTierName;
     private String description;
     private RestaurantTypeSimple type;
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private BigDecimal averageRating;
+    private double averageRating;
     private RestaurantStatus status;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")

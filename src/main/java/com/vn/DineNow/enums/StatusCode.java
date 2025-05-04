@@ -40,6 +40,7 @@ public enum StatusCode {
     RESTAURANT_NOT_FOUND(425, "Restaurant with ID %s not found"),
     INVALID_ACTION(426, "Invalid action. %s"),
     INVALID_ENTITY(427, "Invalid entity. %s"),
+    INVALID_REVIEW_ACTION(428, "You cannot review this %s because you haven't experienced it yet."),
     RUNTIME_EXCEPTION(500, "Unexpected runtime exception occurred.");
 
 

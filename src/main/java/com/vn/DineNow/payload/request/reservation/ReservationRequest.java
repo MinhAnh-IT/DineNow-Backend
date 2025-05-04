@@ -1,4 +1,4 @@
-package com.vn.DineNow.payload.request.Reservation;
+package com.vn.DineNow.payload.request.reservation;
 
 import lombok.AccessLevel;
 import lombok.Getter;

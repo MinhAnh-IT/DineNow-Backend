@@ -6,7 +6,7 @@ import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.mapper.OrderMapper;
 import com.vn.DineNow.mapper.ReservationMapper;
 import com.vn.DineNow.payload.request.Order.OrderRequest;
-import com.vn.DineNow.payload.request.OrderItem.OrderItemRequest;
+import com.vn.DineNow.payload.request.orderItem.OrderItemRequest;
 import com.vn.DineNow.payload.response.order.OrderSimpleResponse;
 import com.vn.DineNow.repositories.OrderRepository;
 import com.vn.DineNow.repositories.RestaurantRepository;
