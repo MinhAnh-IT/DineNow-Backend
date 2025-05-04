@@ -1,4 +1,4 @@
-package com.vn.DineNow.payload.response.RestaurantTypeResponse;
+package com.vn.DineNow.payload.response.restaurantType;
 
 
 import lombok.AccessLevel;

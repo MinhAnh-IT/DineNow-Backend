@@ -3,7 +3,7 @@ package com.vn.DineNow.mapper;
 import com.vn.DineNow.entities.RestaurantType;
 import com.vn.DineNow.payload.request.restaurantType.RestaurantTypeRequest;
 import com.vn.DineNow.payload.request.restaurantType.RestaurantTypeUpdateRequest;
-import com.vn.DineNow.payload.response.RestaurantTypeResponse.RestaurantTypeResponse;
+import com.vn.DineNow.payload.response.restaurantType.RestaurantTypeResponse;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")

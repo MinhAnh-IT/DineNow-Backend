@@ -1,0 +1,96 @@
+1. Lấy danh sách nhà hàng theo trạng thái: api/admin/restaurants?status=APPROVED&page=0&size=10  -  Get
+    * Request: Có phân trang -> mặc định page = 0, size = 10
+        - Các trạng thái nhà hàng:
+            - APPROVED
+            - PENDING
+            - REJECTED
+            - BLOCKED
+            - SUSPENDED
+        => Các trạng thái nhà hàng có thể lọc:
+
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": [
+                {
+                    "id": 3,
+                    "name": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                    "address": "123 Lê Văn Việt, Q.9",
+                    "restaurantTierName": "Bronze",
+                    "thumbnailUrl": "http://localhost:8080/uploads/53bba523-0f8a-4b9b-95d0-24d3fd3ee405_anh2.png",
+                    "typeName": "Quán nhậu",
+                    "createdAt": "2025-04-27T20:24:42+07:00",
+                    "updatedAt": "2025-05-02T22:37:14+07:00"
+                },
+                {
+                    "id": 4,
+                    "name": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 1",
+                    "address": "123 Lê Văn Việt, Q.9",
+                    "restaurantTierName": "Bronze",
+                    "thumbnailUrl": "http://localhost:8080/uploads/189f15ab-1f8e-4082-b620-0323b8fb9fef_anhquanan2.jpg",
+                    "typeName": "Quán nhậu",
+                    "createdAt": "2025-04-28T09:44:00+07:00",
+                    "updatedAt": "2025-04-28T10:55:06+07:00"
+                }
+            ]
+        }
+        - Danh sách nhà hàng theo trạng thái
+        - Trả về danh sách nhà hàng theo trạng thái đã chọn
+        - Nếu không có nhà hàng nào thì trả về danh sách rỗng
+        - Nếu có lỗi thì trả về mã lỗi và thông báo lỗi (tra mã lỗi ở StatusCode)
+
+------------------------------------------------------------------------------------------------------------------------
+2. Lấy danh sách chi tiết nhà hàng bao gồm nhà hàng bị khoá: api/admin/restaurants/3
+    * Request:
+        - id: id của nhà hàng
+    * Response:
+    {
+        "status": 200,
+        "message": "Request successful and data returned.",
+        "data": {
+            "id": 3,
+            "name": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+            "address": "123 Lê Văn Việt, Q.9",
+            "phone": "0909123456",
+            "restaurantTierName": "Bronze",
+            "description": "Quán chuyên món gà tiềm",
+            "type": {
+                "id": 1,
+                "name": "Quán nhậu",
+                "description": "Quán nhậu vỉa hè"
+            },
+            "averageRating": "0.00",
+            "status": "PENDING",
+            "createdAt": "2025-04-27T20:24:42+07:00",
+            "updatedAt": "2025-05-03T05:05:09+07:00",
+            "imageUrls": [
+                "http://localhost:8080/uploads/a37f81ca-2f1c-4352-baba-91d02f240a0f_anhquanan2.jpg",
+                "http://localhost:8080/uploads/c43ed907-9d54-4142-ad6d-acf69af1c8c9_anhquanan3.jpg",
+                "http://localhost:8080/uploads/53bba523-0f8a-4b9b-95d0-24d3fd3ee405_anh2.png"
+            ]
+        }
+    }
+
+------------------------------------------------------------------------------------------------------------------------
+3. Cập nhật trạng thái nhà hàng: api/admin/restaurants/3?status=APPROVED  -  Put
+    * Request:
+        - id: id của nhà hàng
+        - status: trạng thái nhà hàng
+            - APPROVED
+            - PENDING
+            - REJECTED
+            - BLOCKED
+            - SUSPENDED
+
+            => Trạng thái nhà hàng có thể cập nhật:
+                - PENDING -> APPROVED
+                - PENDING -> REJECTED
+                - APPROVED -> BLOCKED
+                - BlOCKED -> APPROVED
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": true
+        }

@@ -1,4 +1,4 @@
-package com.vn.DineNow.payload.response.RestaurantTiers;
+package com.vn.DineNow.payload.response.restaurantTiers;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;

@@ -2,6 +2,7 @@ package com.vn.DineNow.controllers;
 
 import com.vn.DineNow.annotation.RequireEnabledUser;
 import com.vn.DineNow.enums.OrderStatus;
+import com.vn.DineNow.enums.RestaurantStatus;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.payload.request.foodCategory.FoodCategoryRequest;
@@ -57,6 +58,21 @@ public class OwnerController {
         APIResponse<RestaurantResponseDTO> response = APIResponse.<RestaurantResponseDTO>builder()
                 .status(StatusCode.CREATED.getCode())
                 .message(StatusCode.CREATED.getMessage())
+                .data(result)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/restaurants/{restaurantId}/status")
+    @RequireEnabledUser
+    public ResponseEntity<APIResponse<Boolean>> updateRestaurantStatus(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable long restaurantId,
+            @RequestParam("status") RestaurantStatus status) throws CustomException{
+        var result = restaurantService.updateRestaurantStatus(userDetails.getUser().getId(), restaurantId, status);
+        APIResponse<Boolean> response = APIResponse.<Boolean>builder()
+                .status(StatusCode.OK.getCode())
+                .message(StatusCode.OK.getMessage())
                 .data(result)
                 .build();
         return ResponseEntity.ok(response);
