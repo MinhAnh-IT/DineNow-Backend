@@ -34,8 +34,6 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/uploads/**").permitAll()
-
-                // ✅ Dùng hasRole tương ứng với ROLE_OWNER, ROLE_ADMIN
                 .requestMatchers("/api/owner/**").hasRole("OWNER")
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
 

@@ -19,7 +19,8 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        log.info("🛡️ Đã cấu hình CORS cho http://localhost:3000");
+        log.info("🛡️ Cấu hình CORS cho http://localhost:3000");
+
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000")
                 .allowedMethods("*")
@@ -29,7 +30,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     /**
      * ✅ Cho phép truy cập ảnh tĩnh từ thư mục local (D:/BasicProject/uploads)
-     * Ví dụ: /uploads/abc.jpg → file D:/BasicProject/uploads/abc.jpg
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

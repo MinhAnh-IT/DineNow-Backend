@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 import static com.vn.DineNow.enums.StatusCode.INVALID_INPUT;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class  GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<APIResponse<String>> handleCustomException(CustomException ex) {
@@ -66,6 +66,15 @@ public class GlobalExceptionHandler {
                 .message(message)
                 .build();
 
+        return ResponseEntity.ok(response);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<APIResponse<String>> handleRuntimeException(RuntimeException ex) {
+        APIResponse<String> response = APIResponse.<String>builder()
+                .status(StatusCode.RUNTIME_EXCEPTION.getCode())
+                .message("Unexpected error occurred: " + ex.getMessage())
+                .build();
         return ResponseEntity.ok(response);
     }
 

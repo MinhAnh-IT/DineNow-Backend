@@ -24,6 +24,6 @@
     - 420                       Lỗi trong quá trình lưu ảnh (ví dụ: không đúng định dạng PNG, JPG, JPEG, GIF)
     - 421                       Lỗi trong quá trình xoá ảnh để cập nhật
     - 422                       Không tìm thấy mã ảnh
-    - 424
+    - 424                       
     - 500                       Lỗi máy chủ nội bộ
 

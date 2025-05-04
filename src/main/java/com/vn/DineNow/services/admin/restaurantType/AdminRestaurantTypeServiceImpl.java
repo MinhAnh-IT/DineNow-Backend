@@ -9,7 +9,6 @@ import com.vn.DineNow.payload.request.restaurantType.RestaurantTypeUpdateRequest
 import com.vn.DineNow.payload.response.RestaurantTypeResponse.RestaurantTypeResponse;
 import com.vn.DineNow.repositories.RestaurantTypeRepository;
 import com.vn.DineNow.services.common.fileService.FileService;
-import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,7 +21,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class RestaurantTypeServiceImpl implements RestaurantTypeService {
+public class AdminRestaurantTypeServiceImpl implements AdminRestaurantTypeService {
     RestaurantTypeRepository restaurantTypeRepository;
     FileService fileService;
     RestaurantTypeMapper restaurantTypeMapper;

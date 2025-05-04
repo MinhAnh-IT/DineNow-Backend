@@ -1,6 +1,7 @@
 package com.vn.DineNow.services.owner.restaurant;
 
 import com.vn.DineNow.entities.Restaurant;
+import com.vn.DineNow.entities.RestaurantTiers;
 import com.vn.DineNow.entities.User;
 import com.vn.DineNow.enums.Role;
 import com.vn.DineNow.enums.StatusCode;
@@ -11,6 +12,7 @@ import com.vn.DineNow.payload.request.restaurant.RestaurantUpdateDTO;
 import com.vn.DineNow.payload.response.restaurant.RestaurantResponseDTO;
 import com.vn.DineNow.payload.response.restaurant.RestaurantSimpleResponseDTO;
 import com.vn.DineNow.repositories.RestaurantRepository;
+import com.vn.DineNow.repositories.RestaurantTierRepository;
 import com.vn.DineNow.repositories.RestaurantTypeRepository;
 import com.vn.DineNow.repositories.UserRepository;
 import com.vn.DineNow.services.common.cache.RedisService;
@@ -41,6 +43,7 @@ public class OwnerRestaurantServiceImpl implements OwnerRestaurantService {
     final RestaurantImageService restaurantImageService;
     final RestaurantTypeRepository restaurantTypeRepository;
     final RedisService redisService;
+    final RestaurantTierRepository restaurantTierRepository;
 
     @Value("${DineNow.key.cache-restaurant}")
     String keyRedis;
@@ -66,6 +69,8 @@ public class OwnerRestaurantServiceImpl implements OwnerRestaurantService {
         if (restaurantRepository.existsByNameAndOwner(requestDTO.getName(), owner)) {
             throw new CustomException(StatusCode.EXIST_NAME, requestDTO.getName(), String.format("restaurants of %s", owner));
         }
+        var restaurantTier = restaurantTierRepository.findById(requestDTO.getRestaurantTierId())
+                .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "restaurant tier", String.valueOf(requestDTO.getRestaurantTierId())));
 
         Restaurant restaurant = restaurantMapper.toEntity(requestDTO);
         restaurant.setOwner(owner);
@@ -85,6 +90,7 @@ public class OwnerRestaurantServiceImpl implements OwnerRestaurantService {
                 .orElseThrow(() -> new CustomException(StatusCode.RESTAURANT_NOT_FOUND, restaurant.getId()));
 
         RestaurantResponseDTO responseDTO = restaurantMapper.toDTO(savedRestaurant);
+        responseDTO.setRestaurantTierName(restaurantTier.getName());
         responseDTO.setImageUrls(restaurantImageService.getImageUrlsByRestaurantId(savedRestaurant.getId()));
 
         return responseDTO;

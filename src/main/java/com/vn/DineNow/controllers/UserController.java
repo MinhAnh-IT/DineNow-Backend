@@ -1,12 +1,12 @@
 package com.vn.DineNow.controllers;
 
 import com.vn.DineNow.annotation.RequireEnabledUser;
-import com.vn.DineNow.dtos.UserDTO;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
-import com.vn.DineNow.payload.request.user.UserUpdateDTO;
+import com.vn.DineNow.payload.request.user.UserUpdateRequest;
 import com.vn.DineNow.payload.response.APIResponse;
 import com.vn.DineNow.payload.response.restaurant.FavoriteRestaurantResponseDTO;
+import com.vn.DineNow.payload.response.user.UserResponse;
 import com.vn.DineNow.security.CustomUserDetails;
 import com.vn.DineNow.services.customer.favoriteRestaurant.FavoriteRestaurantService;
 import com.vn.DineNow.services.customer.user.UserService;
@@ -31,11 +31,11 @@ public class UserController {
 
     @GetMapping("me")
     @RequireEnabledUser
-    public ResponseEntity<APIResponse<UserDTO>> getUserDetail(
+    public ResponseEntity<APIResponse<UserResponse>> getUserDetail(
             @AuthenticationPrincipal CustomUserDetails userDetails)
             throws CustomException {
-        UserDTO userDTO = userService.getUserDetail(userDetails.getUser().getId());
-        APIResponse<UserDTO> response = APIResponse.<UserDTO>builder()
+        var userDTO = userService.getUserDetail(userDetails.getUser().getId());
+        APIResponse<UserResponse> response = APIResponse.<UserResponse>builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.OK.getMessage())
                 .data(userDTO)
@@ -90,13 +90,13 @@ public class UserController {
 
     @PutMapping("me")
     @RequireEnabledUser
-    public ResponseEntity<APIResponse<UserDTO>> updateUser(
+    public ResponseEntity<APIResponse<UserResponse>> updateUser(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestBody @Valid UserUpdateDTO userUpdateDTO
+            @RequestBody @Valid UserUpdateRequest userUpdateDTO
             ) throws CustomException{
         var result = userService.updateUser(
                 userDetails.getUser().getId(), userUpdateDTO);
-        APIResponse<UserDTO> response = APIResponse.<UserDTO>builder()
+        APIResponse<UserResponse> response = APIResponse.<UserResponse>builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.OK.getMessage())
                 .data(result)

@@ -55,6 +55,9 @@ public class User {
     @Column(nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private BankAccount bankAccount;
+
     @UpdateTimestamp
     @Column(nullable = false)
     private OffsetDateTime updatedAt;

@@ -1,14 +1,17 @@
 package com.vn.DineNow.enums;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public enum RestaurantStatus {
     PENDING("PENDING"),
     APPROVED("APPROVED"),
-    REJECTED("REJECTED");
-
-    private final String name;
+    REJECTED("REJECTED"),
+    BLOCKED("BLOCKED");
+    String name;
 }
