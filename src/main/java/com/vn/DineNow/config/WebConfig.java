@@ -28,9 +28,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowCredentials(true);
     }
 
-    /**
-     * ✅ Cho phép truy cập ảnh tĩnh từ thư mục local (D:/BasicProject/uploads)
-     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String normalizedPath = uploadDirectory.endsWith("/") ? uploadDirectory : uploadDirectory + "/";

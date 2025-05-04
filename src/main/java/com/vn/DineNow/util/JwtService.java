@@ -43,7 +43,7 @@ public class JwtService {
                 .withIssuedAt(now)
                 .withIssuer(issuer)
                 .withExpiresAt(expiryDate)
-                .withClaim("role", "ROLE_" + userDetails.getRole().name()) // ✅ đúng chuẩn ROLE_
+                .withClaim("role", "ROLE_" + userDetails.getRole().name())
                 .sign(getAlgorithm());
     }
 
