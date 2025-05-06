@@ -16,4 +16,5 @@ public class RestaurantSimpleResponseDTO {
     String restaurantTierName;
     String thumbnailUrl;
     String typeName;
+    Long reservationCount;
 }

@@ -1,6 +1,6 @@
 package com.vn.DineNow.payload.request.Order;
 
-import com.vn.DineNow.payload.request.OrderItem.OrderItemRequest;
+import com.vn.DineNow.payload.request.orderItem.OrderItemRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -27,11 +27,8 @@ public class OrderRequest {
     @Min(value = 0, message = "Number of children cannot be negative")
     Integer numberOfChild;
 
-    @NotNull(message = "Password must not be null")
-    @Pattern(
-            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
-            message = "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 digit, and 1 special character and be at least 8 characters long"
-    )
+    @NotNull(message = "Phone number must not be null")
+    @Pattern(regexp = "^0[0-9]{9}$", message = "Phone must be 10 digits and start with 0")
     String numberPhone;
 
     @NotEmpty(message = "Order items must not be empty")

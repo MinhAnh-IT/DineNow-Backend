@@ -2,7 +2,7 @@ package com.vn.DineNow.mapper;
 
 import com.vn.DineNow.entities.Reservation;
 import com.vn.DineNow.payload.request.Order.OrderRequest;
-import com.vn.DineNow.payload.request.Reservation.ReservationRequest;
+import com.vn.DineNow.payload.request.reservation.ReservationRequest;
 import com.vn.DineNow.payload.response.reservation.ReservationDetailsResponse;
 import com.vn.DineNow.payload.response.reservation.ReservationResponse;
 import com.vn.DineNow.payload.response.reservation.ReservationSimpleResponse;
@@ -11,10 +11,11 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ReservationMapper {
+    @Mapping(target = "review", ignore = true)
+    @Mapping(target = "reservationOrder", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "restaurant.id", source = "restaurantId")
     @Mapping(target = "reservationPayments", ignore = true)
-    @Mapping(target = "reservationOrders", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "customer.id", source = "customerId")
     @Mapping(target = "createdAt", ignore = true)

@@ -17,7 +17,7 @@ import java.util.List;
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     boolean existsByNameAndOwner(String name, User owner);
     Page<Restaurant> findAllByStatus(RestaurantStatus status, Pageable pageable);
-
+    List<Restaurant> findAllByType_Id(long typeId, Pageable pageable);
     @Query("SELECT r FROM Restaurant r " +
             "WHERE LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%')) " +
             "AND LOWER(r.address) LIKE LOWER(CONCAT('%', :province, '%'))")

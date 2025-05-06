@@ -23,10 +23,13 @@ import com.vn.DineNow.services.owner.foodCategory.FoodCategoryService;
 import com.vn.DineNow.services.owner.menuItem.OwnerMenuItemService;
 import com.vn.DineNow.services.owner.order.OwnerOrderService;
 import com.vn.DineNow.services.owner.restaurant.OwnerRestaurantService;
+import com.vn.DineNow.services.owner.review.OwnerMenuItemReviewService;
+import com.vn.DineNow.services.owner.review.OwnerRestaurantReviewService;
 import com.vn.DineNow.validation.ValidRestaurantApprovedValidator;
 import io.lettuce.core.dynamic.annotation.Param;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
@@ -46,8 +49,9 @@ public class OwnerController {
     OwnerRestaurantService restaurantService;
     OwnerMenuItemService menuItemService;
     FoodCategoryService foodCategoryService;
-    CustomerOrderService customerOrderService;
     OwnerOrderService ownerOrderService;
+    OwnerRestaurantReviewService ownerRestaurantReviewService;
+    OwnerMenuItemReviewService ownerMenuItemReviewService;
 
     @PostMapping("/restaurants")
     @RequireEnabledUser
@@ -271,6 +275,36 @@ public class OwnerController {
             @RequestBody OrderStatus status) throws Exception {
         var result = ownerOrderService.updateOrderStatus(userDetails.getId(), orderId, status);
         APIResponse<Boolean> response = APIResponse.<Boolean>builder()
+                .status(StatusCode.OK.getCode())
+                .message(StatusCode.OK.getMessage())
+                .data(result)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/reviews/restaurant/{restaurantId}")
+    public ResponseEntity<APIResponse<List<?>>> getAllReviewsByRestaurantId(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable long restaurantId,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) throws CustomException {
+        var result = ownerRestaurantReviewService.getAllReviewsByRestaurantId(userDetails.getId(), restaurantId, page, size);
+        APIResponse<List<?>> response = APIResponse.<List<?>>builder()
+                .status(StatusCode.OK.getCode())
+                .message(StatusCode.OK.getMessage())
+                .data(result)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/reviews/menu-item/{menuItemId}")
+    public ResponseEntity<APIResponse<List<?>>> getAllReviewsByMenuItemId(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable long menuItemId,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) throws CustomException {
+        var result = ownerMenuItemReviewService.getAllReviewsByMenuItemId(userDetails.getId(), menuItemId, page, size);
+        APIResponse<List<?>> response = APIResponse.<List<?>>builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.OK.getMessage())
                 .data(result)

@@ -1,8 +1,7 @@
 package com.vn.DineNow.mapper;
 
-import com.vn.DineNow.dtos.OrderItemDTO;
 import com.vn.DineNow.entities.OrderItem;
-import com.vn.DineNow.payload.request.OrderItem.OrderItemSimpleResponse;
+import com.vn.DineNow.payload.request.orderItem.OrderItemSimpleResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -10,15 +9,6 @@ import java.nio.file.Path;
 
 @Mapper(componentModel = "spring")
 public interface OrderItemMapper {
-
-    @Mapping(source = "order", target = "order.id")
-    @Mapping(source = "menuItem", target = "menuItem.id")
-    OrderItem toEntity(OrderItemDTO orderItemDTO);
-
-    @Mapping(source = "order.id", target = "order")
-    @Mapping(source = "menuItem.id", target = "menuItem")
-    OrderItemDTO toDTO(OrderItem orderItem);
-
     @Mapping(target = "menuItemName", expression = "java(orderItem.getMenuItem().getName())")
     @Mapping(target = "totalPrice", source = "price")
     @Mapping(target = "menuItemPrice", source = "menuItem.price")

@@ -1,0 +1,31 @@
+1. Lấy danh sách đánh giá của nhà hàng: api/owner/reviews/restaurants/1 - Get  => có phân trang, page = 0 và size = 10 mặc định
+    * Request body: 1 = id của nhà hàng
+    * Response body:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": [
+                {
+                    "reviewerName": "Huỳnh Minh Anh",
+                    "comment": "Nhà hàng rất đẹp và phục vụ tốt!",
+                    "reviewDate": "2025-05-04T17:43:30.645816+07:00",
+                    "rating": 5
+                },
+                {
+                    "reviewerName": "Nguyễn Văn A",
+                    "comment": "Nhà hàng bình thường, không có gì đặc biệt.",
+                    "reviewDate": "2025-05-04T17:43:30.645816+07:00",
+                    "rating": 3
+                }
+            ]
+        }
+        # Chú thích:
+            - status: Trạng thái (200 - thành công)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: danh sách đánh giá của nhà hàng
+                - reviewerName: tên người dùng đã đánh giá
+                - comment: bình luận của người dùng
+                - reviewDate: ngày đánh giá
+                - rating: điểm đánh giá (từ 1 đến 5)
+
+=> Bao gồm cả các nhà hàng bị khoá

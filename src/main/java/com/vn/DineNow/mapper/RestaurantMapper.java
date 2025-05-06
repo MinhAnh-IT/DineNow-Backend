@@ -57,14 +57,14 @@ public interface RestaurantMapper {
     FavoriteRestaurantResponseDTO toFavoriteRestaurantDTO(Restaurant restaurant);
 
 
-    @Mappings (
+    @Mappings(
         {
-            @Mapping(source = "type.name", target = "typeName"),
-            @Mapping(source = "restaurantTier.name", target = "restaurantTierName"),
-            @Mapping(target = "thumbnailUrl", expression =
-                    "java(mapThumbnail(restaurant.getRestaurantRestaurantImages()))")
-        }
-    )
+                @Mapping(source = "type.name", target = "typeName"),
+                @Mapping(source = "restaurantTier.name", target = "restaurantTierName"),
+                @Mapping(target = "thumbnailUrl", expression =
+                        "java(mapThumbnail(restaurant.getRestaurantRestaurantImages()))"),
+                @Mapping(target = "reservationCount", ignore = true),
+        })
     RestaurantSimpleResponseDTO toSimpleDTO(Restaurant restaurant);
 
     @Mappings (

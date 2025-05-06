@@ -48,10 +48,13 @@ public class Reservation {
     @Column(nullable = false, name = "number_of_children")
     private Integer numberOfChild;
 
-    @OneToMany(mappedBy = "reservation")
-    private Set<Order> reservationOrders;
+    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Order reservationOrder;
 
     @OneToMany(mappedBy = "reservation")
     private Set<Payment> reservationPayments;
+
+    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private Review review;
 
 }

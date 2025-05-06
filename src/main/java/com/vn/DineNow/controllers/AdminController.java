@@ -76,16 +76,7 @@ public class AdminController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("restaurant-types")
-    public ResponseEntity<APIResponse<List<RestaurantTypeResponse>>> getAllRestaurantTypeResponse() throws CustomException {
-        var result = restaurantTypeService.getAllRestaurantType();
-        APIResponse<List<RestaurantTypeResponse>> response = APIResponse.<List<RestaurantTypeResponse>>builder()
-                .status(StatusCode.OK.getCode())
-                .message(StatusCode.OK.getMessage())
-                .data(result)
-                .build();
-        return ResponseEntity.ok(response);
-    }
+
 
     @PostMapping("restaurant-types")
     public ResponseEntity<APIResponse<RestaurantTypeResponse>> createRestaurantType(

@@ -37,6 +37,9 @@ public class MenuItem {
     private String imageUrl;
 
     @Column
+    private Double averageRating;
+
+    @Column
     @CreationTimestamp
     private OffsetDateTime createdAt;
 

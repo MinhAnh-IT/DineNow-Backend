@@ -1,23 +1,17 @@
 package com.vn.DineNow.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.OffsetDateTime;
 
 
-@Setter
 @Getter
+@Setter
 @Entity
+@Table(name = "reviews")
 public class Review {
 
     @Id
@@ -31,6 +25,7 @@ public class Review {
     private String comment;
 
     @Column
+    @CreationTimestamp
     private OffsetDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,4 +36,8 @@ public class Review {
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reservation_id", nullable = false, unique = true)
+    private Reservation reservation;
 }
+

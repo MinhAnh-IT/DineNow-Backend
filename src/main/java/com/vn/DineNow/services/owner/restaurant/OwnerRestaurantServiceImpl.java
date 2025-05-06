@@ -2,6 +2,7 @@ package com.vn.DineNow.services.owner.restaurant;
 
 import com.vn.DineNow.entities.Restaurant;
 import com.vn.DineNow.entities.RestaurantTiers;
+import com.vn.DineNow.entities.Review;
 import com.vn.DineNow.entities.User;
 import com.vn.DineNow.enums.RestaurantStatus;
 import com.vn.DineNow.enums.Role;
@@ -12,10 +13,7 @@ import com.vn.DineNow.payload.request.restaurant.RestaurantRequestDTO;
 import com.vn.DineNow.payload.request.restaurant.RestaurantUpdateDTO;
 import com.vn.DineNow.payload.response.restaurant.RestaurantResponseDTO;
 import com.vn.DineNow.payload.response.restaurant.RestaurantSimpleResponseDTO;
-import com.vn.DineNow.repositories.RestaurantRepository;
-import com.vn.DineNow.repositories.RestaurantTierRepository;
-import com.vn.DineNow.repositories.RestaurantTypeRepository;
-import com.vn.DineNow.repositories.UserRepository;
+import com.vn.DineNow.repositories.*;
 import com.vn.DineNow.services.common.cache.RedisService;
 import com.vn.DineNow.services.owner.restaurant.restaurantImages.RestaurantImageService;
 import lombok.AccessLevel;
@@ -45,6 +43,7 @@ public class OwnerRestaurantServiceImpl implements OwnerRestaurantService {
     final RestaurantTypeRepository restaurantTypeRepository;
     final RedisService redisService;
     final RestaurantTierRepository restaurantTierRepository;
+    final ReviewRepository reviewRepository;
 
     @Value("${DineNow.key.cache-restaurant}")
     String keyRedis;
@@ -199,6 +198,32 @@ public class OwnerRestaurantServiceImpl implements OwnerRestaurantService {
         }
         return false;
     }
+
+    /**
+     * Updates the average rating for a restaurant based on its reviews.
+     *
+     * @param restaurant the restaurant to update
+     * @throws CustomException if any error occurs during the process
+     */
+    @Override
+    public void updateAvgRatingForRestaurant(Restaurant restaurant) throws CustomException {
+        var reviews = reviewRepository.findAllByRestaurant(restaurant);
+
+        if (reviews.isEmpty()) {
+            restaurant.setAverageRating(0.0);
+        } else {
+            double avgRating = reviews.stream()
+                    .mapToDouble(Review::getRating)
+                    .average()
+                    .orElse(0.0);
+
+            double rounded = Math.floor(avgRating * 10 + 0.5) / 10.0;
+
+            restaurant.setAverageRating(rounded);
+        }
+        restaurantRepository.save(restaurant);
+    }
+
 
     /**
      * Checks if the transition between two restaurant statuses is allowed.

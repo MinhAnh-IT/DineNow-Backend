@@ -22,7 +22,7 @@ public class MenuItemResponseDTO {
     private String name;
 
     private String description;
-
+    private double averageRating;
     @NotNull
     @Digits(integer = 12, fraction = 2)
     @JsonFormat(shape = JsonFormat.Shape.STRING)

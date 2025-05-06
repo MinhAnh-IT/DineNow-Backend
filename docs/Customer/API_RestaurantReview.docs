@@ -1,0 +1,64 @@
+1. Tạo đánh giá mới cho nhà hàng: api/reviews/restaurants/1/add - Post
+    * Request body: 1 = id của nhà hàng
+        {
+            "rating": 4.5,
+            "comment": "Nhà hàng rất đẹp và phục vụ tốt!"
+        }
+        # Chú thích:
+            - rating: Điểm đánh giá (từ 1 đến 5)
+            - comment: Bình luận của người dùng về nhà hàng
+
+    * Response body:
+        {
+            "status": 201,
+            "message": "Resource created successfully.",
+            "data": {
+                "reviewerName": "Huỳnh Minh Anh",
+                "comment": "Tạm ổn",
+                "reviewDate": "2025-05-04T17:43:30.645816+07:00",
+                "rating": 5
+            }
+        }
+        # Chú thích:
+            - status: Trạng thái (201 - tạo mới thành công)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: thông tin đánh giá vừa được tạo mới
+                - reviewerName: tên người dùng đã đánh giá
+                - comment: bình luận của người dùng
+                - reviewDate: ngày đánh giá
+                - rating: điểm đánh giá (từ 1 đến 5)
+
+--------------------------------------------------------------------------------------------------------------------------
+2. Lấy danh sách đánh giá của nhà hàng: api/reviews/restaurants/1/all - Get  => có phân trang, page = 0 và size = 10 mặc định
+    * Request body: 1 = id của nhà hàng
+    * Response body:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": [
+                {
+                    "reviewerName": "Huỳnh Minh Anh",
+                    "comment": "Nhà hàng rất đẹp và phục vụ tốt!",
+                    "reviewDate": "2025-05-04T17:43:30.645816+07:00",
+                    "rating": 5
+                },
+                {
+                    "reviewerName": "Nguyễn Văn A",
+                    "comment": "Nhà hàng bình thường, không có gì đặc biệt.",
+                    "reviewDate": "2025-05-04T17:43:30.645816+07:00",
+                    "rating": 3
+                }
+            ]
+        }
+        # Chú thích:
+            - status: Trạng thái (200 - thành công)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: danh sách đánh giá của nhà hàng
+                - reviewerName: tên người dùng đã đánh giá
+                - comment: bình luận của người dùng
+                - reviewDate: ngày đánh giá
+                - rating: điểm đánh giá (từ 1 đến 5)
+
+
+** Lưu ý:
+    Những nhà hàng bị khoá hoặc tạm khoá sẽ không được đánh giá và hiển thị đánh giá

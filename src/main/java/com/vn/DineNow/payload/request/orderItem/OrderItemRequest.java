@@ -1,4 +1,4 @@
-package com.vn.DineNow.payload.request.OrderItem;
+package com.vn.DineNow.payload.request.orderItem;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

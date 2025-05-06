@@ -31,4 +31,7 @@ public class OrderItem {
     @JoinColumn(name = "menu_item_id", nullable = false)
     private MenuItem menuItem;
 
+    @OneToOne(mappedBy = "orderItem", fetch = FetchType.LAZY)
+    private MenuItemReview review;
+
 }

@@ -38,8 +38,8 @@ public class Restaurant {
     @JoinColumn(name = "type_id")
     private RestaurantType type;
 
-    @Column(precision = 2, scale = 1)
-    private BigDecimal averageRating = BigDecimal.valueOf(0.0);;
+    @Column
+    private double averageRating;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

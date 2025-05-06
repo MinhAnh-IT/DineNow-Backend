@@ -5,15 +5,16 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
-public class MenuItemReviewRequestDTO {
-
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
+public class ReviewRequestDTO {
     @NotNull(message = "Rating is required")
     @Min(value = 1, message = "Rating must be at least 1")
     @Max(value = 5, message = "Rating must be at most 5")
-    private Integer rating;
-
-    private String comment;
+    Integer rating;
+    @NotNull(message = "Customer ID is required")
+    String comment;
 }
