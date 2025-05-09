@@ -43,7 +43,20 @@ public class JwtService {
                 .withIssuedAt(now)
                 .withIssuer(issuer)
                 .withExpiresAt(expiryDate)
-                .withClaim("role", userDetails.getRole().getName())
+                .withClaim("role", "ROLE_" + userDetails.getRole().name())
+                .sign(getAlgorithm());
+    }
+
+    public String generateRefreshToken(UserForGenerateToken userDetails) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + jwtRefreshExpiration);
+        return JWT.create()
+                .withSubject(Long.toString(userDetails.getId()))
+                .withAudience(audience)
+                .withIssuedAt(now)
+                .withIssuer(issuer)
+                .withExpiresAt(expiryDate)
+                .withClaim("role", "ROLE_" + userDetails.getRole().name())
                 .sign(getAlgorithm());
     }
 
@@ -53,6 +66,14 @@ public class JwtService {
                 .build()
                 .verify(token);
         return Long.parseLong(decodedJWT.getSubject());
+    }
+
+    public String getRoleFromToken(String token) {
+        DecodedJWT decodedJWT = JWT.require(getAlgorithm())
+                .withIssuer(issuer)
+                .build()
+                .verify(token);
+        return decodedJWT.getClaim("role").asString();
     }
 
     public boolean validateToken(String authToken) {
@@ -74,18 +95,5 @@ public class JwtService {
             return bearerToken.substring(7);
         }
         return null;
-    }
-
-    public String generateRefreshToken(UserForGenerateToken userDetails) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtRefreshExpiration);
-        return JWT.create()
-                .withSubject(Long.toString(userDetails.getId()))
-                .withAudience(audience)
-                .withIssuedAt(now)
-                .withIssuer(issuer)
-                .withExpiresAt(expiryDate)
-                .withClaim("role", userDetails.getRole().getName())
-                .sign(getAlgorithm());
     }
 }

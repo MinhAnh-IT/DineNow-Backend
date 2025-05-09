@@ -24,8 +24,10 @@ public interface UserMapper {
     @Mapping(target = "customerReviews", ignore = true)
     @Mapping(target = "customerReservations", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-    User toEntity(UserCreateRequest userDTO);
 
+    User toEntity(UserCreateRequest userDTO);
+    
+    @Mapping(target = "role", source = "role")
     UserResponse toResponseDTO(User user);
 
     UserDetailsResponse toEntityDetails(User user);

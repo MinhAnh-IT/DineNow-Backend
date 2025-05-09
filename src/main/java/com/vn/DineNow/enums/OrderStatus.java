@@ -15,6 +15,5 @@ public enum OrderStatus {
     CANCELLED("CANCELLED"),
     COMPLETED("COMPLETED"),
     FAILED("FAILED");
-
     String status;
 }

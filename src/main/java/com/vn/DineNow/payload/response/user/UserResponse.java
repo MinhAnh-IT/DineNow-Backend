@@ -21,4 +21,5 @@ public class UserResponse {
     boolean enabled;
     OffsetDateTime createdAt;
     OffsetDateTime updatedAt;
+    String role;
 }

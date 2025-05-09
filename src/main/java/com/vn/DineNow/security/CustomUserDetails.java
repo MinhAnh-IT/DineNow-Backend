@@ -23,13 +23,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // You can customize role here
-        return List.of(() -> "ROLE_" + user.getRole());
+        return List.of(() -> "ROLE_" + user.getRole().getName()); // 👈 lấy chuỗi "OWNER"
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword(); // Not used for OAuth
+        return user.getPassword();
     }
 
     @Override
