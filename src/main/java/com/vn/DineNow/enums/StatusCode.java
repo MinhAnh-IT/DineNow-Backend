@@ -41,6 +41,7 @@ public enum StatusCode {
     INVALID_ACTION(426, "Invalid action. %s"),
     INVALID_ENTITY(427, "Invalid entity. %s"),
     INVALID_REVIEW_ACTION(428, "You cannot review this %s because you haven't experienced it yet."),
+    INVALID_DATE_RANGE(429, "Invalid date range. Start date must be before end date."),
     RUNTIME_EXCEPTION(500, "Unexpected runtime exception occurred.");
 
 

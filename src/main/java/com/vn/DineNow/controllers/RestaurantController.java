@@ -18,19 +18,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/api/restaurants")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RestaurantController {
+
     CustomerRestaurantServiceImpl restaurantService;
     CustomerMenuItemService menuItemService;
 
     @GetMapping()
-    public ResponseEntity<APIResponse<?> >getALLRestaurant(
+    public ResponseEntity<APIResponse<?>> getALLRestaurant(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size){
+            @RequestParam(defaultValue = "20") int size
+    ) {
         var result = restaurantService.getAllRestaurantStatusApproved(page, size);
         APIResponse<?> response = APIResponse.builder()
                 .status(StatusCode.OK.getCode())
@@ -56,7 +57,7 @@ public class RestaurantController {
     public ResponseEntity<APIResponse<?>> searchRestaurant(
             @RequestBody SearchRestaurantDTO request,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) throws CustomException{
+            @RequestParam(defaultValue = "10") int size) throws CustomException {
         var result = restaurantService.searchRestaurant(request, page, size);
         APIResponse<?> response = APIResponse.builder()
                 .status(StatusCode.OK.getCode())
@@ -68,7 +69,7 @@ public class RestaurantController {
 
     @GetMapping("/{restaurantId}/menu")
     public ResponseEntity<APIResponse<List<MenuItemSimpleResponseDTO>>> addItemForRestaurant(
-            @ValidRestaurantApprovedValidator @PathVariable long restaurantId) throws CustomException{
+            @ValidRestaurantApprovedValidator @PathVariable long restaurantId) throws CustomException {
         var result = menuItemService.GetAllSimpleMenuItemAvailableForRestaurant(restaurantId);
         APIResponse<List<MenuItemSimpleResponseDTO>> response = APIResponse.<List<MenuItemSimpleResponseDTO>>builder()
                 .status(StatusCode.OK.getCode())
@@ -91,5 +92,15 @@ public class RestaurantController {
                 .build();
         return ResponseEntity.ok(response);
     }
-}
 
+    @GetMapping("/featured")
+    public ResponseEntity<APIResponse<List<RestaurantSimpleResponseDTO>>> getListOfFeaturedRestaurants() throws CustomException {
+        var result = restaurantService.GetListOfFeaturedRestaurants();
+        APIResponse<List<RestaurantSimpleResponseDTO>> response = APIResponse.<List<RestaurantSimpleResponseDTO>>builder()
+                .status(StatusCode.OK.getCode())
+                .message(StatusCode.OK.getMessage())
+                .data(result)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+}

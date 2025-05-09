@@ -5,6 +5,7 @@ import com.vn.DineNow.enums.OrderStatus;
 import com.vn.DineNow.enums.RestaurantStatus;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
+import com.vn.DineNow.payload.request.Order.RejectOrderRequest;
 import com.vn.DineNow.payload.request.foodCategory.FoodCategoryRequest;
 import com.vn.DineNow.payload.request.foodCategory.FoodCategoryUpdateRequest;
 import com.vn.DineNow.payload.request.menuItem.MenuItemRequestDTO;
@@ -272,8 +273,9 @@ public class OwnerController {
     public ResponseEntity<APIResponse<Boolean>> updateOrderStatus(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable long orderId,
-            @RequestBody OrderStatus status) throws Exception {
-        var result = ownerOrderService.updateOrderStatus(userDetails.getId(), orderId, status);
+            @RequestParam OrderStatus status,
+            @RequestBody RejectOrderRequest reason) throws Exception {
+        var result = ownerOrderService.updateOrderStatus(userDetails.getId(), orderId, status, reason);
         APIResponse<Boolean> response = APIResponse.<Boolean>builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.OK.getMessage())

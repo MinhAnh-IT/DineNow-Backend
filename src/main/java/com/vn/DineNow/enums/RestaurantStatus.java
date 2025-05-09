@@ -14,6 +14,5 @@ public enum RestaurantStatus {
     REJECTED("REJECTED"),
     SUSPENDED("SUSPENDED"),
     BLOCKED("BLOCKED");
-
     String name;
 }

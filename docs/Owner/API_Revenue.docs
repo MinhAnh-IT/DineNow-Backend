@@ -1,0 +1,120 @@
+1. Thống kê doanh thu theo tháng: api/owner/revenue/restaurant/3/monthly?year=2025  -  Get
+    * Request:
+        - year: 2025 => năm cần thống kê || mặc định là năm hiện tại nếu không nhập
+        - 3: id của nhà hàng
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "totalRevenue": 8680000.00,
+                "monthlyDetails": [
+                    {
+                        "month": 5,
+                        "year": 2025,
+                        "orderCount": 2,
+                        "revenue": 2480000.00
+                    },
+                    {
+                        "month": 6,
+                        "year": 2025,
+                        "orderCount": 4,
+                        "revenue": 4960000.00
+                    },
+                    {
+                        "month": 12,
+                        "year": 2025,
+                        "orderCount": 1,
+                        "revenue": 1240000.00
+                    }
+                ]
+            }
+        }
+        # Chú thích:
+            - totalRevenue: Tổng doanh thu của nhà hàng trong năm 2025
+            - monthlyDetails: Danh sách chi tiết doanh thu theo tháng
+                + month: Tháng
+                + year: Năm
+                + orderCount: Số lượng đơn hàng trong tháng
+                + revenue: Doanh thu trong tháng
+
+------------------------------------------------------------------------------------------------------------------------
+2. Thống kê doanh thu theo năm từ lúc tham gia hệ thống: api/owner/revenue/restaurant/3/yearly  -  Get
+    * Request:
+        - 3: id của nhà hàng
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "totalRevenue": 8680000.00,
+                "yearlyDetails": [
+                    {
+                        "year": 2025,
+                        "orderCount": 7,
+                        "revenue": 8680000.00
+                    }
+                ]
+            }
+        }
+        # Chú thích:
+            - totalRevenue: Tổng doanh thu của nhà hàng từ lúc tham gia hệ thống
+            - yearlyDetails: Danh sách chi tiết doanh thu theo năm
+                + year: Năm
+                + orderCount: Số lượng đơn hàng trong năm
+                + revenue: Doanh thu trong năm
+
+------------------------------------------------------------------------------------------------------------------------
+3. Thống kê doanh thu tháng theo khoản thời gian:
+        api/owner/revenue/restaurant/3/monthly/range?startDate=2023-01&endDate=2027-12  -  Get
+    * Request:
+        - startDate: 2023-01 => tháng bắt đầu thống kê
+        - endDate: 2027-12 => tháng kết thúc thống kê
+        - 3: id của nhà hàng
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "totalRevenue": 11160000.00,
+                "monthlyDetails": [
+                    {
+                        "month": 10,
+                        "year": 2024,
+                        "orderCount": 1,
+                        "revenue": 1240000.00
+                    },
+                    {
+                        "month": 5,
+                        "year": 2025,
+                        "orderCount": 2,
+                        "revenue": 2480000.00
+                    },
+                    {
+                        "month": 6,
+                        "year": 2025,
+                        "orderCount": 4,
+                        "revenue": 4960000.00
+                    },
+                    {
+                        "month": 12,
+                        "year": 2025,
+                        "orderCount": 1,
+                        "revenue": 1240000.00
+                    },
+                    {
+                        "month": 12,
+                        "year": 2026,
+                        "orderCount": 1,
+                        "revenue": 1240000.00
+                    }
+                ]
+            }
+        }
+        # Chú thích:
+            - totalRevenue: Tổng doanh thu của nhà hàng trong khoảng thời gian từ tháng 1 năm 2023 đến tháng 12 năm 2027
+            - monthlyDetails: Danh sách chi tiết doanh thu theo tháng
+                + month: Tháng
+                + year: Năm
+                + orderCount: Số lượng đơn hàng trong tháng
+                + revenue: Doanh thu trong tháng

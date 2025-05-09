@@ -181,9 +181,13 @@
 
 
 -------------------------------------------------------------------------------------------------------------------------------
-3. Cập nhật trạng thái đơn hàng: api/owner/orders/1/status
-    * Request: 1 = id của đơn hàng ||  lưu ý chỉ truyền string không phải json
-         "COMPLETED"
+3. Cập nhật trạng thái đơn hàng: api/owner/orders/1/status?status=COMPLETED
+    * Request: 1 = id của đơn hàng
+        - nếu là trạng thái từ chối:
+            + reason: lý do từ chối đơn hàng
+             {
+                 "reason" : "Món A hiện không đủ số lượng, chỉ đáp ứng được 2 đĩa"
+             }
     * Response:
         {
             "status": 200,

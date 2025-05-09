@@ -27,4 +27,25 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
             );
 
     List<Restaurant> findAllByOwner(User owner);
+
+    @Query(
+            value = """
+                SELECT r.*
+                FROM restaurants r
+                LEFT JOIN reservations res ON r.id = res.restaurant_id
+                LEFT JOIN orders o ON o.reservation_id = res.id
+                WHERE r.status = 'APPROVED'
+                GROUP BY r.id, r.name, r.address, r.phone, r.average_rating
+                ORDER BY
+                    ROUND(
+                        r.average_rating * 0.5 +
+                        LOG10(COUNT(DISTINCT IF(o.status = 'COMPLETED', o.id, NULL)) + 1) * 0.5,
+                        3
+                    ) DESC
+                LIMIT 15
+            """,
+            nativeQuery = true
+    )
+    List<Restaurant> findTopFeaturedRestaurants();
+
 }
