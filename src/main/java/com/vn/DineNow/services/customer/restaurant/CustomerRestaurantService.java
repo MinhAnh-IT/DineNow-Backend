@@ -17,5 +17,7 @@ public interface CustomerRestaurantService {
             throws CustomException;
     List<RestaurantSimpleResponseDTO> getAllRestaurantByTypeId(long typeId, int page, int size)
             throws CustomException;
+    List<RestaurantSimpleResponseDTO>GetListOfFeaturedRestaurants();
+
 }
 

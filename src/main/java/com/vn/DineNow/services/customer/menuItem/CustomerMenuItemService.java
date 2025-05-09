@@ -16,4 +16,5 @@ public interface CustomerMenuItemService {
             throws CustomException;
     List<MenuItemSimpleResponseDTO> GetAllMenuItemAvailableTrueByCategory(long categoryId, int page, int size)
             throws CustomException;
+    List<MenuItemSimpleResponseDTO> getListMenuItemFeatured() throws CustomException;
 }

@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.util.HashMap;
+
 /**
  * Service implementation for sending OTP or verification emails using a predefined HTML template.
  */
@@ -71,6 +73,83 @@ public class EmailServiceImpl implements EmailService {
             throw new CustomException(StatusCode.EMAIL_ERROR, e);
         }
     }
+
+    /**
+     * Sends a confirmation email using a Thymeleaf template with dynamic variables.
+     *
+     * @param to           the recipient's email address
+     * @param subject      the subject of the email
+     * @param templateName the name of the Thymeleaf template to render
+     * @param variables    a map of variables to inject into the template
+     * @throws CustomException if any error occurs while sending the email
+     */
+    @Override
+    @Async
+    public void confirmOrderEmail(String to, String subject, String templateName, HashMap<String, Object> variables) throws CustomException {
+        try {
+            Context context = new Context();
+            variables.forEach(context::setVariable);
+
+            String htmlContent = templateEngine.process(templateName, context);
+
+            System.out.println("====== HTML EMAIL CONTENT ======");
+            System.out.println(htmlContent);
+            System.out.println("================================");
+
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            InternetAddress fromAddress = new InternetAddress("testproject610@gmail.com", sender, "UTF-8");
+            helper.setFrom(fromAddress);
+
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(htmlContent, true);
+
+            javaMailSender.send(message);
+            log.info("Confirmation email sent to {}", to);
+        } catch (Exception e) {
+            log.error("Error sending confirmation email to {}: {}", to, e.getMessage());
+            throw new CustomException(StatusCode.EMAIL_ERROR, e);
+        }
+    }
+
+
+    /**
+     * Sends a rejection email using a Thymeleaf template with dynamic variables.
+     *
+     * @param to           the recipient's email address
+     * @param subject      the subject of the email
+     * @param templateName the name of the Thymeleaf template to render
+     * @param variables    a map of variables to inject into the template
+     * @throws CustomException if any error occurs while sending the email
+     */
+    @Override
+    @Async
+    public void rejectOrderEmail(String to, String subject, String templateName, HashMap<String, Object> variables) throws CustomException {
+        try {
+            Context context = new Context();
+            variables.forEach(context::setVariable);
+
+            String htmlContent = templateEngine.process(templateName, context);
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            InternetAddress fromAddress = new InternetAddress("testproject610@gmail.com", sender, "UTF-8");
+            helper.setFrom(fromAddress);
+
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(htmlContent, true);
+
+            javaMailSender.send(message);
+            log.info("Rejection email sent to {}", to);
+        } catch (Exception e) {
+            log.error("Error sending rejection email to {}: {}", to, e.getMessage());
+            throw new CustomException(StatusCode.EMAIL_ERROR, e);
+        }
+    }
+
 
     @Override
     @Async

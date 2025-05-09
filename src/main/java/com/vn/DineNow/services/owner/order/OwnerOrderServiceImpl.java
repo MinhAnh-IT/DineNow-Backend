@@ -8,17 +8,21 @@ import com.vn.DineNow.enums.Role;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.mapper.OrderMapper;
+import com.vn.DineNow.payload.request.Order.RejectOrderRequest;
 import com.vn.DineNow.payload.response.order.OrderDetailResponse;
 import com.vn.DineNow.payload.response.order.OrderResponse;
 import com.vn.DineNow.payload.response.order.OrderSimpleResponse;
 import com.vn.DineNow.repositories.OrderRepository;
 import com.vn.DineNow.repositories.RestaurantRepository;
 import com.vn.DineNow.repositories.UserRepository;
+import com.vn.DineNow.services.common.email.EmailService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -30,61 +34,14 @@ public class OwnerOrderServiceImpl implements OwnerOrderService{
     UserRepository userRepository;
     RestaurantRepository restaurantRepository;
     OrderMapper orderMapper;
+    EmailService emailService;
+
 
     /**
-     * Cancels an order by setting its status to CANCELLED.
-     * @param orderId the ID of the order to cancel
-     * @return true if the order was cancelled, false otherwise
-     * @throws Exception if the order is not found or if the status is not PENDING
+     * Validates the status of an order to ensure it is not cancelled or completed.
+     * @param order the order to validate
+     * @throws CustomException if the order is cancelled or completed
      */
-    @Override
-    public boolean cancelOrder(Long orderId) throws Exception {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "Order", String.valueOf(orderId)));
-        if (order.getStatus() == OrderStatus.PENDING) {
-            order.setStatus(OrderStatus.CANCELLED);
-            orderRepository.save(order);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Confirms an order by setting its status to CONFIRMED.
-     * @param orderId the ID of the order to confirm
-     * @return true if the order was confirmed, false otherwise
-     * @throws Exception if the order is not found or if the status is not PENDING
-     */
-    @Override
-    public boolean confirmedOrder(Long orderId) throws Exception {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "Order", String.valueOf(orderId)));
-        if (order.getStatus() == OrderStatus.PENDING) {
-            order.setStatus(OrderStatus.CONFIRMED);
-            orderRepository.save(order);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Completes an order by setting its status to COMPLETED.
-     * @param orderId the ID of the order to complete
-     * @return true if the order was completed, false otherwise
-     * @throws Exception if the order is not found or if the status is not PAID
-     */
-    @Override
-    public boolean completeOrder(Long orderId) throws Exception {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "Order", String.valueOf(orderId)));
-        if (order.getStatus() == OrderStatus.PAID) {
-            order.setStatus(OrderStatus.COMPLETED);
-            orderRepository.save(order);
-            return true;
-        }
-        return false;
-    }
-
     private void validateOrderStatus(Order order) throws CustomException {
         if (order.getStatus() == OrderStatus.CANCELLED) {
             throw new CustomException(StatusCode.INVALID_ACTION, "Order is cancelled.");
@@ -103,7 +60,7 @@ public class OwnerOrderServiceImpl implements OwnerOrderService{
      * @throws CustomException if the order is not found or if the status transition is not allowed
      */
     @Override
-    public boolean updateOrderStatus(long ownerId, long orderId, OrderStatus status) throws CustomException {
+    public boolean updateOrderStatus(long ownerId, long orderId, OrderStatus status, RejectOrderRequest reason) throws CustomException {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "Order", String.valueOf(orderId)));
         User owner = userRepository.findById(ownerId)
@@ -118,11 +75,69 @@ public class OwnerOrderServiceImpl implements OwnerOrderService{
         if (!isTransitionAllowed(order.getStatus(), status)) {
             throw new CustomException(StatusCode.INVALID_ACTION, "Order status cannot be updated from " + order.getStatus() + " to " + status);
         }
-
+        if (status.equals(OrderStatus.CONFIRMED)){
+            try {
+                sendMailConfirmOrder(order);
+            } catch (CustomException e) {
+                throw new CustomException(StatusCode.INTERNAL_SERVER_ERROR);
+            }
+        }
+        if (status.equals(OrderStatus.CANCELLED)){
+            try {
+                sendMailRejectOrder(order, reason.getReason());
+            } catch (CustomException e) {
+                throw new CustomException(StatusCode.INTERNAL_SERVER_ERROR);
+            }
+        }
         order.setStatus(status);
         orderRepository.save(order);
         return true;
     }
+
+    private void sendMailConfirmOrder(Order order) throws CustomException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'lúc' HH:mm");
+
+        HashMap<String, Object> variables = new HashMap<>();
+        variables.put("fullName", order.getReservation().getCustomer().getFullName());
+        variables.put("restaurantName", order.getReservation().getRestaurant().getName());
+        variables.put("orderCode", String.valueOf(order.getId()));
+        variables.put("orderTime", order.getCreatedAt().format(formatter));
+        variables.put("totalPrice", order.getTotalPrice().toPlainString());
+        variables.put("restaurantAddress", order.getReservation().getRestaurant().getAddress());
+        variables.put("restaurantPhone", order.getReservation().getRestaurant().getPhone());
+        variables.put("reservationTime", order.getReservation().getReservationTime().format(formatter));
+        variables.put("paymentLink", "https://www.google.com.vn/?hl=vi");
+
+        emailService.confirmOrderEmail(
+                order.getReservation().getCustomer().getEmail(),
+                "Đơn hàng đã được xác nhận",
+                "confirm-order",
+                variables
+        );
+    }
+
+    private  void sendMailRejectOrder(Order order, String reason) throws CustomException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'lúc' HH:mm");
+
+        HashMap<String, Object> variables = new HashMap<>();
+        variables.put("fullName", order.getReservation().getCustomer().getFullName());
+        variables.put("restaurantName", order.getReservation().getRestaurant().getName());
+        variables.put("orderCode", String.valueOf(order.getId()));
+        variables.put("orderTime", order.getCreatedAt().format(formatter));
+        variables.put("totalPrice", order.getTotalPrice().toPlainString());
+        variables.put("restaurantAddress", order.getReservation().getRestaurant().getAddress());
+        variables.put("restaurantPhone", order.getReservation().getRestaurant().getPhone());
+        variables.put("reservationTime", order.getReservation().getReservationTime().format(formatter));
+        variables.put("rejectionReason", reason);
+        variables.put("reorderLink", "https://www.google.com.vn/?hl=vi");
+        emailService.rejectOrderEmail(
+                order.getReservation().getCustomer().getEmail(),
+                "Đơn hàng đã bị từ chối",
+                "reject-order",
+                variables
+        );
+    }
+
 
 
     private boolean isTransitionAllowed(OrderStatus current, OrderStatus target) {

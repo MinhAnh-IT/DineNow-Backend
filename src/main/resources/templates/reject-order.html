@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Đơn hàng bị từ chối</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f4f4;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4;">
+  <tr>
+    <td align="center" style="padding: 40px 10px;">
+      <table width="600" cellpadding="0" cellspacing="0" style="background-color: #fff; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden;">
+
+        <!-- Header -->
+        <tr>
+          <td align="center" style="padding: 30px 20px 10px;">
+            <h2 style="color: #e74c3c; margin: 0;">❌ Đơn hàng đã bị huỷ</h2>
+          </td>
+        </tr>
+
+        <!-- Greeting -->
+        <tr>
+          <td style="padding: 0 40px 10px; color: #333;">
+            <p>Xin chào <strong>[[${fullName}]]</strong>,</p>
+            <p>Chúng tôi rất tiếc phải thông báo rằng đơn hàng của bạn tại nhà hàng <strong>[[${restaurantName}]]</strong> đã bị huỷ.</p>
+          </td>
+        </tr>
+
+        <!-- Order Info -->
+        <tr>
+          <td style="padding: 0 40px;">
+            <table width="100%" style="margin: 20px 0; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 8px 0;"><strong>Mã đơn hàng:</strong></td>
+                <td style="padding: 8px 0; text-align: right;">[[${orderCode}]]</td>
+              </tr>
+              <tr style="background-color: #fafafa;">
+                <td style="padding: 8px 0;"><strong>Thời gian đặt:</strong></td>
+                <td style="padding: 8px 0; text-align: right;">[[${orderTime}]]</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0;"><strong>Tổng tiền:</strong></td>
+                <td style="padding: 8px 0; text-align: right;"><strong style="color: #e67e22;">[[${totalPrice}]]₫</strong></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Reason -->
+        <tr>
+          <td style="padding: 0 40px 20px;">
+            <p><strong>Lý do huỷ đơn:</strong></p>
+            <blockquote style="background-color: #fcecec; padding: 15px; border-left: 5px solid #e74c3c; border-radius: 5px; color: #c0392b; font-style: italic; margin: 0;">
+              [[${rejectionReason}]]
+            </blockquote>
+          </td>
+        </tr>
+
+        <!-- Suggestion -->
+        <tr>
+          <td style="padding: 0 40px 10px; color: #333;">
+            <p>Nếu cần hỗ trợ thêm hoặc muốn đặt lại đơn, bạn có thể truy cập lại ứng dụng DineNow hoặc liên hệ với nhà hàng qua số điện thoại <strong>[[${restaurantPhone}]]</strong>.</p>
+          </td>
+        </tr>
+
+        <!-- Reorder Button -->
+        <tr>
+          <td align="center" style="padding: 20px 40px;">
+            <a th:href="${reorderLink}" style="background-color: #27ae60; color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; display: inline-block;">
+              🛒 Đặt lại đơn hàng
+            </a>
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td style="padding: 0 40px 30px;">
+            <p style="margin-bottom: 5px;">Chúng tôi xin lỗi vì sự bất tiện này và hy vọng được phục vụ bạn trong thời gian tới.</p>
+            <p><strong>Đội ngũ DineNow</strong></p>
+          </td>
+        </tr>
+
+        <tr>
+          <td align="center" style="font-size: 12px; color: #999; padding: 20px;">
+            © 2025 DineNow. All rights reserved.
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

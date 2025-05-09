@@ -129,4 +129,12 @@ public class CustomerRestaurantServiceImpl implements CustomerRestaurantService 
                 .map(restaurantMapper::toSimpleDTO)
                 .toList();
     }
+
+    @Override
+    public List<RestaurantSimpleResponseDTO> GetListOfFeaturedRestaurants() {
+        var restaurants = restaurantRepository.findTopFeaturedRestaurants();
+        return restaurants.stream()
+                .map(restaurantMapper::toSimpleDTO)
+                .toList();
+    }
 }

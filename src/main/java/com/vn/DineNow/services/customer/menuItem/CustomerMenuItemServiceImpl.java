@@ -170,4 +170,16 @@ public class CustomerMenuItemServiceImpl implements CustomerMenuItemService {
                 })
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<MenuItemSimpleResponseDTO> getListMenuItemFeatured() throws CustomException {
+        var menuItems = menuItemRepository.findTopFeaturedMenuItems();
+        return menuItems.stream()
+                .map(menuItem -> {
+                    var dto = menuItemMapper.toSimpleDTO(menuItem);
+                    dto.setImageUrl(fileService.getPublicFileUrl(dto.getImageUrl()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
 }

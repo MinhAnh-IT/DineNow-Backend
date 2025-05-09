@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Đơn hàng đã được chấp nhận</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f4f4;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4;">
+  <tr>
+    <td align="center" style="padding: 40px 10px;">
+      <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden;">
+        <tr>
+          <td align="center" style="padding: 30px 20px 10px;">
+            <h2 style="color: #2c3e50; margin: 0;">🎉 Đơn hàng đã được chấp nhận!</h2>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding: 0 40px 10px; color: #333;">
+            <p>Xin chào <strong>[[${fullName}]]</strong>,</p>
+            <p>Đơn hàng của bạn tại <strong>[[${restaurantName}]]</strong> đã được <strong style="color: #27ae60;">chấp nhận</strong>.</p>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding: 0 40px;">
+            <table width="100%" style="border-collapse: collapse; margin: 20px 0;">
+              <tr>
+                <td style="padding: 8px 0;"><strong>Mã đơn hàng:</strong></td>
+                <td style="padding: 8px 0; text-align: right;">[[${orderCode}]]</td>
+              </tr>
+              <tr style="background-color: #fafafa;">
+                <td style="padding: 8px 0;"><strong>Thời gian đặt:</strong></td>
+                <td style="padding: 8px 0; text-align: right;">[[${orderTime}]]</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0;"><strong>Tổng tiền:</strong></td>
+                <td style="padding: 8px 0; text-align: right;"><strong style="color: #27ae60;">[[${totalPrice}]]₫</strong></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding: 0 40px;">
+            <p><strong>Thông tin nhà hàng:</strong></p>
+            <p style="margin: 4px 0;">📍 <strong>Địa chỉ:</strong> [[${restaurantAddress}]]</p>
+            <p style="margin: 4px 0;">📞 <strong>SĐT:</strong> [[${restaurantPhone}]]</p>
+            <p style="margin: 4px 0;">⏰ <strong>Thời gian nhận bàn:</strong> [[${reservationTime}]]</p>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding: 20px 40px; background-color: #fef7e0; border-radius: 6px; margin: 20px;">
+            <p style="margin: 0; font-size: 15px; color: #d35400;"><strong>📢 Vui lòng tiến hành thanh toán ngay để nhà hàng bắt đầu chuẩn bị món ăn cho bạn.</strong></p>
+          </td>
+        </tr>
+
+        <tr>
+          <td align="center" style="padding: 20px 40px;">
+            <a th:href="${paymentLink}" style="display: inline-block; background-color: #27ae60; color: #fff; text-decoration: none; padding: 12px 24px; border-radius: 5px; font-weight: bold;">Thanh toán ngay</a>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding: 0 40px 30px;">
+            <p style="margin-bottom: 5px;">Cảm ơn bạn đã sử dụng DineNow!</p>
+            <p><strong>Đội ngũ DineNow</strong></p>
+          </td>
+        </tr>
+
+        <tr>
+          <td align="center" style="font-size: 12px; color: #999; padding: 20px;">
+            © 2025 DineNow. All rights reserved.
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

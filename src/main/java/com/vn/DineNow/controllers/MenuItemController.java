@@ -72,4 +72,15 @@ public class MenuItemController {
                 .build();
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/featured")
+    public ResponseEntity<APIResponse<?>> getListMenuItemFeatured() throws CustomException{
+        var result = menuItemService.getListMenuItemFeatured();
+        APIResponse<?> response = APIResponse.builder()
+                .status(StatusCode.OK.getCode())
+                .message(StatusCode.OK.getMessage())
+                .data(result)
+                .build();
+        return ResponseEntity.ok(response);
+    }
 }

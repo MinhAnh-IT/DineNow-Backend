@@ -91,5 +91,16 @@ public class RestaurantController {
                 .build();
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/featured")
+    public ResponseEntity<APIResponse<List<RestaurantSimpleResponseDTO>>> getListOfFeaturedRestaurants() throws CustomException {
+        var result = restaurantService.GetListOfFeaturedRestaurants();
+        APIResponse<List<RestaurantSimpleResponseDTO>> response = APIResponse.<List<RestaurantSimpleResponseDTO>>builder()
+                .status(StatusCode.OK.getCode())
+                .message(StatusCode.OK.getMessage())
+                .data(result)
+                .build();
+        return ResponseEntity.ok(response);
+    }
 }
 
