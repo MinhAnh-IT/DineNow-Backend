@@ -1,0 +1,116 @@
+1. Thống kê lợi nhuận từ các nhà hàng theo tháng:
+    - admin/profits/restaurants/monthly?yearMonth=2025-06
+    - Method: GET
+    * Request: yearMonth: 2025-06 => Kiểu param, mặc định là tháng hiện tại
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "totalProfit": 300000.00,
+                "monthlyProfitDetails": [
+                    {
+                        "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 1",
+                        "month": 5,
+                        "year": 2025,
+                        "totalGuests": 6,
+                        "feePerGuest": 50000.00,
+                        "totalOrders": 2,
+                        "profit": 300000.00
+                    },
+                    {
+                        "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                        "month": 5,
+                        "year": 2025,
+                        "totalGuests": 0,
+                        "feePerGuest": 50000.00,
+                        "totalOrders": 0,
+                        "profit": 0.00
+                    }
+                ]
+            }
+        }
+        # Chú thích:
+            - totalProfit: Tổng lợi nhuận thu từ tất cả các nhà hàng trong tháng
+            - monthlyProfitDetails: Danh sách chi tiết lợi nhuận từ các nhà hàng trong tháng
+            - feePerGuest: Phí dịch vụ trên mỗi khách hàng
+            - restaurantName: Tên nhà hàng
+            - totalGuests: Tổng số khách hàng trong tháng
+            - totalOrders: Tổng số đơn hàng trong tháng
+            - profit: Lợi nhuận thu từ nhà hàng trong tháng
+
+
+------------------------------------------------------------------------------------------------------------------------
+2. Thống kê tổng lợi nhuận từ các nhà hàng từ lúc tham gia hệ thống:
+    - admin/profits/restaurants/total
+    - Method: GET
+    {
+        "status": 200,
+        "message": "Request successful and data returned.",
+        "data": {
+            "totalProfit": 1350000.00,
+            "totalProfitDetails": [
+                {
+                    "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 1",
+                    "totalOrders": 9,
+                    "totalGuests": 27,
+                    "feePerGuest": 50000.00,
+                    "totalProfit": 1350000.00
+                },
+                {
+                    "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                    "totalOrders": 0,
+                    "totalGuests": 0,
+                    "feePerGuest": 50000.00,
+                    "totalProfit": 0.00
+                }
+            ]
+        }
+    }
+        # Chú thích:
+            - totalProfit: Tổng lợi nhuận thu từ tất cả các nhà hàng từ lúc tham gia hệ thống
+            - totalProfitDetails: Danh sách chi tiết lợi nhuận từ các nhà hàng từ lúc tham gia hệ thống
+            - restaurantName: Tên nhà hàng
+            - feePerGuest: Phí dịch vụ trên mỗi khách hàng
+            - totalGuests: Tổng số khách hàng từ lúc tham gia hệ thống
+            - totalOrders: Tổng số đơn hàng từ lúc tham gia hệ thống
+            - profit: Lợi nhuận thu từ nhà hàng từ lúc tham gia hệ thống
+
+
+------------------------------------------------------------------------------------------------------------------------
+3. Thống kê lợi nhuận từ các nhà hàng theo khoảng thời gian là tháng:
+    - api/admin/profits/restaurants/monthly/range?startMonth=2025-03&endMonth=2025-08
+    - Method: GET
+    * Request: startMonth: 2025-03, endMonth: 2025-08 => Kiểu param, tháng bắt đầu phải trước tháng kết thúc
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "totalProfit": 1350000.00,
+                "monthlyProfitDetails": [
+                    {
+                        "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 1",
+                        "totalGuests": 6,
+                        "feePerGuest": 50000.00,
+                        "totalOrders": 2,
+                        "profit": 300000.00
+                    },
+                    {
+                        "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                        "totalGuests": 0,
+                        "feePerGuest": 50000.00,
+                        "totalOrders": 0,
+                        "profit": 0.00
+                    }
+                ]
+            }
+        }
+        # Chú thích:
+            - totalProfit: Tổng lợi nhuận thu từ tất cả các nhà hàng trong khoảng thời gian
+            - monthlyProfitDetails: Danh sách chi tiết lợi nhuận từ các nhà hàng trong khoảng thời gian
+            - feePerGuest: Phí dịch vụ trên mỗi khách hàng
+            - restaurantName: Tên nhà hàng
+            - totalGuests: Tổng số khách hàng trong khoảng thời gian
+            - totalOrders: Tổng số đơn hàng trong khoảng thời gian
+            - profit: Lợi nhuận thu từ nhà hàng trong khoảng thời gian

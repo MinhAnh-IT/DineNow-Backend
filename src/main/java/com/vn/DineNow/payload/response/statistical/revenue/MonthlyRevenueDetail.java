@@ -1,4 +1,4 @@
-package com.vn.DineNow.payload.response.statistical;
+package com.vn.DineNow.payload.response.statistical.revenue;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

@@ -1,0 +1,92 @@
+1. Thông kê doanh thu của các nhà hàng theo tháng:
+     - api/admin/revenues/restaurants/monthly?month=2025-06
+     - Method: GET
+
+     * Request: month: 2025-06 => Kiểu param, mặc định là tháng hiện tại
+     * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "totalRevenue": 2480000.00,
+                "restaurantMonthlyDetails": [
+                    {
+                        "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 1",
+                        "month": 5,
+                        "year": 2025,
+                        "totalOrder": 2,
+                        "totalRevenue": 2480000.00
+                    },
+                    {
+                        "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                        "month": 5,
+                        "year": 2025,
+                        "totalOrder": 0,
+                        "totalRevenue": 0.00
+                    }
+                ]
+            }
+        }
+        # Chú thích:
+            - totalRevenue: Tổng doanh thu của tất cả các nhà hàng trong tháng
+            - restaurantMonthlyDetails: Danh sách chi tiết doanh thu của từng nhà hàng trong tháng
+
+------------------------------------------------------------------------------------------------------------------------
+2. Thống kê tổng doanh thu của các nhà hàng từ lúc tham gia hệ thống:
+    - api/admin/revenues/restaurants/total
+    - Method: GET
+       * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "totalRevenue": 11160000.00,
+                "restaurantRevenueDetails": [
+                    {
+                        "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 1",
+                        "totalOrder": 9,
+                        "totalRevenue": 11160000.00
+                    },
+                    {
+                        "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                        "totalOrder": 0,
+                        "totalRevenue": 0.00
+                    }
+                ]
+            }
+        }
+
+        # Chú thích:
+            - totalRevenue: Tổng doanh thu của tất cả các nhà hàng từ lúc tham gia hệ thống
+            - restaurantRevenueDetails: Danh sách chi tiết doanh thu của từng nhà hàng từ lúc tham gia hệ thống
+
+------------------------------------------------------------------------------------------------------------------------
+3. Thống kê doanh thu nhà hàng từ tháng này đến tháng kia:
+    - api/admin/revenues/restaurants/monthly/range?startMonth=2023-01&endMonth=2027-12
+    - Method: GET
+       * Request: startMonth: 2023-01, endMonth: 2027-12 => Kiểu param, tháng bắt đầu phải trước tháng kết thúc
+       * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "totalRevenue": 11160000.00,
+                "restaurantRevenueDetails": [
+                    {
+                        "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 1",
+                        "totalOrder": 9,
+                        "totalRevenue": 11160000.00
+                    },
+                    {
+                        "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 2",
+                        "totalOrder": 0,
+                        "totalRevenue": 0.00
+                    }
+                ]
+            }
+        }
+
+        # Chú thích:
+            - totalRevenue: Tổng doanh thu của tất cả các nhà hàng từ tháng này đến tháng kia
+            - restaurantRevenueDetails: Danh sách chi tiết doanh thu của từng nhà hàng từ tháng này đến tháng kia
+

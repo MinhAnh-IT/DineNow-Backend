@@ -1,8 +1,8 @@
 package com.vn.DineNow.services.owner.statistical;
 
 import com.vn.DineNow.exception.CustomException;
-import com.vn.DineNow.payload.response.statistical.MonthlyRevenueResponse;
-import com.vn.DineNow.payload.response.statistical.YearlyRevenueResponse;
+import com.vn.DineNow.payload.response.statistical.revenue.MonthlyRevenueResponse;
+import com.vn.DineNow.payload.response.statistical.revenue.YearlyRevenueResponse;
 
 import java.time.YearMonth;
 

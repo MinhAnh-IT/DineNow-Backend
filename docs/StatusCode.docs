@@ -24,6 +24,11 @@
     - 420                       Lỗi trong quá trình lưu ảnh (ví dụ: không đúng định dạng PNG, JPG, JPEG, GIF)
     - 421                       Lỗi trong quá trình xoá ảnh để cập nhật
     - 422                       Không tìm thấy mã ảnh
-    - 424                       
+    - 423                       Kiểu ảnh không hợp lệ, không thuộc các dạng PNG, JPG, JPEG, GIF
+    - 424                       Không tìm thấy nhà hàng với Id đã cho
+    - 425                       Hành động không hợp lệ
+    - 426                       Entity không hợp lệ
+    - 427                       Không thể review nhà hàng || món ăn, vì đã review trước đó hoặc chưa trải nghiệm
+    - 428                       Ngày/tháng nhập vào không hợp lệ, không được phép null và ngày bắt đầu phải nhỏ hơn ngày kết thúc
     - 500                       Lỗi máy chủ nội bộ
 
