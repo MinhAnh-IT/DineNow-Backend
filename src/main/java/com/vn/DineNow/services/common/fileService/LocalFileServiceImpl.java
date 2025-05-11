@@ -40,29 +40,28 @@ public class LocalFileServiceImpl implements FileService {
      */
     @Override
     public String uploadFile(MultipartFile file) throws IOException {
+        if (file == null || file.isEmpty()) {
+            throw new IOException("Uploaded file is empty or null.");
+        }
+
         String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null || !originalFilename.contains(".")) {
+            throw new IOException("Invalid file name.");
+        }
 
-        // Extract file extension
-        String extension = originalFilename != null && originalFilename.contains(".")
-                ? originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toLowerCase()
-                : "";
-
-        // Validate extension
+        String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toLowerCase();
         if (!isValidImageExtension(extension)) {
             throw new IOException("Invalid image type: " + extension);
         }
 
-        // Generate a unique filename with UUID prefix
+        Files.createDirectories(Paths.get(uploadDirectory)); 
         String filename = UUID.randomUUID() + "_" + originalFilename;
-
-        // Build the full file path where the file will be saved
         Path filePath = Paths.get(uploadDirectory, filename);
-
-        // Write file to disk
         Files.write(filePath, file.getBytes());
 
         return filename;
     }
+
 
     /**
      * Deletes a file from the server if it exists.

@@ -37,11 +37,11 @@ public enum StatusCode {
     IMAGE_DELETE_FAILED(421, "Failed to delete image: %s"),
     IMAGE_NOT_FOUND(422, "Image with ID %s not found"),
     INVALID_IMAGE_TYPE(423, "Invalid image type. Only PNG, JPG, JPEG, and GIF are allowed."),
-    RESTAURANT_NOT_FOUND(425, "Restaurant with ID %s not found"),
-    INVALID_ACTION(426, "Invalid action. %s"),
-    INVALID_ENTITY(427, "Invalid entity. %s"),
-    INVALID_REVIEW_ACTION(428, "You cannot review this %s because you haven't experienced it yet."),
-    INVALID_DATE_RANGE(429, "Invalid date range. Start date must be before end date."),
+    RESTAURANT_NOT_FOUND(424, "Restaurant with ID %s not found"),
+    INVALID_ACTION(425, "Invalid action. %s"),
+    INVALID_ENTITY(426, "Invalid entity. %s"),
+    INVALID_REVIEW_ACTION(427, "You cannot review this %s because you haven't experienced it yet."),
+    INVALID_DATE_RANGE(428, "Invalid date range. Start date must be before end date."),
     RUNTIME_EXCEPTION(500, "Unexpected runtime exception occurred.");
 
 

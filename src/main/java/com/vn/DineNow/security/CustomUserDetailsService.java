@@ -20,7 +20,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     public CustomUserDetails loadUserById(Long id) {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + id));
-        log.info("🚀 User loaded by id: {}, Role: {}", user.getEmail(), user.getRole().getName());
         return new CustomUserDetails(user);
     }
 

@@ -1,15 +1,14 @@
 package com.vn.DineNow.services.owner.statistical;
 
 import com.vn.DineNow.constrants.OrderStatusConstants;
-import com.vn.DineNow.enums.OrderStatus;
 import com.vn.DineNow.enums.Role;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.payload.projection.MonthlyRevenueDTO;
-import com.vn.DineNow.payload.response.statistical.MonthlyRevenueDetail;
-import com.vn.DineNow.payload.response.statistical.MonthlyRevenueResponse;
-import com.vn.DineNow.payload.response.statistical.YearlyRevenueDetail;
-import com.vn.DineNow.payload.response.statistical.YearlyRevenueResponse;
+import com.vn.DineNow.payload.response.statistical.revenue.MonthlyRevenueDetail;
+import com.vn.DineNow.payload.response.statistical.revenue.MonthlyRevenueResponse;
+import com.vn.DineNow.payload.response.statistical.revenue.YearlyRevenueDetail;
+import com.vn.DineNow.payload.response.statistical.revenue.YearlyRevenueResponse;
 import com.vn.DineNow.repositories.OrderRepository;
 import com.vn.DineNow.repositories.UserRepository;
 import lombok.AccessLevel;

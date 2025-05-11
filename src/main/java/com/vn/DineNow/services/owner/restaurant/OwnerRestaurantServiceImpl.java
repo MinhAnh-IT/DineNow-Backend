@@ -67,7 +67,7 @@ public class OwnerRestaurantServiceImpl implements OwnerRestaurantService {
         }
 
         if (restaurantRepository.existsByNameAndOwner(requestDTO.getName(), owner)) {
-            throw new CustomException(StatusCode.EXIST_NAME, requestDTO.getName(), String.format("restaurants of %s", owner));
+            throw new CustomException(StatusCode.EXIST_NAME, requestDTO.getName(), String.format("restaurants of %s", owner.getFullName()));
         }
         var restaurantTier = restaurantTierRepository.findById(requestDTO.getRestaurantTierId())
                 .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "restaurant tier", String.valueOf(requestDTO.getRestaurantTierId())));
