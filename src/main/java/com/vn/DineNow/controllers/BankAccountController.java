@@ -7,24 +7,27 @@ import com.vn.DineNow.payload.request.bankAccount.BankAccountUpdateRequest;
 import com.vn.DineNow.payload.response.APIResponse;
 import com.vn.DineNow.security.CustomUserDetails;
 import com.vn.DineNow.services.owner.bankAccount.BankAccountService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/owner")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Validated
 public class BankAccountController {
     BankAccountService bankAccountService;
 
     @PostMapping("/bank-accounts")
     public ResponseEntity<?> createBankAccount(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestBody BankAccountRequest request) throws CustomException {
+            @RequestBody @Valid BankAccountRequest request) throws CustomException {
         var result = bankAccountService.createBankAccount(userDetails.getId(), request);
         APIResponse<?> response = APIResponse.builder()
                 .status(StatusCode.OK.getCode())

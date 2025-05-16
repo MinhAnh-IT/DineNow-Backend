@@ -1,0 +1,115 @@
+1. Lấy danh sách nhà hàng cần tất toán trong quý hiện tại:
+    api/admin/settlement/unsettled   -  Get
+    * Request body: Không có
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": [
+                {
+                    "restaurantId": 3,
+                    "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 1",
+                    "address": "123 Lê Văn Việt, Q.9",
+                    "phoneNumber": "0909123456"
+                }
+            ]
+        }
+        # Giải thích:
+        - restaurantId: id của nhà hàng
+        - restaurantName: tên nhà hàng
+        - address: địa chỉ nhà hàng
+        - phoneNumber: số điện thoại nhà hàng
+
+
+------------------------------------------------------------------------------------------------------------------------
+2. Lấy chi tiết tất toán của nhà hàng: api/admin/settlement/summary/3  -  Get
+    * Request body: 3 = id của nhà hàng
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "restaurantId": 3,
+                "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 1",
+                "bankName": "MB",
+                "accountHolderName": "Huỳnh Minh Anh",
+                "accountNumber": "393666668789",
+                "totalOrders": 1,
+                "totalRevenue": 1240000.00,
+                "platformFee": 150000.00,
+                "amountToSettle": 1090000.00
+            }
+        }
+        # Giải thích:
+        - restaurantId: id của nhà hàng
+        - restaurantName: tên nhà hàng
+        - bankName: tên ngân hàng
+        - accountHolderName: tên chủ tài khoản ngân hàng
+        - accountNumber: số tài khoản ngân hàng
+        - totalOrders: tổng số đơn hàng trong quý
+        - totalRevenue: tổng doanh thu trong quý
+        - platformFee: phí dịch vụ của nền tảng
+        - amountToSettle: số tiền cần tất toán
+------------------------------------------------------------------------------------------------------------------------
+3. Tạo thông tin đã thanh toán cho nhà hàng: api/admin/settlement/confirm  -  Post
+    * Request body:
+        {
+            "restaurantId":"3",
+            "amount": "1090000",
+            "note": "Đã thanh toán quý 2 cho nhà hàng có id là 3"
+        }
+        => Những thông tin này được nhập từ api số 2
+            - amount : số tiền đã thanh toán cho nhà hàng  => amountToSettle
+            - note : ghi chú cho việc thanh toán
+    * Response:
+        {
+            "status": 201,
+            "message": "Resource created successfully.",
+            "data": {
+                "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 1",
+                "address": "123 Lê Văn Việt, Q.9",
+                "amount": 1090000,
+                "note": "Đã thanh toán quý 2 cho nhà hàng có id là 3",
+                "startDate": "2025-05-16",
+                "endDate": "2025-05-31"
+            }
+        }
+        # Giải thích:
+        - restaurantName: tên nhà hàng
+        - address: địa chỉ nhà hàng
+        - amount: số tiền đã thanh toán cho nhà hàng
+        - note: ghi chú cho việc thanh toán
+        - startDate: ngày bắt đầu của
+        - endDate: ngày kết thúc của
+        - startDate và endDate là ngày bắt đầu và kết thúc của quý hiện tại
+
+------------------------------------------------------------------------------------------------------------------------
+3. Lấy danh sách đã thanh toán cho nhà hàng theo quý:
+    api/admin/settlement/settled?year=2025&month=5&periodIndex=2  -  Get
+    * Request body: year = năm, month = tháng, periodIndex = quý (1, 2) 1 = quý 1(15 ngày đầu trong tháng),
+                            2 = quý 2 (15 ngày cuối trong tháng)
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": [
+                {
+                    "restaurantName": "Gà Ác Tiềm Thuốc Bắc - chi nhánh 1",
+                    "address": "123 Lê Văn Việt, Q.9",
+                    "amount": 1090000.00,
+                    "note": "Đã thanh toán quý 2 cho nhà hàng có id là 3",
+                    "startDate": "2025-05-16",
+                    "endDate": "2025-05-31"
+                }
+            ]
+        }
+        # Giải thích:
+        - restaurantName: tên nhà hàng
+        - address: địa chỉ nhà hàng
+        - amount: số tiền đã thanh toán cho nhà hàng
+        - note: ghi chú cho việc thanh toán
+        - startDate: ngày bắt đầu của
+        - endDate: ngày kết thúc của
+        - startDate và endDate là ngày bắt đầu và kết thúc của quý hiện tại
+
+
