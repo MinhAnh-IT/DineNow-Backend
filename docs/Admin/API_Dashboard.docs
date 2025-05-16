@@ -1,0 +1,28 @@
+1. Lấy dữ liệu hiển thị cho trang dasdboard: api/admin/dashboard
+    * Request: Không có
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "totalRestaurant": 9,
+                "totalUser": 2,
+                "totalOwner": 1,
+                "totalRevenue": 12400000.00,
+                "totalProfit": 1500000.00,
+                "totalOrderCompleted": 7
+            }
+        }
+        # Chú thích:
+            - status: Trạng thái (200 - thành công)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: Dữ liệu trả về
+                - totalRestaurant: Tổng số nhà hàng
+                - totalUser: Tổng số người dùng
+                - totalOwner: Tổng số chủ nhà hàng
+                - totalRevenue: Tổng doanh thu
+                - totalProfit: Tổng lợi nhuận
+                - totalOrderCompleted: Tổng số đơn hàng đã hoàn thành
+
+
+

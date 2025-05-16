@@ -93,7 +93,7 @@
         # Chú thích: Dữ liệu được trả về dưới dạng cở bản ở mục Content, nhằm hiển thị ở trang tất cả món của người dùng
 
 -----------------------------------------------------------------------------------------------------------------
-6. Lấy chi tiết món ăn thông qua id: api/menu-items/101   -    Get
+3. Lấy chi tiết món ăn thông qua id: api/menu-items/101   -    Get
     * Request body: Không có
         - 101 = id của món ăn
 
@@ -118,4 +118,56 @@
             }
         }
         # Chú thích: API trả về thông tin chi tiết của nhà hàng
+
+
+------------------------------------------------------------------------------------------------------------------------
+3. Lọc danh sách món ăn: api/menu-items/filter?page=1&size=20   -   Get
+    * Request body:  Có phân trang page = 0, size = 20 mặc định
+        {
+            "restaurantTypeId": "1",
+            "city": "Hồ Chí Minh",
+            "district":"Q.9",
+            "minPrice": 70000,
+            "maxPrice": 500000,
+            "mainCategoryId":"2"
+        }
+        # Chú thích:
+                - restaurantTypeId: id của loại nhà hàng
+                - city: Tên thành phố
+                - district: Tên quận
+                - minPrice: Giá thấp nhất
+                - maxPrice: Giá cao nhất
+                - mainCategoryId: id của loại món ăn chính
+
+        * Response body:
+            {
+                "status": 200,
+                "message": "Request successful and data returned.",
+                "data": [
+                    {
+                        "id": 2,
+                        "name": "Yến sào",
+                        "description": "Ngon, bổ dưỡng",
+                        "price": "200000.00",
+                        "averageRating": 0.0,
+                        "imageUrl": "4913fd67-3883-4f6e-aba7-f8cfe79a8d32_yen-sao.jpeg",
+                        "typeName": "Bổ dưỡng"
+                    }
+                ]
+            }
+            # Chú thích:
+                - status: Trạng thái (200 - thành công)
+                - message: Thông báo về kết quả của yêu cầu
+                - data: danh sách nhà hàng được lọc theo các tiêu chí đã cho
+                    - id: id của nhà hàng
+                    - name: tên của nhà hàng
+                    - description: mô tả của nhà hàng
+                    - price: giá của món ăn
+                    - averageRating: điểm đánh giá trung bình của món ăn
+                    - imageUrl: đường dẫn đến ảnh đại diện của món ăn
+                    - typeName: loại món ăn của nhà hàng
+
+
+
+
 

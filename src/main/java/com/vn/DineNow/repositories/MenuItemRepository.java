@@ -1,15 +1,15 @@
 package com.vn.DineNow.repositories;
 
-import com.vn.DineNow.entities.FoodCategory;
-import com.vn.DineNow.entities.MainCategory;
-import com.vn.DineNow.entities.MenuItem;
-import com.vn.DineNow.entities.Restaurant;
+import com.vn.DineNow.entities.*;
+import com.vn.DineNow.payload.response.menuItem.MenuItemSimpleResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,5 +54,28 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
             nativeQuery = true)
     List<MenuItem> findTopFeaturedMenuItems();
 
+
+    @Query("""
+                SELECT mi
+                FROM MenuItem mi
+                    JOIN mi.restaurant r
+                    JOIN mi.category c
+                WHERE (:city IS NULL OR LOWER(r.address) LIKE LOWER(CONCAT('%', :city, '%')))
+                  AND (:district IS NULL OR LOWER(r.address) LIKE LOWER(CONCAT('%', :district, '%')))
+                  AND (:restaurantType IS NULL OR r.type = :restaurantType)
+                  AND (:mainCategory IS NULL OR c.mainCategory = :mainCategory)
+                  AND (:minPrice IS NULL OR mi.price >= :minPrice)
+                  AND (:maxPrice IS NULL OR mi.price <= :maxPrice)
+                  AND mi.available = true
+            """)
+    Page<MenuItem> findAllMenuItemByFilter(
+            @Param("city") String city,
+            @Param("district") String district,
+            @Param("restaurantType") RestaurantType restaurantType,
+            @Param("mainCategory") MainCategory mainCategory,
+            @Param("minPrice") BigDecimal minPrice,
+            @Param("maxPrice") BigDecimal maxPrice,
+            Pageable pageable
+    );
 
 }

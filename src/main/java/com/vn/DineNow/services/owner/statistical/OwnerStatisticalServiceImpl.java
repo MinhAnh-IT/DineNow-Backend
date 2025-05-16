@@ -1,16 +1,19 @@
 package com.vn.DineNow.services.owner.statistical;
 
 import com.vn.DineNow.constrants.OrderStatusConstants;
+import com.vn.DineNow.enums.OrderStatus;
 import com.vn.DineNow.enums.Role;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.payload.projection.MonthlyRevenueDTO;
+import com.vn.DineNow.payload.response.statistical.dashboard.OwnerDashboardResponseDTO;
 import com.vn.DineNow.payload.response.statistical.revenue.MonthlyRevenueDetail;
 import com.vn.DineNow.payload.response.statistical.revenue.MonthlyRevenueResponse;
 import com.vn.DineNow.payload.response.statistical.revenue.YearlyRevenueDetail;
 import com.vn.DineNow.payload.response.statistical.revenue.YearlyRevenueResponse;
 import com.vn.DineNow.repositories.OrderRepository;
 import com.vn.DineNow.repositories.UserRepository;
+import com.vn.DineNow.repositories.dashboard.DashboardRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,6 +29,7 @@ import java.util.List;
 public class OwnerStatisticalServiceImpl implements OwnerStatisticalService{
     OrderRepository orderRepository;
     UserRepository userRepository;
+    DashboardRepository dashboardRepository;
 
 
     /**
@@ -134,6 +138,15 @@ public class OwnerStatisticalServiceImpl implements OwnerStatisticalService{
                         restaurantId, start, end, OrderStatusConstants.SUCCESSFUL_STATUSES);
 
         return convertToMonthlyRevenueResponse(revenues);
+    }
+
+    @Override
+    public OwnerDashboardResponseDTO getDashboardData(long ownerId) throws CustomException {
+        // Validate the owner
+        userRepository.findById(ownerId).orElseThrow(
+                () -> new CustomException(StatusCode.NOT_FOUND, "Owner", String.valueOf(ownerId))
+        );
+        return dashboardRepository.getOwnerDashboard(ownerId, OrderStatusConstants.SUCCESSFUL_STATUSES, OrderStatus.COMPLETED);
     }
 
     /**

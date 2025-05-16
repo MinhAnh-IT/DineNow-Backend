@@ -1,0 +1,25 @@
+1. Lấy dữ liệu để hiển thị cho trang dashboard: api/owner/dashboard
+    * Request: Yêu cầu truy cập với quyền owner
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "totalRestaurant": 9,
+                "totalOrderCompleted": 7,
+                "totalRevenue": 12400000.00,
+                "totalFoodCategory": 1,
+                "totalRestaurantReview": 6,
+                "totalMenuItemReview": 4
+            }
+        }
+        # Chú thích:
+            - status: Trạng thái (200 - thành công)
+            - message: Thông báo về kết quả của yêu cầu
+            - data: Dữ liệu trả về
+                - totalRestaurant: Tổng số nhà hàng
+                - totalOrderCompleted: Tổng số đơn hàng đã hoàn thành
+                - totalRevenue: Tổng doanh thu
+                - totalFoodCategory: Tổng số loại món ăn
+                - totalRestaurantReview: Tổng số đánh giá nhà hàng
+                - totalMenuItemReview: Tổng số đánh giá món ăn
