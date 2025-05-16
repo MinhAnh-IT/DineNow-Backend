@@ -1,0 +1,61 @@
+1. Tạo thông tin tài khoản ngân hàng mới: api/owner/bank-accounts  -  Post
+    * Request body:
+        {
+            "accountHolderName" : "Huynh Minh Anh",
+            "accountNumber": "393666668789",
+            "bankName": "MB Bank"
+        }
+
+    * Response:
+        {
+            "accountHolderName": "Huynh Minh Anh",
+            "accountNumber": "393666668789",
+            "bankName": "MB Bank",
+            "createdAt": "2023-10-01T07:00:00.000Z",
+            "updatedAt": "2023-10-01T07:00:00.000Z"
+        }
+
+------------------------------------------------------------------------------------------------------------------------
+2. Lấy thông tin tài khoản ngân hàng: api/owner/bank-accounts  -  Get
+    * Request body: Không có
+
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "accountHolderName": "Huỳnh Minh Anh",
+                "accountNumber": "393666668789",
+                "bankName": "MB",
+                "createdAt": "2025-05-16T18:44:28+07:00",
+                "updatedAt": "2025-05-16T19:08:38+07:00"
+            }
+        }
+
+------------------------------------------------------------------------------------------------------------------------
+3. Cập nhật thông tin tài khoản ngân hàng: api/owner/bank-accounts  -  Put
+    * Request body:
+        {
+            "accountHolderName" : "Nguyen Van A",
+            "accountNumber": "393666668789",
+            "bankName": "MB Bank"
+        }
+
+    * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": {
+                "accountHolderName": "Nguyen Van A",
+                "accountNumber": "393666668789",
+                "bankName": "MB Bank",
+                "createdAt": "2023-10-01T07:00:00.000Z",
+                "updatedAt": "2023-10-01T07:00:00.000Z"
+            }
+        }
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+* Lưu ý: Mỗi owenr chỉ có 1 thông tin tài khoản ngân hàng
+    - Các api trên yêu cầu đăng nhập với quyền owner
