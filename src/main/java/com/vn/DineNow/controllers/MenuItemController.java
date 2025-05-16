@@ -46,7 +46,7 @@ public class MenuItemController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/filter")
+    @PostMapping("/filter")
     public ResponseEntity<APIResponse<?>> getAllMenuItemByFilter(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
