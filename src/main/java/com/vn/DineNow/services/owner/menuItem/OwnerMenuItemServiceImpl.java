@@ -5,9 +5,11 @@ import com.vn.DineNow.enums.Role;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.mapper.MenuItemMapper;
+import com.vn.DineNow.payload.request.menuItem.MenuItemFilterRequest;
 import com.vn.DineNow.payload.request.menuItem.MenuItemRequestDTO;
 import com.vn.DineNow.payload.request.menuItem.MenuItemUpdateDTO;
 import com.vn.DineNow.payload.response.menuItem.MenuItemResponseDTO;
+import com.vn.DineNow.payload.response.menuItem.MenuItemSimpleResponseDTO;
 import com.vn.DineNow.repositories.*;
 import com.vn.DineNow.services.common.fileService.FileService;
 import com.vn.DineNow.services.common.cache.RedisService;
@@ -15,6 +17,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -39,6 +43,7 @@ public class OwnerMenuItemServiceImpl implements OwnerMenuItemService {
     final MenuItemMapper menuItemMapper;
     final RedisService redisService;
     final MenuItemReviewRepository reviewRepository;
+    final RestaurantTypeRepository restaurantTypeRepository;
 
     @Value("${DineNow.key.cache-item}")
     String keyRedis;

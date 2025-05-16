@@ -2,6 +2,7 @@ package com.vn.DineNow.controllers;
 
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
+import com.vn.DineNow.payload.request.menuItem.MenuItemFilterRequest;
 import com.vn.DineNow.payload.response.APIResponse;
 import com.vn.DineNow.payload.response.menuItem.MenuItemResponseDTO;
 import com.vn.DineNow.payload.response.menuItem.MenuItemSimpleResponseDTO;
@@ -38,6 +39,20 @@ public class MenuItemController {
             @PathVariable long menuItemId) throws CustomException{
         var result = menuItemService.getMenuItemById(menuItemId);
         APIResponse<MenuItemResponseDTO> response = APIResponse.<MenuItemResponseDTO>builder()
+                .status(StatusCode.OK.getCode())
+                .message(StatusCode.OK.getMessage())
+                .data(result)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<APIResponse<?>> getAllMenuItemByFilter(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestBody MenuItemFilterRequest request) throws CustomException{
+        var result = menuItemService.getAllMenuItemByFilter(request, page, size);
+        APIResponse<?> response = APIResponse.builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.OK.getMessage())
                 .data(result)

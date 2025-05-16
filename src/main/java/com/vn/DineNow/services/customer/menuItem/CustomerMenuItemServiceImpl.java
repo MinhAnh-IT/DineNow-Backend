@@ -1,10 +1,10 @@
 package com.vn.DineNow.services.customer.menuItem;
 
-import com.vn.DineNow.entities.MenuItem;
-import com.vn.DineNow.entities.Restaurant;
+import com.vn.DineNow.entities.*;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.mapper.MenuItemMapper;
+import com.vn.DineNow.payload.request.menuItem.MenuItemFilterRequest;
 import com.vn.DineNow.payload.response.menuItem.MenuItemResponseDTO;
 import com.vn.DineNow.payload.response.menuItem.MenuItemSimpleResponseDTO;
 import com.vn.DineNow.repositories.*;
@@ -40,6 +40,7 @@ public class CustomerMenuItemServiceImpl implements CustomerMenuItemService {
     final MainCategoryRepository mainCategoryRepository;
     final MenuItemRepository menuItemRepository;
     final RedisService redisService;
+    final RestaurantTypeRepository restaurantTypeRepository;
 
     @Value("${DineNow.key.cache-item}")
     String keyRedis;
@@ -171,6 +172,12 @@ public class CustomerMenuItemServiceImpl implements CustomerMenuItemService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves a list of featured menu items.
+     *
+     * @return list of simple menu item DTOs
+     * @throws CustomException if any error occurs
+     */
     @Override
     public List<MenuItemSimpleResponseDTO> getListMenuItemFeatured() throws CustomException {
         var menuItems = menuItemRepository.findTopFeaturedMenuItems();
@@ -181,5 +188,44 @@ public class CustomerMenuItemServiceImpl implements CustomerMenuItemService {
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Retrieves all menu items based on various filters.
+     *
+     * @param request the filter request
+     * @param page page number (zero-based)
+     * @param size number of records per page
+     * @return list of simple menu item DTOs
+     * @throws CustomException if any error occurs
+     */
+    @Override
+    public List<MenuItemSimpleResponseDTO> getAllMenuItemByFilter(MenuItemFilterRequest request, int page, int size) throws CustomException {
+        if(request.getMinPrice() != null && request.getMaxPrice() != null && request.getMinPrice().longValue() > request.getMaxPrice().longValue()) {
+            throw new CustomException(StatusCode.INVALID_INPUT);
+        }
+
+        RestaurantType restaurantType = request.getRestaurantTypeId() == null ? null :
+                restaurantTypeRepository.findById(request.getRestaurantTypeId())
+                        .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "restaurant type", String.valueOf(request.getRestaurantTypeId())));
+
+        MainCategory mainCategory = request.getMainCategoryId() == null ? null :
+                mainCategoryRepository.findById(request.getMainCategoryId())
+                        .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "main category", String.valueOf(request.getMainCategoryId())));
+
+        Pageable pageable = PageRequest.of(page, size);
+        var menuItems = menuItemRepository.findAllMenuItemByFilter(
+                request.getCity(),
+                request.getDistrict(),
+                restaurantType,
+                mainCategory,
+                request.getMinPrice(),
+                request.getMaxPrice(),
+                pageable
+        );
+
+        return menuItems.stream()
+                .map(menuItemMapper::toSimpleDTO)
+                .toList();
     }
 }
