@@ -53,7 +53,7 @@ public class RestaurantController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<APIResponse<?>> searchRestaurant(
             @RequestBody SearchRestaurantDTO request,
             @RequestParam(defaultValue = "0") int page,

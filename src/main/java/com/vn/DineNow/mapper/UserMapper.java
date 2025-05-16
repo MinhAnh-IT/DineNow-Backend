@@ -12,6 +12,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
+    @Mapping(target = "bankAccount", ignore = true)
     @Mapping(target = "userFavoriteRestaurants", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "role", ignore = true)
@@ -24,14 +25,15 @@ public interface UserMapper {
     @Mapping(target = "customerReviews", ignore = true)
     @Mapping(target = "customerReservations", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-
     User toEntity(UserCreateRequest userDTO);
     
+    @Mapping(target = "verified", ignore = true)
     @Mapping(target = "role", source = "role")
     UserResponse toResponseDTO(User user);
 
     UserDetailsResponse toEntityDetails(User user);
 
+    @Mapping(target = "bankAccount", ignore = true)
     @Mapping(target = "phone", ignore = true)
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "providerId", ignore = true)
@@ -43,6 +45,7 @@ public interface UserMapper {
 
     UserForGenerateToken toUserDetailsForGenerateToken(User user);
 
+    @Mapping(target = "bankAccount", ignore = true)
     @Mapping(target = "updatedAt",ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "provider", ignore = true)
