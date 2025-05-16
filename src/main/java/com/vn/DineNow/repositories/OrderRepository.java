@@ -11,6 +11,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.YearMonth;
 import java.util.List;
@@ -196,6 +198,32 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             @Param("start") OffsetDateTime start,
             @Param("end") OffsetDateTime end,
             @Param("statuses") Set<OrderStatus> successfulStatuses
+    );
+
+    @Query("SELECT o FROM Order o WHERE o.status = 'CONFIRMED' AND o.updatedAt <= :now")
+    List<Order> findExpiredUnpaidOrders(@Param("now") OffsetDateTime now);
+
+    @Query("""
+    SELECT o FROM Order o
+    JOIN o.reservation r
+    JOIN r.restaurant rest
+    WHERE rest = :restaurant
+      AND o.status IN :statuses
+      AND r.reservationTime BETWEEN :startDateTime AND :endDateTime
+      AND NOT EXISTS (
+          SELECT 1 FROM RestaurantPayment rp
+          WHERE rp.restaurant = :restaurant
+            AND rp.startDate = :startDate
+            AND rp.endDate = :endDate
+      )
+""")
+    List<Order> findUnsettledOrdersByRestaurantAndPeriod(
+            @Param("restaurant") Restaurant restaurant,
+            @Param("statuses") Set<OrderStatus> statuses,
+            @Param("startDateTime") OffsetDateTime startDateTime,
+            @Param("endDateTime") OffsetDateTime endDateTime,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
     );
 
 }

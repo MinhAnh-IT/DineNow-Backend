@@ -1,4 +1,4 @@
-package com.vn.DineNow.payload.response.OrderItem;
+package com.vn.DineNow.payload.response.orderItem;
 
 public class OrderItemResponse {
     Long menuItemId;
