@@ -1,0 +1,75 @@
+1. Tạo hạng nhà hàng mới: api/admin/restaurant-tiers  -   POST
+    * Reuqest body:
+        {
+            "name": "Cao cấp",
+            "feePerGuest": "100000",
+            "description": "Nhà hàng thuộc loại cao cấp"
+        }
+    * Response:
+        {
+            "status": 201,
+            "message": "Resource created successfully.",
+            "data": {
+                "id": 4,
+                "name": "Cao cấp",
+                "feePerGuest": "100000",
+                "description": "Nhà hàng thuộc loại cao cấp"
+            }
+        }
+        # Chú thích:
+            - name: tên hạng nhà hàng
+            - feePerGuest: phí phục vụ trên mỗi khách
+            - description: mô tả về hạng nhà hàng
+
+------------------------------------------------------------------------------------------------------------------------
+2. Lấy danh sách hạng nhà hàng: api/admin/restaurant-tiers  -   GET
+    * Response:
+        {
+            "status": 200,
+            "message": "Resource retrieved successfully.",
+            "data": [
+                {
+                    "id": 1,
+                    "name": "Thường",
+                    "feePerGuest": "0",
+                    "description": "Nhà hàng thuộc loại thường"
+                },
+                {
+                    "id": 2,
+                    "name": "Khá",
+                    "feePerGuest": "50000",
+                    "description": "Nhà hàng thuộc loại khá"
+                },
+                {
+                    "id": 3,
+                    "name": "Đặc biệt",
+                    "feePerGuest": "200000",
+                    "description": "Nhà hàng thuộc loại đặc biệt"
+                }
+            ]
+        }
+
+------------------------------------------------------------------------------------------------------------------------
+3. Cập nhật hạng nhà hàng: api/admin/restaurant-tiers/{id}  -   PUT
+    * Request body:
+        {
+            "name": "Cao cấp",
+            "feePerGuest": "100000",
+            "description": "Nhà hàng thuộc loại cao cấp"
+        }
+
+    * Response:
+        {
+            "status": 200,
+            "message": "Resource updated successfully.",
+            "data": {
+                "id": 4,
+                "name": "Cao cấp",
+                "feePerGuest": "100000",
+                "description": "Nhà hàng thuộc loại cao cấp"
+            }
+        }
+        # Chú thích:
+            - name: tên hạng nhà hàng
+            - feePerGuest: phí phục vụ trên mỗi khách
+            - description: mô tả về hạng nhà hàng
