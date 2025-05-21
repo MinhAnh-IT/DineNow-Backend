@@ -51,9 +51,6 @@ public class Reservation {
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private Order reservationOrder;
 
-    @OneToMany(mappedBy = "reservation")
-    private Set<Payment> reservationPayments;
-
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
     private Review review;
 

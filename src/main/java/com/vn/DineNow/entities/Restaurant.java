@@ -25,6 +25,12 @@ public class Restaurant {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private double latitude;
+
+    @Column(nullable = false)
+    private double longitude;
+
     @Column(nullable = false, columnDefinition = "text")
     private String address;
 

@@ -109,7 +109,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         if (customer.getRole() != Role.CUSTOMER) {
             throw new CustomException(StatusCode.INVALID_ACTION, "User is not a customer.");
         }
-        List<Order> orders = orderRepository.findAllByReservation_Customer(customer);
+        List<Order> orders = orderRepository.findAllByReservation_CustomerOrderByCreatedAtDesc(customer);
         return orders.stream()
                 .map(orderMapper::toSimpleDTO)
                 .toList();

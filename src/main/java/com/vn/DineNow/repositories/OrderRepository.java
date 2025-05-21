@@ -22,7 +22,7 @@ import java.util.Set;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findAllByReservation_RestaurantAndReservation_customer(Restaurant restaurant, User customer);
-    List<Order> findAllByReservation_Customer(User owner);
+    List<Order> findAllByReservation_CustomerOrderByCreatedAtDesc(User owner);
     List<Order> findAllByReservation_CustomerAndStatusIn(User owner, Set<OrderStatus> status);
     List<Order> findAllByReservation_RestaurantAndStatusInAndReservation_Restaurant_Owner(Restaurant restaurant, Set<OrderStatus> status, User owner);
     List<Order> findAllByStatus(OrderStatus status, Pageable pageable);

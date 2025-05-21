@@ -1,16 +1,11 @@
 package com.vn.DineNow.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
+import com.vn.DineNow.enums.PaymentStatus;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -19,6 +14,7 @@ import java.time.OffsetDateTime;
 @Setter
 @Getter
 @Entity
+@Table(name = "Payments")
 public class Payment {
 
     @Id
@@ -28,23 +24,22 @@ public class Payment {
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal amount;
 
-    @Column(nullable = false)
-    private String paymentMethod;
-
-    @Column(nullable = false, length = 100)
     private String transactionId;
 
     @Column
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status = PaymentStatus.PENDING;
 
     @Column
+    @CreationTimestamp
     private OffsetDateTime createdAt;
 
     @Column
+    @UpdateTimestamp
     private OffsetDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reservation_id", nullable = false)
-    private Reservation reservation;
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
 }
