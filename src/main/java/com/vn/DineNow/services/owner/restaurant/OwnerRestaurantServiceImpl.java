@@ -1,7 +1,6 @@
 package com.vn.DineNow.services.owner.restaurant;
 
 import com.vn.DineNow.entities.Restaurant;
-import com.vn.DineNow.entities.RestaurantTiers;
 import com.vn.DineNow.entities.Review;
 import com.vn.DineNow.entities.User;
 import com.vn.DineNow.enums.RestaurantStatus;
@@ -15,6 +14,7 @@ import com.vn.DineNow.payload.response.restaurant.RestaurantResponseDTO;
 import com.vn.DineNow.payload.response.restaurant.RestaurantSimpleResponseDTO;
 import com.vn.DineNow.repositories.*;
 import com.vn.DineNow.services.common.cache.RedisService;
+import com.vn.DineNow.services.common.googleMaps.GeocodingService;
 import com.vn.DineNow.services.owner.restaurant.restaurantImages.RestaurantImageService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +44,7 @@ public class OwnerRestaurantServiceImpl implements OwnerRestaurantService {
     final RedisService redisService;
     final RestaurantTierRepository restaurantTierRepository;
     final ReviewRepository reviewRepository;
+    final GeocodingService geocodingService;
 
     @Value("${DineNow.key.cache-restaurant}")
     String keyRedis;
@@ -79,7 +80,9 @@ public class OwnerRestaurantServiceImpl implements OwnerRestaurantService {
                 restaurantTypeRepository.findById(requestDTO.getTypeId())
                         .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "restaurant type", String.valueOf(requestDTO.getTypeId())))
         );
-
+        var location = geocodingService.getCoordinates(requestDTO.getAddress());
+        restaurant.setLatitude(location.getLat());
+        restaurant.setLongitude(location.getLng());
         restaurantRepository.save(restaurant);
 
         if (requestDTO.getImages() != null && !requestDTO.getImages().isEmpty()) {

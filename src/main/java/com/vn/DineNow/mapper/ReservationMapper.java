@@ -15,7 +15,6 @@ public interface ReservationMapper {
     @Mapping(target = "reservationOrder", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "restaurant.id", source = "restaurantId")
-    @Mapping(target = "reservationPayments", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "customer.id", source = "customerId")
     @Mapping(target = "createdAt", ignore = true)

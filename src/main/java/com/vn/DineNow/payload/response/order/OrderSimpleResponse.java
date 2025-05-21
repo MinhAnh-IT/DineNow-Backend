@@ -18,5 +18,5 @@ public class OrderSimpleResponse {
     Long totalPrice;
     OrderStatus status;
     List<OrderItemSimpleResponse> menuItems;
-    ReservationSimpleResponse reservationSimpleResponse;
+        ReservationSimpleResponse reservationSimpleResponse;
 }

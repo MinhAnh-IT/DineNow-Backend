@@ -12,5 +12,5 @@ public interface OwnerOrderService{
     boolean updateOrderStatus(long ownerId, long orderId, OrderStatus status, RejectOrderRequest reason) throws CustomException;
     List<?> getAllOrderByStatuses(long ownerId, long restaurantId, Set<OrderStatus> statuses) throws CustomException;
     OrderDetailResponse getOrderDetail(long orderId, long ownerId) throws CustomException;
-
+    void updateOrderStatusFromCallBackPayment(long orderId, OrderStatus status) throws CustomException;
 }

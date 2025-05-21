@@ -41,6 +41,9 @@ public class Order {
     @JoinColumn(name = "reservation_id", nullable = false)
     private Reservation reservation;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Payment> payments;
+
     @OneToMany(mappedBy = "order")
     private Set<OrderItem> orderOrderItems;
 

@@ -1,0 +1,24 @@
+1. Lấy danh sách hạng nhà hàng để hiển thị lúc tạo nhà hàng: api/owner/restaurant-tiers  -   GET
+     * Response:
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": [
+                {
+                    "id": 1,
+                    "name": "Sang trọng"
+                },
+                {
+                    "id": 2,
+                    "name": "Silver"
+                },
+                {
+                    "id": 3,
+                    "name": "Gold"
+                },
+                {
+                    "id": 4,
+                    "name": "Cao cấp"
+                }
+            ]
+        }

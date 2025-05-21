@@ -10,8 +10,6 @@ import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.mapper.OrderMapper;
 import com.vn.DineNow.payload.request.Order.RejectOrderRequest;
 import com.vn.DineNow.payload.response.order.OrderDetailResponse;
-import com.vn.DineNow.payload.response.order.OrderResponse;
-import com.vn.DineNow.payload.response.order.OrderSimpleResponse;
 import com.vn.DineNow.repositories.OrderRepository;
 import com.vn.DineNow.repositories.RestaurantRepository;
 import com.vn.DineNow.repositories.UserRepository;
@@ -150,7 +148,12 @@ public class OwnerOrderServiceImpl implements OwnerOrderService{
     }
 
 
-
+    private  boolean isTransitionAllowedForCallback(OrderStatus current, OrderStatus target) {
+        return switch (current) {
+            case CONFIRMED -> target == OrderStatus.PAID || target == OrderStatus.FAILED;
+            default -> false;
+        };
+    }
     /**
      * Retrieves all orders for a specific restaurant and owner with status PAID or CONFIRMED.
      * @param ownerId the ID of the owner
@@ -199,5 +202,24 @@ public class OwnerOrderServiceImpl implements OwnerOrderService{
             throw new CustomException(StatusCode.INVALID_ACTION, "Order is cancelled.");
         }
         return orderMapper.toDetailDTO(order);
+    }
+
+    /**
+     * Updates the order status from a callback payment.
+     *
+     * @param orderId the ID of the order
+     * @param status  the new status to set
+     * @throws CustomException if the order is not found or if the status transition is not allowed
+     */
+    @Override
+    public void updateOrderStatusFromCallBackPayment(long orderId, OrderStatus status) throws CustomException {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "Order", String.valueOf(orderId)));
+
+        if (!isTransitionAllowedForCallback(order.getStatus(), status)) {
+            throw new CustomException(StatusCode.INVALID_ACTION, "Order status cannot be updated from " + order.getStatus() + " to " + status);
+        }
+        order.setStatus(status);
+        orderRepository.save(order);
     }
 }
