@@ -1,4 +1,4 @@
-1. Tạo đánh giá mới: api/reviews/menu-items/1/add - Post
+1. Tạo đánh giá mới: api/customer/reviews/menu-items/1/add - Post
     * Request body: 1 = id của món ăn
         {
             "rating": 4.5,
@@ -29,37 +29,3 @@
                 - rating: điểm đánh giá (từ 1 đến 5)
 
 -------------------------------------------------------------------------------------------------------------------------
-2. Lấy danh sách đánh giá của món ăn: api/reviews/menu-items/1/all - Get  => có phân trang, page = 0 và size = 10 mặc định
-    * Request body: 1 = id của món ăn
-    * Response body:
-        {
-            "status": 200,
-            "message": "Request successful and data returned.",
-            "data": [
-                {
-                    "reviewerName": "Huỳnh Minh Anh",
-                    "comment": "Món ăn rất ngon và hấp dẫn!",
-                    "reviewDate": "2025-05-04T18:51:57.76314+07:00",
-                    "rating": 4
-                },
-                {
-                    "reviewerName": "Nguyễn Văn A",
-                    "comment": "Món ăn bình thường, không có gì đặc biệt.",
-                    "reviewDate": "2025-05-04T18:51:57.76314+07:00",
-                    "rating": 3
-                }
-            ]
-        }
-        # Chú thích:
-            - status: Trạng thái (200 - thành công)
-            - message: Thông báo về kết quả của yêu cầu
-            - data: danh sách đánh giá của món ăn
-                - reviewerName: tên người dùng đã đánh giá
-                - comment: bình luận của người dùng
-                - reviewDate: ngày đánh giá
-                - rating: điểm đánh giá (từ 1 đến 5)
-
-
-
-*** Lưu ý:
-    Những món ăn bị khoá sẽ không được hiển thị và đánh giá

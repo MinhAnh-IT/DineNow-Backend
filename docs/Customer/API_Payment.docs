@@ -1,0 +1,17 @@
+1. Tạo đường link thanh toán cho order: api/customer/payments/create-url/6  -  Post
+    * Request: 6 == id của order
+    * Response body:
+        {
+            "status": 201,
+            "message": "Resource created successfully.",
+            "data": "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_Amount=124000000&vnp_Command=pay&vnp_CreateDate=20250523102608&vnp_CurrCode=VND&vnp_IpAddr=127.0.0.1&vnp_Locale=vn&vnp_OrderInfo=OID8_PID29&vnp_OrderType=billpayment&vnp_ReturnUrl=http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fpayments%2Fvnpay%2Fcallback&vnp_TmnCode=GVDPRN7T&vnp_TxnRef=29&vnp_Version=2.1.0&vnp_SecureHash=9545fa574c882f2da2c1036117845349b22eff74fde5b46e056fabb318ad7769a45b5d929a049a70197bf0caf39c8e2350dfbdb9a10e814c41ffddfd1bd9280f"
+        }
+
+
+--------------------------------------------------------------------------------------------------------------------------------
+2. Sau khi thanh toán thành công thì backend sẽ gọi về đường dẫn
+    http://localhost:3000/payment-status?paymentStatus=SUCCESS để hiển thị trạng thái thanh toán cho người dùng
+
+    # Chú thích: paymentStatus -> Trạng thái thanh toán
+        + SUCCESS: thanh toán thành công
+        + FAILED: thanh toán thất bại

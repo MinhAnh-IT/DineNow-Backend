@@ -1,4 +1,4 @@
-package com.vn.DineNow.controllers;
+package com.vn.DineNow.controllers.customer;
 
 import com.vn.DineNow.annotation.RequireEnabledUser;
 import com.vn.DineNow.enums.StatusCode;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/reviews/menu-items")
+@RequestMapping("api/customer/reviews/menu-items")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MenuItemReviewController {
 
@@ -31,20 +31,6 @@ public class MenuItemReviewController {
         APIResponse<?> response = APIResponse.builder()
                 .status(StatusCode.CREATED.getCode())
                 .message(StatusCode.CREATED.getMessage())
-                .data(result)
-                .build();
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("{menuId}/all")
-    public ResponseEntity<APIResponse<?>> getAllReviewsByMenuItemId(
-            @PathVariable long menuId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) throws Exception {
-        var result = menuItemReviewService.getAllReviewsByMenuItemId(menuId, page, size);
-        APIResponse<?> response = APIResponse.builder()
-                .status(StatusCode.OK.getCode())
-                .message(StatusCode.OK.getMessage())
                 .data(result)
                 .build();
         return ResponseEntity.ok(response);

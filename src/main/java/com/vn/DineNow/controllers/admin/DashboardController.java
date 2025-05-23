@@ -1,4 +1,4 @@
-package com.vn.DineNow.controllers;
+package com.vn.DineNow.controllers.admin;
 
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.payload.response.APIResponse;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("api/admin/dashboard")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class AdminDashboardController {
+public class DashboardController {
 
     AdminDashboardService adminDashboardService;
 

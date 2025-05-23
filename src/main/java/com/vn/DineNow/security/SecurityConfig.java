@@ -1,6 +1,5 @@
 package com.vn.DineNow.security;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,12 +36,18 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/owner/**").hasRole("OWNER")
+                        .requestMatchers("/api/customer/**", "/api/customers/**").hasRole("CUSTOMER")
+                        .requestMatchers("/api/users/me/favorites", "/api/users/me/favorites/**").hasRole("CUSTOMER")
+                        .requestMatchers("/api/users/me").authenticated()
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

@@ -1,9 +1,9 @@
-package com.vn.DineNow.controllers;
+package com.vn.DineNow.controllers.admin;
 
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.payload.response.APIResponse;
-import com.vn.DineNow.services.admin.statistical.AdminRevenueService;
+import com.vn.DineNow.services.admin.statistical.AdminProfitService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,16 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.YearMonth;
 
 @RestController
+@RequestMapping("/api/admin/profits")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequestMapping("api/admin/revenues")
-public class AdminRevenueController {
-    AdminRevenueService adminRevenueService;
+public class ProfitController {
+
+    AdminProfitService adminProfitService;
 
     @GetMapping("/restaurants/monthly")
-    public ResponseEntity<?> getMonthlyRevenueInYear(
-            @RequestParam(value = "month", required = false) YearMonth yearMonth) throws CustomException {
-        var result = adminRevenueService.getMonthlyRevenue(yearMonth);
+    public ResponseEntity<?> getMonthlyProfitInYear(
+            @RequestParam(value = "yearMonth", required = false) YearMonth month) {
+        var result = adminProfitService.getMonthlyProfitsOfAllRestaurants(month);
         APIResponse<?> response = APIResponse.builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.OK.getMessage())
@@ -35,8 +36,8 @@ public class AdminRevenueController {
     }
 
     @GetMapping("/restaurants/total")
-    public ResponseEntity<?> getTotalRevenuePerRestaurantSinceJoined() throws CustomException {
-        var result = adminRevenueService.getTotalRevenuePerRestaurantSinceJoined();
+    public ResponseEntity<?> getTotalProfitPerRestaurantSinceJoined() {
+        var result = adminProfitService.getTotalProfitsPerRestaurant();
         APIResponse<?> response = APIResponse.builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.OK.getMessage())
@@ -46,10 +47,10 @@ public class AdminRevenueController {
     }
 
     @GetMapping("/restaurants/monthly/range")
-    public ResponseEntity<?> getMonthlyRevenueInRange(
+    public ResponseEntity<?> getMonthlyProfitInRange(
             @RequestParam(value = "startMonth") YearMonth startMonth,
             @RequestParam(value = "endMonth") YearMonth endMonth) throws CustomException {
-        var result = adminRevenueService.getMonthlyRevenueInRange(startMonth, endMonth);
+        var result = adminProfitService.getTotalProfitsPerRestaurantInRange(startMonth, endMonth);
         APIResponse<?> response = APIResponse.builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.OK.getMessage())
@@ -57,7 +58,4 @@ public class AdminRevenueController {
                 .build();
         return ResponseEntity.ok(response);
     }
-
-
-
 }

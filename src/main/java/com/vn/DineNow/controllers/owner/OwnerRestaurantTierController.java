@@ -1,4 +1,4 @@
-package com.vn.DineNow.controllers;
+package com.vn.DineNow.controllers.owner;
 
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.payload.response.APIResponse;

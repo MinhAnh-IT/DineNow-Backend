@@ -1,4 +1,4 @@
-package com.vn.DineNow.controllers;
+package com.vn.DineNow.controllers.owner;
 
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
@@ -8,7 +8,6 @@ import com.vn.DineNow.services.owner.statistical.OwnerStatisticalService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
