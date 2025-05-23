@@ -1,4 +1,4 @@
-package com.vn.DineNow.controllers;
+package com.vn.DineNow.controllers.admin;
 
 import com.vn.DineNow.enums.OrderStatus;
 import com.vn.DineNow.enums.RestaurantStatus;
@@ -48,7 +48,7 @@ public class AdminController {
         List<UserResponse> users = adminService.getAllUsers();
         APIResponse<List<UserResponse>> response = APIResponse.<List<UserResponse>>builder()
                 .status(StatusCode.OK.getCode())
-                .message("Users retrieved successfully")
+                .message(StatusCode.OK.getMessage())
                 .data(users)
                 .build();
         return ResponseEntity.ok(response);

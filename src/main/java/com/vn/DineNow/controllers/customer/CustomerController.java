@@ -1,4 +1,4 @@
-package com.vn.DineNow.controllers;
+package com.vn.DineNow.controllers.customer;
 
 import com.vn.DineNow.enums.OrderStatus;
 import com.vn.DineNow.enums.StatusCode;

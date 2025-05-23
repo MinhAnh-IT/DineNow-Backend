@@ -1,4 +1,4 @@
-package com.vn.DineNow.controllers;
+package com.vn.DineNow.controllers.admin;
 
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;

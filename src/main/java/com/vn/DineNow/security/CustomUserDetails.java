@@ -23,7 +23,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> "ROLE_" + user.getRole().getName()); // 👈 lấy chuỗi "OWNER"
+        return List.of(() -> "ROLE_" + user.getRole().getName());
     }
 
     @Override
