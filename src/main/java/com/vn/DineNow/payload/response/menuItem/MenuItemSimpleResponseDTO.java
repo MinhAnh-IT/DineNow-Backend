@@ -21,5 +21,6 @@ public class MenuItemSimpleResponseDTO {
     double averageRating;
     String imageUrl;
     String typeName;
+    long restaurantId;
 }
 

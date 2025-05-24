@@ -23,6 +23,7 @@ public interface MenuItemMapper {
 
     MenuItemResponseDTO toDTO(MenuItem menuItem);
 
+    @Mapping(target = "restaurantId", source = "restaurant.id")
     @Mapping(target = "typeName", source = "category.name")
     MenuItemSimpleResponseDTO toSimpleDTO(MenuItem menuItem);
 
