@@ -2,6 +2,7 @@ package com.vn.DineNow.controllers.publicEnpoint;
 
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
+import com.vn.DineNow.payload.request.googleMaps.LocationRequest;
 import com.vn.DineNow.payload.request.restaurant.SearchRestaurantDTO;
 import com.vn.DineNow.payload.response.APIResponse;
 import com.vn.DineNow.payload.response.menuItem.MenuItemSimpleResponseDTO;
@@ -96,6 +97,25 @@ public class RestaurantController {
     @GetMapping("/featured")
     public ResponseEntity<APIResponse<List<RestaurantSimpleResponseDTO>>> getListOfFeaturedRestaurants() throws CustomException {
         var result = restaurantService.GetListOfFeaturedRestaurants();
+        APIResponse<List<RestaurantSimpleResponseDTO>> response = APIResponse.<List<RestaurantSimpleResponseDTO>>builder()
+                .status(StatusCode.OK.getCode())
+                .message(StatusCode.OK.getMessage())
+                .data(result)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/nearby")
+    public ResponseEntity<APIResponse<List<RestaurantSimpleResponseDTO>>> findNearbyRestaurants(
+            @RequestParam double lat,
+            @RequestParam double lng,
+            @RequestParam(defaultValue = "10") double radius,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) throws Exception {
+        LocationRequest locationRequest = new LocationRequest(lat, lng);
+        var result = restaurantService.findRestaurantsWithinRadius(locationRequest, radius, page, size);
+
         APIResponse<List<RestaurantSimpleResponseDTO>> response = APIResponse.<List<RestaurantSimpleResponseDTO>>builder()
                 .status(StatusCode.OK.getCode())
                 .message(StatusCode.OK.getMessage())

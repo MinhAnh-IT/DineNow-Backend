@@ -1,6 +1,7 @@
 package com.vn.DineNow.services.customer.restaurant;
 
 import com.vn.DineNow.exception.CustomException;
+import com.vn.DineNow.payload.request.googleMaps.LocationRequest;
 import com.vn.DineNow.payload.request.restaurant.SearchRestaurantDTO;
 import com.vn.DineNow.payload.response.restaurant.RestaurantResponseDTO;
 import com.vn.DineNow.payload.response.restaurant.RestaurantSimpleResponseDTO;
@@ -18,6 +19,9 @@ public interface CustomerRestaurantService {
     List<RestaurantSimpleResponseDTO> getAllRestaurantByTypeId(long typeId, int page, int size)
             throws CustomException;
     List<RestaurantSimpleResponseDTO>GetListOfFeaturedRestaurants();
+
+    List<RestaurantSimpleResponseDTO> findRestaurantsWithinRadius(LocationRequest request, double radius, int page, int size)
+            throws CustomException;
 
 }
 

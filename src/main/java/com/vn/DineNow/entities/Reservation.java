@@ -1,8 +1,10 @@
 package com.vn.DineNow.entities;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,29 +15,30 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "reservations")
 public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @Column(nullable = false)
-    private OffsetDateTime reservationTime;
+    OffsetDateTime reservationTime;
 
     @Column(nullable = false)
-    private Integer numberOfPeople;
+    Integer numberOfPeople;
 
     @Column
     @CreationTimestamp
-    private OffsetDateTime createdAt;
+    OffsetDateTime createdAt;
 
     @Column
     @UpdateTimestamp
-    private OffsetDateTime updatedAt;
+    OffsetDateTime updatedAt;
 
     @Column
-    private String numberPhone;
+    String numberPhone;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)

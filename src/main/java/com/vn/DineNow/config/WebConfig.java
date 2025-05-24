@@ -1,5 +1,7 @@
 package com.vn.DineNow.config;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -9,14 +11,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Slf4j
 @Configuration
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class WebConfig implements WebMvcConfigurer {
 
     @Value("${upload.images}")
     private String uploadDirectory;
 
-    /**
-     * ✅ Cho phép React frontend truy cập API
-     */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         log.info("🛡️ Cấu hình CORS cho http://localhost:3000");

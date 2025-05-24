@@ -79,15 +79,15 @@ public class  GlobalExceptionHandler {
     }
 
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<APIResponse<String>> handleGeneralException(Exception ex) {
-//        APIResponse<String> response = APIResponse.<String>builder()
-//                .status(StatusCode.INTERNAL_SERVER_ERROR.getCode())
-//                .message(StatusCode.INTERNAL_SERVER_ERROR.getMessage())
-//                .data(null)
-//                .build();
-//        return ResponseEntity.ok(response);
-//    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<APIResponse<String>> handleGeneralException(Exception ex) {
+        APIResponse<String> response = APIResponse.<String>builder()
+                .status(StatusCode.INTERNAL_SERVER_ERROR.getCode())
+                .message(StatusCode.INTERNAL_SERVER_ERROR.getMessage())
+                .data(null)
+                .build();
+        return ResponseEntity.ok(response);
+    }
 
 
 }

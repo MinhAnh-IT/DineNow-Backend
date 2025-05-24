@@ -1,22 +1,25 @@
 package com.vn.DineNow.payload.response.menuItem;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class MenuItemSimpleResponseDTO {
-    private Long id;
-    private String name;
-    private String description;
+    Long id;
+    String name;
+    String description;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private BigDecimal price;
-    private double averageRating;
-    private String imageUrl;
-    private String typeName;
+    BigDecimal price;
+    double averageRating;
+    String imageUrl;
+    String typeName;
 }
 

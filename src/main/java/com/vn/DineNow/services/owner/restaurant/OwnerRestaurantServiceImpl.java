@@ -142,7 +142,11 @@ public class OwnerRestaurantServiceImpl implements OwnerRestaurantService {
             restaurantImageService.deleteImagesByRestaurantId(restaurantId);
             restaurantImageService.saveImages(restaurantId, restaurantUpdateDTO.getImages());
         }
-
+        if (restaurantUpdateDTO.getAddress() != null) {
+            var location = geocodingService.getCoordinates(restaurantUpdateDTO.getAddress());
+            restaurant.setLatitude(location.getLat());
+            restaurant.setLongitude(location.getLng());
+        }
         restaurantRepository.save(restaurant);
 
         RestaurantResponseDTO responseDTO = restaurantMapper.toDTO(restaurant);

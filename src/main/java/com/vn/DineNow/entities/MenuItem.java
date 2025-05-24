@@ -3,6 +3,7 @@ package com.vn.DineNow.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,27 +15,28 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 @Table(name = "menu_items")
 public class MenuItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @Column(nullable = false)
-    private String name;
+    String name;
 
     @Column(columnDefinition = "text")
-    private String description;
+    String description;
 
     @Column(nullable = false, precision = 12, scale = 2)
-    private BigDecimal price;
+    BigDecimal price;
 
     @Column
-    private Boolean available;
+    Boolean available;
 
     @Column
-    private String imageUrl;
+    String imageUrl;
 
     @Column
     private Double averageRating;

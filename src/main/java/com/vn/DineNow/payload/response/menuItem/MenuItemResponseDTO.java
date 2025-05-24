@@ -6,35 +6,38 @@ import com.vn.DineNow.payload.response.foodCategory.FoodCategoryResponseDTO;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class MenuItemResponseDTO {
-    private Long id;
+    Long id;
 
     @NotNull
     @Size(max = 255)
-    private String name;
+    String name;
 
-    private String description;
-    private double averageRating;
+    String description;
+    double averageRating;
     @NotNull
     @Digits(integer = 12, fraction = 2)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private BigDecimal price;
+    BigDecimal price;
 
-    private Boolean available;
+    Boolean available;
 
-    private String imageUrl;
+    String imageUrl;
 
-    private OffsetDateTime createdAt;
+    OffsetDateTime createdAt;
 
-    private OffsetDateTime updatedAt;
+    OffsetDateTime updatedAt;
 
-    private FoodCategoryResponseDTO category;
+    FoodCategoryResponseDTO category;
 }

@@ -1,8 +1,10 @@
 package com.vn.DineNow.entities;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.OffsetDateTime;
@@ -10,31 +12,32 @@ import java.time.OffsetDateTime;
 @Entity
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "menu_item_reviews",
         uniqueConstraints = @UniqueConstraint(columnNames = "order_item_id"))
 public class MenuItemReview {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_item_id", nullable = false, unique = true)
-    private OrderItem orderItem;
+    OrderItem orderItem;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    User user;
 
-    private Integer rating;
+    Integer rating;
 
     @Column(columnDefinition = "TEXT")
-    private String comment;
+    String comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_item_id", nullable = false)
-    private MenuItem menuItem;
+    MenuItem menuItem;
 
     @CreationTimestamp
-    private OffsetDateTime createdAt;
+    OffsetDateTime createdAt;
 }

@@ -1,30 +1,33 @@
 package com.vn.DineNow.entities;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.util.Set;
 
 @Getter
 @Setter
 @Entity
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "restaurant_types")
 public class RestaurantType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @Column(nullable = false, unique = true)
-    private String name;
+    String name;
 
     @Column(columnDefinition = "text")
-    private String description;
+    String description;
 
     @Column
-    private String imageUrl;
+    String imageUrl;
 
     @OneToMany(mappedBy = "type")
-    private Set<Restaurant> restaurants;
+    Set<Restaurant> restaurants;
 }

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,13 +17,14 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class RedisConfig {
 
     @Value("${DineNow.redis.host}")
-    private String redisHost;
+    String redisHost;
 
     @Value("${DineNow.redis.port}")
-    private int redisPort;
+    int redisPort;
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {

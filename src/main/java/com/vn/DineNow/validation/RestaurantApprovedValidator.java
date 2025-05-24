@@ -6,14 +6,17 @@ import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.repositories.RestaurantRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class RestaurantApprovedValidator implements ConstraintValidator<ValidRestaurantApprovedValidator, Long> {
 
-    private final RestaurantRepository restaurantRepository;
+    final RestaurantRepository restaurantRepository;
 
     @Override
     public boolean isValid(Long restaurantId, ConstraintValidatorContext context) {
