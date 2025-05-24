@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 public class MainCategoryRequest {
     @NotNull(message = "Main category name must not be null")
     @NotBlank(message = "Main category name must not be blank")
-    private String name;
+    String name;
 
     @NotNull(message = "Main category description must not be null")
     @NotBlank(message = "Main category description must not be blank")

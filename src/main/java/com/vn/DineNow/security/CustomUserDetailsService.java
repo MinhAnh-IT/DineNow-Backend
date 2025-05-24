@@ -2,7 +2,9 @@ package com.vn.DineNow.security;
 
 import com.vn.DineNow.entities.User;
 import com.vn.DineNow.repositories.UserRepository;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,9 +15,10 @@ import java.util.Optional;
 
 @Slf4j
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-    private final UserRepository userRepository;
+    final UserRepository userRepository;
 
     public CustomUserDetails loadUserById(Long id) {
         User user = userRepository.findById(id)

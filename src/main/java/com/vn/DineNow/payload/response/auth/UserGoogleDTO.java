@@ -4,37 +4,40 @@ import com.vn.DineNow.enums.Role;
 import com.vn.DineNow.enums.SignWith;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.time.OffsetDateTime;
 
 @Builder
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserGoogleDTO {
 
-    private Long id;
-    private String fullName;
-    private String email;
+    Long id;
+    String fullName;
+    String email;
 
     @Builder.Default
-    private Role role = Role.CUSTOMER;
+    Role role = Role.CUSTOMER;
 
     @Builder.Default
-    private Boolean isVerified = true;
+    Boolean isVerified = true;
 
     @Builder.Default
-    private Boolean enabled = true;
+    Boolean enabled = true;
 
     @Builder.Default
     @Enumerated(EnumType.STRING)
-    private SignWith provider = SignWith.GOOGLE;
+    SignWith provider = SignWith.GOOGLE;
 
     @Builder.Default
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    OffsetDateTime createdAt = OffsetDateTime.now();
 
     @Builder.Default
-    private OffsetDateTime updatedAt = OffsetDateTime.now();
+    OffsetDateTime updatedAt = OffsetDateTime.now();
 }

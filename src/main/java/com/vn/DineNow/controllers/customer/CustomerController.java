@@ -3,8 +3,10 @@ package com.vn.DineNow.controllers.customer;
 import com.vn.DineNow.enums.OrderStatus;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.payload.request.Order.OrderRequest;
+import com.vn.DineNow.payload.request.googleMaps.LocationRequest;
 import com.vn.DineNow.payload.response.APIResponse;
 import com.vn.DineNow.payload.response.order.OrderSimpleResponse;
+import com.vn.DineNow.payload.response.restaurant.RestaurantSimpleResponseDTO;
 import com.vn.DineNow.security.CustomUserDetails;
 import com.vn.DineNow.services.customer.order.CustomerOrderService;
 import com.vn.DineNow.validation.ValidRestaurantApprovedValidator;
@@ -17,6 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -94,4 +97,5 @@ public class CustomerController {
                 .build();
         return ResponseEntity.ok(response);
     }
+
 }

@@ -11,6 +11,6 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class YearlyRevenueResponse {
-    private BigDecimal totalRevenue;
-    private List<YearlyRevenueDetail> yearlyDetails;
+    BigDecimal totalRevenue;
+    List<YearlyRevenueDetail> yearlyDetails;
 }

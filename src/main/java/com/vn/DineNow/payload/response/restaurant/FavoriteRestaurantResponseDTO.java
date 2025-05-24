@@ -1,16 +1,18 @@
 package com.vn.DineNow.payload.response.restaurant;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class FavoriteRestaurantResponseDTO {
-    private Long id;
-    private String name;
-    private String address;
-    private String thumbnailUrl;
-    private Double averageRating;
-    private String typeName;
-    private String restaurantTierName;
+    Long id;
+    String name;
+    String address;
+    String thumbnailUrl;
+    Double averageRating;
+    String typeName;
+    String restaurantTierName;
 }

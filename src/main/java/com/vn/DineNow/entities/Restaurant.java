@@ -2,8 +2,10 @@ package com.vn.DineNow.entities;
 
 import com.vn.DineNow.enums.RestaurantStatus;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,73 +17,74 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "restaurants")
 public class Restaurant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @Column(nullable = false)
-    private String name;
+    String name;
 
     @Column(nullable = false)
-    private double latitude;
+    double latitude;
 
     @Column(nullable = false)
-    private double longitude;
+    double longitude;
 
     @Column(nullable = false, columnDefinition = "text")
-    private String address;
+    String address;
 
     @Column(nullable = false, length = 20)
-    private String phone;
+    String phone;
 
     @Column(columnDefinition = "text")
-    private String description;
+    String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id")
-    private RestaurantType type;
+    RestaurantType type;
 
     @Column
-    private double averageRating;
+    double averageRating;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private RestaurantStatus status = RestaurantStatus.PENDING;
+    RestaurantStatus status = RestaurantStatus.PENDING;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tier_id", nullable = false)
-    private RestaurantTiers restaurantTier;
+    RestaurantTiers restaurantTier;
 
     @Column
     @CreationTimestamp
-    private OffsetDateTime createdAt;
+    OffsetDateTime createdAt;
 
     @Column
     @UpdateTimestamp
-    private OffsetDateTime updatedAt;
+    OffsetDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
-    private User owner;
+    User owner;
 
     @OneToMany(mappedBy = "restaurant")
-    private Set<RestaurantImage> restaurantRestaurantImages;
+    Set<RestaurantImage> restaurantRestaurantImages;
 
     @OneToMany(mappedBy = "restaurant")
-    private Set<Reservation> restaurantReservations;
+    Set<Reservation> restaurantReservations;
 
     @OneToMany(mappedBy = "restaurant")
-    private Set<MenuItem> restaurantMenuItems;
+    Set<MenuItem> restaurantMenuItems;
 
     @OneToMany(mappedBy = "restaurant")
-    private Set<Review> restaurantReviews;
+    Set<Review> restaurantReviews;
 
     @OneToMany(mappedBy = "restaurant")
-    private Set<FavoriteRestaurant> restaurantFavoriteRestaurants;
+    Set<FavoriteRestaurant> restaurantFavoriteRestaurants;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<FoodCategory> foodCategories;
+    Set<FoodCategory> foodCategories;
 }

@@ -1,8 +1,10 @@
 package com.vn.DineNow.entities;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.util.Set;
 
@@ -10,16 +12,17 @@ import java.util.Set;
 @Table(name = "main_category")
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class MainCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @Column(nullable = false, unique = true)
-    private String name;
+    String name;
 
-    private String description;
+    String description;
 
     @OneToMany(mappedBy = "mainCategory")
-    private Set<FoodCategory> foodCategories;
+    Set<FoodCategory> foodCategories;
 }

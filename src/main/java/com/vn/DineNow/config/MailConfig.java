@@ -1,5 +1,7 @@
 package com.vn.DineNow.config;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,25 +11,26 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import java.util.Properties;
 
 @Configuration
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class MailConfig {
 
     @Value("${DineNow.mail.host}")
-    private String host;
+    String host;
 
     @Value("${DineNow.mail.port}")
-    private int port;
+    int port;
 
     @Value("${DineNow.mail.username}")
-    private String username;
+    String username;
 
     @Value("${DineNow.mail.password}")
-    private String password;
+    String password;
 
     @Value("${DineNow.mail.properties.mail.smtp.auth}")
-    private String smtpAuth;
+    String smtpAuth;
 
     @Value("${DineNow.mail.properties.mail.smtp.starttls.enable}")
-    private String starttlsEnable;
+    String starttlsEnable;
 
     @Bean
     public JavaMailSender javaMailSender() {

@@ -5,6 +5,7 @@ import com.vn.DineNow.enums.RestaurantStatus;
 import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.mapper.RestaurantMapper;
+import com.vn.DineNow.payload.request.googleMaps.LocationRequest;
 import com.vn.DineNow.payload.request.restaurant.SearchRestaurantDTO;
 import com.vn.DineNow.payload.response.restaurant.RestaurantResponseDTO;
 import com.vn.DineNow.payload.response.restaurant.RestaurantSimpleResponseDTO;
@@ -137,4 +138,33 @@ public class CustomerRestaurantServiceImpl implements CustomerRestaurantService 
                 .map(restaurantMapper::toSimpleDTO)
                 .toList();
     }
+
+    /**
+     * Finds restaurants within a specified radius from a given location.
+     *
+     * @param request the location request containing latitude and longitude
+     * @param radius  the search radius in meters
+     * @param page    the page number (0-based)
+     * @param size    the number of results per page
+     * @return paginated list of restaurants within the specified radius
+     * @throws CustomException if an error occurs during the search
+     */
+    @Override
+    public List<RestaurantSimpleResponseDTO> findRestaurantsWithinRadius(
+            LocationRequest request, double radius, int page, int size) throws CustomException {
+
+        List<Restaurant> restaurants = restaurantRepository.findRestaurantsWithinRadius(
+                request.getLat(), request.getLng(), radius);
+
+        int start = Math.max(0, page * size);
+        int end = Math.min(start + size, restaurants.size());
+        if (start >= end) return List.of();
+
+        return restaurants.subList(start, end)
+                .stream()
+                .map(restaurantMapper::toSimpleDTO)
+                .toList();
+    }
+
+
 }

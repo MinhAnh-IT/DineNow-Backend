@@ -48,4 +48,20 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     )
     List<Restaurant> findTopFeaturedRestaurants();
 
+
+    @Query(value = "SELECT *, " +
+            "(6371 * acos(" +
+            "cos(radians(:lat)) * cos(radians(latitude)) * " +
+            "cos(radians(:lng) - radians(longitude)) + " +
+            "sin(radians(:lat)) * sin(radians(latitude))" +
+            ")) AS distance " +
+            "FROM restaurants " +
+            "WHERE status = 'APPROVED' " +
+            "HAVING distance < :radius " +
+            "ORDER BY distance ASC", nativeQuery = true)
+    List<Restaurant> findRestaurantsWithinRadius(
+            @Param("lat") double lat,
+            @Param("lng") double lng,
+            @Param("radius") double radius);
+
 }

@@ -9,11 +9,15 @@ import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.mapper.OrderMapper;
 import com.vn.DineNow.payload.request.Order.RejectOrderRequest;
+import com.vn.DineNow.payload.request.payment.PaymentRequest;
 import com.vn.DineNow.payload.response.order.OrderDetailResponse;
 import com.vn.DineNow.repositories.OrderRepository;
 import com.vn.DineNow.repositories.RestaurantRepository;
 import com.vn.DineNow.repositories.UserRepository;
 import com.vn.DineNow.services.common.email.EmailService;
+import com.vn.DineNow.services.customer.payment.PaymentService;
+import com.vn.DineNow.services.customer.vnpay.VnPayService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -33,7 +37,6 @@ public class OwnerOrderServiceImpl implements OwnerOrderService{
     RestaurantRepository restaurantRepository;
     OrderMapper orderMapper;
     EmailService emailService;
-
 
     /**
      * Validates the status of an order to ensure it is not cancelled or completed.

@@ -3,8 +3,10 @@ package com.vn.DineNow.entities;
 import com.vn.DineNow.enums.Role;
 import com.vn.DineNow.enums.SignWith;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,62 +17,63 @@ import java.util.Set;
 @Setter
 @Getter
 @Entity
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "Users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @Column(nullable = false)
-    private String fullName;
+    String fullName;
 
     @Column(nullable = false)
-    private String email;
+    String email;
 
     @Column
-    private String password;
+    String password;
 
     @Column(length = 10)
-    private String phone;
+    String phone;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Role role;
+    Role role;
 
     @Column
-    private Boolean isVerified;
+    Boolean isVerified;
 
     @Column(nullable = false)
-    private Boolean enabled = true;
+    Boolean enabled = true;
 
     @Column
     @Enumerated(EnumType.STRING)
-    private SignWith provider = SignWith.LOCAL;
+    SignWith provider = SignWith.LOCAL;
 
     @Column(name = "provider_id")
-    private String providerId;
+    String providerId;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
-    private OffsetDateTime createdAt;
+    OffsetDateTime createdAt;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private BankAccount bankAccount;
+    BankAccount bankAccount;
 
     @UpdateTimestamp
     @Column(nullable = false)
-    private OffsetDateTime updatedAt;
+    OffsetDateTime updatedAt;
 
     @OneToMany(mappedBy = "owner")
-    private Set<Restaurant> ownerRestaurants;
+    Set<Restaurant> ownerRestaurants;
 
     @OneToMany(mappedBy = "customer")
-    private Set<Reservation> customerReservations;
+    Set<Reservation> customerReservations;
 
     @OneToMany(mappedBy = "customer")
-    private Set<Review> customerReviews;
+    Set<Review> customerReviews;
 
     @OneToMany(mappedBy = "user")
-    private Set<FavoriteRestaurant> userFavoriteRestaurants;
+    Set<FavoriteRestaurant> userFavoriteRestaurants;
 }

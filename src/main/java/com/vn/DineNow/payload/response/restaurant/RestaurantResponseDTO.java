@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.vn.DineNow.payload.response.restaurantType.RestaurantTypeSimple;
 import com.vn.DineNow.enums.RestaurantStatus;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -13,23 +14,24 @@ import java.util.List;
 @Setter
 @Builder
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class RestaurantResponseDTO {
-    private Long id;
-    private String name;
-    private String address;
-    private String phone;
-    private String restaurantTierName;
-    private String description;
-    private RestaurantTypeSimple type;
-    private double averageRating;
-    private RestaurantStatus status;
+    Long id;
+    String name;
+    String address;
+    String phone;
+    String restaurantTierName;
+    String description;
+    RestaurantTypeSimple type;
+    double averageRating;
+    RestaurantStatus status;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
-    private OffsetDateTime createdAt;
+    OffsetDateTime createdAt;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
-    private OffsetDateTime updatedAt;
+    OffsetDateTime updatedAt;
 
-    private List<String> imageUrls;
+    List<String> imageUrls;
 }
