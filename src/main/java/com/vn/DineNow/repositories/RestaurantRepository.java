@@ -51,9 +51,9 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     @Query(value = "SELECT *, " +
             "(6371 * acos(" +
-            "cos(radians(:lat)) * cos(radians(latitude)) * " +
-            "cos(radians(:lng) - radians(longitude)) + " +
-            "sin(radians(:lat)) * sin(radians(latitude))" +
+                "cos(radians(:lat)) * cos(radians(latitude)) * " +
+                "cos(radians(:lng) - radians(longitude)) + " +
+                "sin(radians(:lat)) * sin(radians(latitude))" +
             ")) AS distance " +
             "FROM restaurants " +
             "WHERE status = 'APPROVED' " +
