@@ -4,12 +4,13 @@ import com.vn.DineNow.entities.Order;
 import com.vn.DineNow.payload.request.Order.OrderRequest;
 import com.vn.DineNow.payload.response.order.OrderDetailResponse;
 import com.vn.DineNow.payload.response.order.OrderResponse;
+import com.vn.DineNow.payload.response.order.OrderResponseForPayment;
 import com.vn.DineNow.payload.response.order.OrderSimpleResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-@Mapper(componentModel = "spring", uses = {ReservationMapper.class, OrderItemMapper.class})
+@Mapper(componentModel = "spring", uses = {ReservationMapper.class, OrderItemMapper.class, RestaurantMapper.class})
 public interface OrderMapper {
 
     @Mappings({
@@ -19,7 +20,8 @@ public interface OrderMapper {
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "status", ignore = true),
             @Mapping(target = "totalPrice", ignore = true),
-            @Mapping(target = "updatedAt", ignore = true)
+            @Mapping(target = "updatedAt", ignore = true),
+            @Mapping(target = "payments", ignore = true)
     })
     Order toEntity(OrderRequest orderDTO);
 
@@ -33,5 +35,11 @@ public interface OrderMapper {
             @Mapping(source = "orderOrderItems", target = "menuItems"),
             @Mapping(source = "reservation", target = "reservationSimpleResponse")
     })
+    @Mapping(target = "restaurants", source = "reservation.restaurant")
     OrderSimpleResponse toSimpleDTO(Order order);
+
+    @Mapping(target = "restaurant", source = "reservation.restaurant")
+    @Mapping(target = "menuItems", source = "orderOrderItems")
+    OrderResponseForPayment toResponseForPayment(Order order);
+
 }

@@ -13,6 +13,5 @@ import java.time.OffsetDateTime;
 public class ReservationSimpleResponse {
     long numberOfPeople;
     long numberOfChild;
-    String restaurantName;
     OffsetDateTime reservationTime;
 }

@@ -111,8 +111,7 @@ public class RestaurantController {
             @RequestParam double lng,
             @RequestParam(defaultValue = "10") double radius,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size
-    ) throws Exception {
+            @RequestParam(defaultValue = "20") int size) throws Exception {
         LocationRequest locationRequest = new LocationRequest(lat, lng);
         var result = restaurantService.findRestaurantsWithinRadius(locationRequest, radius, page, size);
 

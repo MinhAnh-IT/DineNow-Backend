@@ -7,6 +7,7 @@ import com.vn.DineNow.mapper.OrderMapper;
 import com.vn.DineNow.mapper.ReservationMapper;
 import com.vn.DineNow.payload.request.Order.OrderRequest;
 import com.vn.DineNow.payload.request.orderItem.OrderItemRequest;
+import com.vn.DineNow.payload.response.order.OrderResponseForPayment;
 import com.vn.DineNow.payload.response.order.OrderSimpleResponse;
 import com.vn.DineNow.repositories.OrderRepository;
 import com.vn.DineNow.repositories.RestaurantRepository;
@@ -154,6 +155,21 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         order.setStatus(OrderStatus.CANCELLED);
         orderRepository.save(order);
         return true;
+    }
+
+    @Override
+    public OrderResponseForPayment getOrderById(long customerId, long orderId) throws CustomException {
+        User customer = userRepository.findById(customerId)
+                .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "Customer", String.valueOf(customerId)));
+        if (customer.getRole() != Role.CUSTOMER) {
+            throw new CustomException(StatusCode.INVALID_ACTION, "User is not a customer.");
+        }
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "Order", String.valueOf(orderId)));
+        if (!order.getReservation().getCustomer().getId().equals(customer.getId())) {
+            throw new CustomException(StatusCode.INVALID_ACTION, "User does not own this order.");
+        }
+        return orderMapper.toResponseForPayment(order);
     }
 
     /**
