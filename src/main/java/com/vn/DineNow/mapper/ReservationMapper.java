@@ -30,7 +30,6 @@ public interface ReservationMapper {
     @Mapping(target = "customerEmail", source = "customer.email")
     ReservationDetailsResponse toDetailsDTO(Reservation reservation);
 
-    @Mapping(target = "restaurantName", source = "restaurant.name")
     ReservationSimpleResponse toSimpleDTO(Reservation reservation);
 
 

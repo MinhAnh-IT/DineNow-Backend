@@ -4,10 +4,7 @@ import com.vn.DineNow.entities.Restaurant;
 import com.vn.DineNow.entities.RestaurantImage;
 import com.vn.DineNow.payload.request.restaurant.RestaurantRequestDTO;
 import com.vn.DineNow.payload.request.restaurant.RestaurantUpdateDTO;
-import com.vn.DineNow.payload.response.restaurant.FavoriteRestaurantResponseDTO;
-import com.vn.DineNow.payload.response.restaurant.RestaurantResponseDTO;
-import com.vn.DineNow.payload.response.restaurant.RestaurantSimpleResponseDTO;
-import com.vn.DineNow.payload.response.restaurant.RestaurantSimpleResponseForAdmin;
+import com.vn.DineNow.payload.response.restaurant.*;
 import org.mapstruct.*;
 
 import java.nio.file.Path;
@@ -15,24 +12,25 @@ import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface RestaurantMapper {
-    @Mappings (
-        {
-            @Mapping(target = "status", ignore = true),
-            @Mapping(target = "id", ignore = true),
-            @Mapping(target = "foodCategories", ignore = true),
-            @Mapping(target = "owner", ignore = true),
-            @Mapping(target = "restaurantFavoriteRestaurants", ignore = true),
-            @Mapping(target = "createdAt", ignore = true),
-            @Mapping(target = "restaurantMenuItems", ignore = true),
-            @Mapping(target = "restaurantReservations", ignore = true),
-            @Mapping(target = "restaurantRestaurantImages", ignore = true),
-            @Mapping(target = "restaurantReviews", ignore = true),
-            @Mapping(target = "type.id", source = "typeId"),
-            @Mapping(target = "restaurantTier.id", source = "restaurantTierId") ,
-            @Mapping(target = "updatedAt", ignore = true),
-            @Mapping(target = "averageRating", ignore = true)
-        }
-    )
+    @Mappings(
+            {
+                    @Mapping(target = "status", ignore = true),
+                    @Mapping(target = "id", ignore = true),
+                    @Mapping(target = "foodCategories", ignore = true),
+                    @Mapping(target = "owner", ignore = true),
+                    @Mapping(target = "restaurantFavoriteRestaurants", ignore = true),
+                    @Mapping(target = "createdAt", ignore = true),
+                    @Mapping(target = "restaurantMenuItems", ignore = true),
+                    @Mapping(target = "restaurantReservations", ignore = true),
+                    @Mapping(target = "restaurantRestaurantImages", ignore = true),
+                    @Mapping(target = "restaurantReviews", ignore = true),
+                    @Mapping(target = "type.id", source = "typeId"),
+                    @Mapping(target = "restaurantTier.id", source = "restaurantTierId"),
+                    @Mapping(target = "updatedAt", ignore = true),
+                    @Mapping(target = "averageRating", ignore = true),
+                    @Mapping(target = "latitude", ignore = true),
+                    @Mapping(target = "longitude", ignore = true)
+            })
     Restaurant toEntity(RestaurantRequestDTO requestDTO);
 
 
@@ -77,24 +75,25 @@ public interface RestaurantMapper {
     )
     RestaurantSimpleResponseForAdmin toSimpleDTOForAdmin(Restaurant restaurant);
 
-    @Mappings (
-        {
-            @Mapping(target = "restaurantTier", ignore = true),
-            @Mapping(target = "type", ignore = true),
-            @Mapping(target = "updatedAt", ignore = true),
-            @Mapping(target = "status", ignore = true),
-            @Mapping(target = "restaurantReviews", ignore = true),
-            @Mapping(target = "restaurantRestaurantImages", ignore = true),
-            @Mapping(target = "restaurantReservations", ignore = true),
-            @Mapping(target = "restaurantMenuItems", ignore = true),
-            @Mapping(target = "restaurantFavoriteRestaurants", ignore = true),
-            @Mapping(target = "owner", ignore = true),
-            @Mapping(target = "id", ignore = true),
-            @Mapping(target = "foodCategories", ignore = true),
-            @Mapping(target = "createdAt", ignore = true),
-            @Mapping(target = "averageRating", ignore = true)
-        }
-    )
+    @Mappings(
+            {
+                    @Mapping(target = "restaurantTier", ignore = true),
+                    @Mapping(target = "type", ignore = true),
+                    @Mapping(target = "updatedAt", ignore = true),
+                    @Mapping(target = "status", ignore = true),
+                    @Mapping(target = "restaurantReviews", ignore = true),
+                    @Mapping(target = "restaurantRestaurantImages", ignore = true),
+                    @Mapping(target = "restaurantReservations", ignore = true),
+                    @Mapping(target = "restaurantMenuItems", ignore = true),
+                    @Mapping(target = "restaurantFavoriteRestaurants", ignore = true),
+                    @Mapping(target = "owner", ignore = true),
+                    @Mapping(target = "id", ignore = true),
+                    @Mapping(target = "foodCategories", ignore = true),
+                    @Mapping(target = "createdAt", ignore = true),
+                    @Mapping(target = "averageRating", ignore = true),
+                    @Mapping(target = "latitude", ignore = true),
+                    @Mapping(target = "longitude", ignore = true)
+            })
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateRestaurantFromRequest(RestaurantUpdateDTO dto, @MappingTarget Restaurant restaurant);
 
@@ -104,5 +103,16 @@ public interface RestaurantMapper {
             return "http://localhost:8080/uploads/" + filename;
         }
         return null;
+    }
+
+    @Mapping(target = "thumbnailUrl", expression = "java(getThumbnail(restaurant))")
+    RestaurantSimple toSimple(Restaurant restaurant);
+    default String getThumbnail(Restaurant restaurant) {
+        if (restaurant == null || restaurant.getRestaurantRestaurantImages() == null
+                || restaurant.getRestaurantRestaurantImages().isEmpty()) {
+            return null;
+        }
+        return "http://localhost:8080/uploads/" + restaurant.getRestaurantRestaurantImages().iterator().next().getImageUrl();
+
     }
 }

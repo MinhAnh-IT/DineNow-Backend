@@ -151,3 +151,50 @@
                 "empty": false
             }
         }
+
+
+-------------------------------------------------------------------------------------------------------------------------
+4. Lấy danh sách nhà hàng gần đây: api/restaurants/nearby?lng=106.785460&lat=10.855403&radius=10  - Get
+    * Request: 2 tham số mặc định page = 0 và size = 20 nếu để trống
+        - page : trang hiện tại muốn lấy
+        - size : Dữ liệu cần có của một trang
+        - lng: kinh độ của vị trí hiện tạiq
+        - lat: vĩ độ của vị trí hiện tại
+
+    * Response: Dữ liệu trả về kiểu đơn giản, và chứa ở mục "content"
+        {
+            "status": 200,
+            "message": "Request successful and data returned.",
+            "data": [
+                {
+                    "id": 14,
+                    "name": "Nhà Hàng Tiệc Cưới",
+                    "address": "663 Lê Văn Việt, Q.9, Hồ Chí Minh",
+                    "averageRating": 0.0,
+                    "restaurantTierName": "Sang trọng",
+                    "thumbnailUrl": "http://localhost:8080/uploads/31415b60-c3f0-469e-ad7c-fe949c6dc20f_anhquanan2.jpg",
+                    "typeName": "Quán nhậu",
+                    "reservationCount": null
+                },
+                {
+                    "id": 16,
+                    "name": "Nhà Hàng Đồng Hương",
+                    "address": "663 Tô Ngọc Vân, Thủ Đức, Hồ Chí Minh",
+                    "averageRating": 0.0,
+                    "restaurantTierName": "Sang trọng",
+                    "thumbnailUrl": "http://localhost:8080/uploads/44c52c08-8908-4433-a2a4-11fe0493f1c8_anhquanan2.jpg",
+                    "typeName": "Quán nhậu",
+                    "reservationCount": null
+                },
+                {
+                    "id": 15,
+                    "name": "Nhà Hàng Hải Yến  ",
+                    "address": "Nguyễn trãi, Quận 1, Tp.Hồ Chí Minh",
+                    "averageRating": 0.0,
+                    "restaurantTierName": "Sang trọng",
+                    "thumbnailUrl": "http://localhost:8080/uploads/2ce83215-fef7-452d-85a1-b3d79ea240c5_anhquanan2.jpg",
+                    "typeName": "Quán nhậu",
+                    "reservationCount": null
+                }
+            ]
+        }
