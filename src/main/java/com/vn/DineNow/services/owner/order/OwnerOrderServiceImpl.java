@@ -107,7 +107,7 @@ public class OwnerOrderServiceImpl implements OwnerOrderService{
         variables.put("restaurantAddress", order.getReservation().getRestaurant().getAddress());
         variables.put("restaurantPhone", order.getReservation().getRestaurant().getPhone());
         variables.put("reservationTime", order.getReservation().getReservationTime().format(formatter));
-        variables.put("paymentLink", "https://www.google.com.vn/?hl=vi");
+        variables.put("paymentLink", "http://localhost:3000/payment/" + order.getId());
 
         emailService.confirmOrderEmail(
                 order.getReservation().getCustomer().getEmail(),
@@ -130,7 +130,7 @@ public class OwnerOrderServiceImpl implements OwnerOrderService{
         variables.put("restaurantPhone", order.getReservation().getRestaurant().getPhone());
         variables.put("reservationTime", order.getReservation().getReservationTime().format(formatter));
         variables.put("rejectionReason", reason);
-        variables.put("reorderLink", "https://www.google.com.vn/?hl=vi");
+        variables.put("reorderLink", "http://localhost:8080/re-order/" + order.getId());
         emailService.rejectOrderEmail(
                 order.getReservation().getCustomer().getEmail(),
                 "Đơn hàng đã bị từ chối",
