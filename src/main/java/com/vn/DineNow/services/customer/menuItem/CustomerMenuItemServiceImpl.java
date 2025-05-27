@@ -216,7 +216,6 @@ public class CustomerMenuItemServiceImpl implements CustomerMenuItemService {
         Pageable pageable = PageRequest.of(page, size);
         var menuItems = menuItemRepository.findAllMenuItemByFilter(
                 request.getCity(),
-                request.getDistrict(),
                 restaurantType,
                 mainCategory,
                 request.getMinPrice(),

@@ -61,7 +61,6 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
                     JOIN mi.restaurant r
                     JOIN mi.category c
                 WHERE (:city IS NULL OR LOWER(r.address) LIKE LOWER(CONCAT('%', :city, '%')))
-                  AND (:district IS NULL OR LOWER(r.address) LIKE LOWER(CONCAT('%', :district, '%')))
                   AND (:restaurantType IS NULL OR r.type = :restaurantType)
                   AND (:mainCategory IS NULL OR c.mainCategory = :mainCategory)
                   AND (:minPrice IS NULL OR mi.price >= :minPrice)
@@ -70,7 +69,6 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
             """)
     Page<MenuItem> findAllMenuItemByFilter(
             @Param("city") String city,
-            @Param("district") String district,
             @Param("restaurantType") RestaurantType restaurantType,
             @Param("mainCategory") MainCategory mainCategory,
             @Param("minPrice") BigDecimal minPrice,

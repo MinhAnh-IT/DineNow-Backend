@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -30,8 +31,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.startsWith("/api/auth");
+        return path.startsWith("/api/auth") ||
+                path.startsWith("/api/customer/payments/vnpay/callback");
     }
+//    @Override
+//    protected boolean shouldNotFilter(HttpServletRequest request) {
+//        String path = request.getRequestURI();
+//        AntPathMatcher matcher = new AntPathMatcher();
+//        return path.startsWith("/api/auth")
+//                || path.equals("/api/customer/payments/vnpay/callback")
+//                || matcher.match("/api/customer/payments/vnpay/callback/**", path);
+//
+//    }
+
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,

@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/customer/payments/vnpay/callback").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/owner/**").hasRole("OWNER")
                         .requestMatchers("/api/customer/**", "/api/customers/**").hasRole("CUSTOMER")
