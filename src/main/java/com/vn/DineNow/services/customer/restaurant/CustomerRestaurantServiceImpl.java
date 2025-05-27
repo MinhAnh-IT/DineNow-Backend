@@ -83,9 +83,14 @@ public class CustomerRestaurantServiceImpl implements CustomerRestaurantService 
         // Attach image URLs (from image service)
         restaurantResponseDTO.setImageUrls(restaurantImageService.getImageUrlsByRestaurantId(restaurantId));
 
+        try {
+            restaurantResponseDTO.setReservationCount(reservationService.getTotalReservationByRestaurantId(restaurantId));
+        } catch (Exception e) {
+            throw new CustomException(StatusCode.BAD_REQUEST);
+        }
+
         // Cache result for 20 minutes
         redisService.saveObject(key, restaurantResponseDTO, 20, TimeUnit.MINUTES);
-
         return restaurantResponseDTO;
     }
 

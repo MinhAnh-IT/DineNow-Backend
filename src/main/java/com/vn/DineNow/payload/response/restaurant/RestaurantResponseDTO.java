@@ -26,6 +26,7 @@ public class RestaurantResponseDTO {
     RestaurantTypeSimple type;
     double averageRating;
     RestaurantStatus status;
+    Long reservationCount;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     OffsetDateTime createdAt;
