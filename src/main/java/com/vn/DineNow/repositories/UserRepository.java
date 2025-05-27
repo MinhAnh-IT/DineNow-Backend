@@ -2,6 +2,7 @@ package com.vn.DineNow.repositories;
 
 import com.vn.DineNow.entities.User;
 import com.vn.DineNow.enums.SignWith;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,5 +17,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByPhone(String phone);
     User findByEmail(String email);
     User findByEmailAndProvider(@NotNull String email, @NotNull SignWith signWith);
-
+    boolean existsByEmailAndProviderAndIsVerified(@Email(message = "Email should be valid") String email, SignWith signWith, boolean b);
 }

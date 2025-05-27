@@ -130,7 +130,7 @@ public class OwnerOrderServiceImpl implements OwnerOrderService{
         variables.put("restaurantPhone", order.getReservation().getRestaurant().getPhone());
         variables.put("reservationTime", order.getReservation().getReservationTime().format(formatter));
         variables.put("rejectionReason", reason);
-        variables.put("reorderLink", "http://localhost:8080/re-order/" + order.getId());
+        variables.put("reorderLink", "http://localhost:3000/re-order/" + order.getId());
         emailService.rejectOrderEmail(
                 order.getReservation().getCustomer().getEmail(),
                 "Đơn hàng đã bị từ chối",

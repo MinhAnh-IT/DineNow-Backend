@@ -80,6 +80,7 @@ public class AuthServiceImpl implements AuthService {
         if (userRepository.existsByEmail(userDTO.getEmail(), SignWith.LOCAL)) {
             throw new CustomException(StatusCode.EXIST_EMAIL, userDTO.getEmail());
         }
+        log.info("Registering user with email: {}", userDTO.getEmail());
         if (userRepository.existsByPhone(userDTO.getPhone())) {
             throw new CustomException(StatusCode.EXIST_PHONE, userDTO.getPhone());
         }
@@ -216,6 +217,10 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public boolean verifyOTPVerifyAccount(VerifyOTPRequest request) throws CustomException {
+        if(!userRepository.existsByEmailAndProviderAndIsVerified(request.getEmail(), SignWith.LOCAL, false)) {
+            throw new CustomException(StatusCode.NOT_FOUND, "user", request.getEmail());
+        }
+
         String redisOtp = redisService.getObject(keyVerifyAccount + request.getEmail(), String.class);
         if (redisOtp == null) {
             throw new CustomException(StatusCode.INVALID_OTP);

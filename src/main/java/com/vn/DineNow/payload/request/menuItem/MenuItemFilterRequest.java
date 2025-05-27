@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MenuItemFilterRequest {
     String city;
-    String district;
     Long restaurantTypeId;
     BigDecimal minPrice;
     BigDecimal maxPrice;

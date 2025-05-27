@@ -45,6 +45,7 @@ public class PaymentController {
     @GetMapping("/vnpay/callback")
     public void handleVNPayCallback(@RequestParam Map<String, String> allParams,
                                     HttpServletResponse response) throws IOException, CustomException {
+        log.info("VNPay callback received with parameters: {}", allParams);
         boolean isSuccess = vnPayService.processCallback(allParams);
 
         String redirectUrl = String.format("%s?paymentStatus=%s", paymentResultUrl, isSuccess ? "SUCCESS" : "FAILED");
