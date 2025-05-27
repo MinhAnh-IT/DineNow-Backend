@@ -41,36 +41,30 @@ public class CustomerRestaurantServiceImpl implements CustomerRestaurantService 
     @Value("${DineNow.key.cache-restaurant}")
     String keyRedis;
 
+    private RestaurantSimpleResponseDTO toDTOWithReservationCount(Restaurant restaurant) {
+        var dto = restaurantMapper.toSimpleDTO(restaurant);
+        try {
+            dto.setReservationCount(reservationService.getTotalReservationByRestaurantId(dto.getId()));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return dto;
+    }
+
     /**
      * Retrieves paginated list of all restaurants with APPROVED status.
-     *
-     * @param page the page number (0-based)
-     * @param size the number of records per page
-     * @return paginated list of simplified restaurant DTOs
      */
     @Override
     public List<RestaurantSimpleResponseDTO> getAllRestaurantStatusApproved(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         var restaurants = restaurantRepository.findAllByStatus(RestaurantStatus.APPROVED, pageable);
-
-        return restaurants.stream().map(restaurant -> {
-            var restaurantDTO = restaurantMapper.toSimpleDTO(restaurant);
-            try {
-                restaurantDTO.setReservationCount(
-                        reservationService.getTotalReservationByRestaurantId(restaurantDTO.getId()));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            return restaurantDTO;
-        }).toList();
+        return restaurants.stream()
+                .map(this::toDTOWithReservationCount)
+                .toList();
     }
 
     /**
      * Retrieves full detail of a restaurant by ID, with caching.
-     *
-     * @param restaurantId the ID of the restaurant
-     * @return the full restaurant response DTO
-     * @throws CustomException if restaurant is not found
      */
     @Override
     public RestaurantResponseDTO getRestaurantByID(long restaurantId) throws CustomException {
@@ -97,12 +91,6 @@ public class CustomerRestaurantServiceImpl implements CustomerRestaurantService 
 
     /**
      * Searches for restaurants by name and province (case-insensitive, partial matches).
-     *
-     * @param searchRestaurantDTO the search criteria object
-     * @param page the page number
-     * @param size the number of results per page
-     * @return paginated list of matched restaurants
-     * @throws CustomException if a search failure occurs
      */
     @Override
     public List<RestaurantSimpleResponseDTO> searchRestaurant(SearchRestaurantDTO searchRestaurantDTO, int page, int size)
@@ -112,42 +100,43 @@ public class CustomerRestaurantServiceImpl implements CustomerRestaurantService 
 
         Pageable pageable = PageRequest.of(page, size);
 
-        // Normalize null/blank search inputs to empty string
         if (province == null || province.isBlank()) province = "";
         if (restaurantName == null || restaurantName.isBlank()) restaurantName = "";
 
         var restaurants = restaurantRepository.searchRestaurantByCityAndName(
                 province.trim(), restaurantName.trim(), pageable);
 
-        return restaurants.map(restaurantMapper::toSimpleDTO).stream().toList();
+        // restaurants là Page<Restaurant>
+        return restaurants.stream()
+                .map(this::toDTOWithReservationCount)
+                .toList();
     }
 
+    /**
+     * Retrieves all restaurants by type ID.
+     */
     @Override
     public List<RestaurantSimpleResponseDTO> getAllRestaurantByTypeId(long typeId, int page, int size) throws CustomException {
         Pageable pageable = PageRequest.of(page, size);
         var restaurants = restaurantRepository.findAllByType_Id(typeId, pageable);
         return restaurants.stream()
-                .map(restaurantMapper::toSimpleDTO)
+                .map(this::toDTOWithReservationCount)
                 .toList();
     }
 
+    /**
+     * Retrieves a list of featured restaurants.
+     */
     @Override
     public List<RestaurantSimpleResponseDTO> GetListOfFeaturedRestaurants() {
         var restaurants = restaurantRepository.findTopFeaturedRestaurants();
         return restaurants.stream()
-                .map(restaurantMapper::toSimpleDTO)
+                .map(this::toDTOWithReservationCount)
                 .toList();
     }
 
     /**
      * Finds restaurants within a specified radius from a given location.
-     *
-     * @param request the location request containing latitude and longitude
-     * @param radius  the search radius in meters
-     * @param page    the page number (0-based)
-     * @param size    the number of results per page
-     * @return paginated list of restaurants within the specified radius
-     * @throws CustomException if an error occurs during the search
      */
     @Override
     public List<RestaurantSimpleResponseDTO> findRestaurantsWithinRadius(
@@ -162,9 +151,7 @@ public class CustomerRestaurantServiceImpl implements CustomerRestaurantService 
 
         return restaurants.subList(start, end)
                 .stream()
-                .map(restaurantMapper::toSimpleDTO)
+                .map(this::toDTOWithReservationCount)
                 .toList();
     }
-
-
 }
