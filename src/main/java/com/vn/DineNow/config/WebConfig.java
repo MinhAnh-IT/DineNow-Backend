@@ -19,8 +19,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        log.info("🛡️ Cấu hình CORS cho http://localhost:3000");
-
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000")
                 .allowedMethods("*")
@@ -32,9 +30,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String normalizedPath = uploadDirectory.endsWith("/") ? uploadDirectory : uploadDirectory + "/";
         String resourceLocation = "file:" + normalizedPath;
-
-        log.info("Mapping /uploads/** → {}", resourceLocation);
-
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations(resourceLocation);
     }
