@@ -37,7 +37,10 @@ public class GeocodingServiceImpl implements GeocodingService {
 
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36");
+            conn.setRequestProperty(
+                    "User-Agent",
+                    "DineNowApp/1.0 (contact: hma.tech04@gmail.com)"
+            );
             conn.setConnectTimeout(5000); // 5s timeout
             conn.setReadTimeout(5000);    // 5s timeout
             conn.setRequestMethod("GET");
@@ -53,7 +56,6 @@ public class GeocodingServiceImpl implements GeocodingService {
                 in.close();
 
                 String jsonResult = content.toString();
-                // Parse đơn giản
                 double[] coordinates = parseCoordinatesFromJson(jsonResult);
 
                 if (coordinates != null) {
