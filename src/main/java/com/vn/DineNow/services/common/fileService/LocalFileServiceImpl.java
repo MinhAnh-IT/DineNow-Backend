@@ -111,6 +111,6 @@ public class LocalFileServiceImpl implements FileService {
      * @return true if the extension is one of the accepted image formats
      */
     public boolean isValidImageExtension(String ext) {
-        return ext.matches("png|jpg|jpeg|gif");
+        return ext.matches("png|jpg|jpeg|gif|webp");
     }
 }

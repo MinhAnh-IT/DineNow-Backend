@@ -34,13 +34,13 @@ public interface RestaurantMapper {
     Restaurant toEntity(RestaurantRequestDTO requestDTO);
 
 
-    @Mappings (
-        {
-            @Mapping(target = "imageUrls", ignore = true),
-            @Mapping(source = "type", target = "type"),
-            @Mapping(source = "restaurantTier.name", target = "restaurantTierName")
-        }
-    )
+    @Mappings(
+            {
+                    @Mapping(target = "imageUrls", ignore = true),
+                    @Mapping(source = "type", target = "type"),
+                    @Mapping(source = "restaurantTier.name", target = "restaurantTierName"),
+                    @Mapping(target = "reservationCount", ignore = true)
+            })
     RestaurantResponseDTO toDTO(Restaurant restaurant);
 
 
