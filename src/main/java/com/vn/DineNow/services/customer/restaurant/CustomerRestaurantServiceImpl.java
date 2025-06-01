@@ -123,7 +123,7 @@ public class CustomerRestaurantServiceImpl implements CustomerRestaurantService 
     @Override
     public List<RestaurantSimpleResponseDTO> getAllRestaurantByTypeId(long typeId, int page, int size) throws CustomException {
         Pageable pageable = PageRequest.of(page, size);
-        var restaurants = restaurantRepository.findAllByType_Id(typeId, pageable);
+        var restaurants = restaurantRepository.findAllByType_IdAndStatus(typeId, RestaurantStatus.APPROVED, pageable);
         return restaurants.stream()
                 .map(this::toDTOWithReservationCount)
                 .toList();

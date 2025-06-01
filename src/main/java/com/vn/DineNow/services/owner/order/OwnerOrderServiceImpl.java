@@ -9,18 +9,18 @@ import com.vn.DineNow.enums.StatusCode;
 import com.vn.DineNow.exception.CustomException;
 import com.vn.DineNow.mapper.OrderMapper;
 import com.vn.DineNow.payload.request.Order.RejectOrderRequest;
-import com.vn.DineNow.payload.request.payment.PaymentRequest;
 import com.vn.DineNow.payload.response.order.OrderDetailResponse;
+import com.vn.DineNow.payload.response.restaurant.RestaurantResponseDTO;
 import com.vn.DineNow.repositories.OrderRepository;
 import com.vn.DineNow.repositories.RestaurantRepository;
 import com.vn.DineNow.repositories.UserRepository;
+import com.vn.DineNow.services.common.cache.RedisService;
 import com.vn.DineNow.services.common.email.EmailService;
-import com.vn.DineNow.services.customer.payment.PaymentService;
-import com.vn.DineNow.services.customer.vnpay.VnPayService;
-import jakarta.servlet.http.HttpServletRequest;
+import com.vn.DineNow.services.customer.reservation.CustomerReservationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
@@ -37,6 +37,7 @@ public class OwnerOrderServiceImpl implements OwnerOrderService{
     RestaurantRepository restaurantRepository;
     OrderMapper orderMapper;
     EmailService emailService;
+
 
     /**
      * Validates the status of an order to ensure it is not cancelled or completed.
@@ -61,7 +62,7 @@ public class OwnerOrderServiceImpl implements OwnerOrderService{
      * @throws CustomException if the order is not found or if the status transition is not allowed
      */
     @Override
-    public boolean updateOrderStatus(long ownerId, long orderId, OrderStatus status, RejectOrderRequest reason) throws CustomException {
+    public boolean updateOrderStatus(long ownerId, long orderId, OrderStatus status, RejectOrderRequest reason) throws Exception {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "Order", String.valueOf(orderId)));
         User owner = userRepository.findById(ownerId)

@@ -9,40 +9,56 @@ import com.vn.DineNow.payload.request.Order.OrderRequest;
 import com.vn.DineNow.payload.request.orderItem.OrderItemRequest;
 import com.vn.DineNow.payload.response.order.OrderResponseForPayment;
 import com.vn.DineNow.payload.response.order.OrderSimpleResponse;
+import com.vn.DineNow.payload.response.restaurant.RestaurantResponseDTO;
 import com.vn.DineNow.repositories.OrderRepository;
 import com.vn.DineNow.repositories.RestaurantRepository;
 import com.vn.DineNow.repositories.UserRepository;
+import com.vn.DineNow.services.common.cache.RedisService;
 import com.vn.DineNow.services.customer.orderItem.CustomerOrderItemService;
 import com.vn.DineNow.services.customer.reservation.CustomerReservationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CustomerOrderServiceImpl implements CustomerOrderService {
 
-    CustomerOrderItemService customerOrderItemService;
-    CustomerReservationService customerReservationService;
-    CustomerOrderItemService orderItemService;
-    ReservationMapper reservationMapper;
-    OrderRepository orderRepository;
-    UserRepository userRepository;
-    RestaurantRepository restaurantRepository;
-    OrderMapper orderMapper;
+    final CustomerOrderItemService customerOrderItemService;
+    final CustomerReservationService customerReservationService;
+    final CustomerOrderItemService orderItemService;
+    final ReservationMapper reservationMapper;
+    final OrderRepository orderRepository;
+    final UserRepository userRepository;
+    final RestaurantRepository restaurantRepository;
+    final OrderMapper orderMapper;
+    final RedisService redisService;
+    final CustomerReservationService reservationService;
+
+
+    @Value("${DineNow.key.cache-restaurant}")
+    String keyRedis;
+
 
     /**
-     * Creates a new order for a customer.
+     * Creates a new order for a customer at a specific restaurant.
+     * @param customerId the ID of the customer
+     * @param restaurantId the ID of the restaurant
+     * @param orderRequest the order request containing details
+     * @return OrderSimpleResponse containing order details
+     * @throws CustomException if any validation fails or an error occurs during order creation
      */
     @Override
     public OrderSimpleResponse createOrder(long customerId, long restaurantId, OrderRequest orderRequest) throws CustomException {
@@ -52,6 +68,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         Order order = null;
         try {
             reservation = createReservation(customerId, restaurantId, orderRequest);
+            updateReservationCountOfRestaurantInCache(restaurantId);
             order = buildOrder(orderRequest, reservation);
         } catch (Exception e) {
             throw new CustomException(StatusCode.BAD_REQUEST);
@@ -72,8 +89,17 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 
         attachRestaurantToReservation(reservation, restaurantId);
 
-        log.info("Order #{} successfully created for customer #{}", order.getId(), customerId);
         return orderMapper.toSimpleDTO(order);
+    }
+
+    private void updateReservationCountOfRestaurantInCache(long restaurantId) throws Exception {
+        String key = keyRedis + restaurantId;
+        var cachedRestaurant = redisService.getObject(key, RestaurantResponseDTO.class);
+        if(cachedRestaurant != null){
+                long reservationCount = reservationService.getTotalReservationByRestaurantId(restaurantId);
+                cachedRestaurant.setReservationCount(reservationCount);
+                redisService.saveObject(key, cachedRestaurant, 20, TimeUnit.MINUTES);
+        }
     }
 
     /**
