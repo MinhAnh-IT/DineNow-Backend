@@ -133,12 +133,11 @@ public class OwnerRestaurantServiceImpl implements OwnerRestaurantService {
             );
         }
 
-        // Validate images before saving
-        for (MultipartFile image : restaurantUpdateDTO.getImages()) {
-            restaurantImageService.validateImageFile(image);
-        }
-
         if (restaurantUpdateDTO.getImages() != null) {
+            // Validate images before saving
+            for (MultipartFile image : restaurantUpdateDTO.getImages()) {
+                restaurantImageService.validateImageFile(image);
+            }
             restaurantImageService.deleteImagesByRestaurantId(restaurantId);
             restaurantImageService.saveImages(restaurantId, restaurantUpdateDTO.getImages());
         }

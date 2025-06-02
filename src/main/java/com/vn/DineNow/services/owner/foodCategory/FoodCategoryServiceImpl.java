@@ -101,7 +101,9 @@ public class FoodCategoryServiceImpl implements FoodCategoryService{
             throw new CustomException(StatusCode.EXIST_NAME, request.getName(), "food category");
         }
         if(request.getMainCategoryId() != null){
-            foodCategory.getMainCategory().setId(request.getMainCategoryId());
+            MainCategory mainCategory = mainCategoryRepository.findById(request.getMainCategoryId())
+                    .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "main category", String.valueOf(request.getMainCategoryId())));
+            foodCategory.setMainCategory(mainCategory);
         }
         foodCategoryMapper.updateEntity(request, foodCategory);
 
