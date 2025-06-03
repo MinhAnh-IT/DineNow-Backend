@@ -43,7 +43,6 @@ public class OwnerMenuItemServiceImpl implements OwnerMenuItemService {
     final MenuItemMapper menuItemMapper;
     final RedisService redisService;
     final MenuItemReviewRepository reviewRepository;
-    final RestaurantTypeRepository restaurantTypeRepository;
 
     @Value("${DineNow.key.cache-item}")
     String keyRedis;
@@ -108,6 +107,13 @@ public class OwnerMenuItemServiceImpl implements OwnerMenuItemService {
     public MenuItemResponseDTO updateMenuItem(long ownerId, long menuItemId, MenuItemUpdateDTO request) throws CustomException {
         MenuItem menuItem = menuItemRepository.findByIdAndAvailableTrue(menuItemId)
                 .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "menu item", String.valueOf(menuItemId)));
+
+        if(request.getFoodCategoryId() != null) {
+            var foodCategory = foodCategoryRepository.findById(request.getFoodCategoryId())
+                    .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "food category", String.valueOf(request.getFoodCategoryId())));
+            menuItem.setCategory(foodCategory);
+        }
+
         if(menuItem.getRestaurant().getOwner().getId() != ownerId){
             throw new CustomException(StatusCode.FORBIDDEN);
         }
