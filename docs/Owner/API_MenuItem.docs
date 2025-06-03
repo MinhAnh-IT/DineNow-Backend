@@ -34,7 +34,7 @@
 2. Cập nhật thông tin của món ăn: api/owner/menu-items/101   -   Put
     * Request body: nhập dưới dạng form-data
         - 101 = id của món ăn
-        - Trường dữ liệu tương tự Create ở trên
+        - Trường dữ liệu tương tự Create ở trên => category => foodCategoryId
         - Mặc định trường nào không nhập thì không cập nhật
 
     * Response:
