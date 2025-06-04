@@ -16,6 +16,7 @@ import com.vn.DineNow.services.common.cache.RedisService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
  * Service implementation for restaurant owners to manage menu items,
  * including creation, update, deletion, and availability control.
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -59,6 +61,7 @@ public class OwnerMenuItemServiceImpl implements OwnerMenuItemService {
      */
     @Override
     public MenuItemResponseDTO addNewMenuItem(long ownerId, long restaurantId, MenuItemRequestDTO request) throws CustomException {
+        log.info("[OwnerMenuItemService] Adding new menu item for owner ID: {}, restaurant ID: {}", ownerId, restaurantId);
         User owner = userRepository.findById(ownerId)
                 .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "owner", String.valueOf(ownerId)));
 
@@ -108,9 +111,9 @@ public class OwnerMenuItemServiceImpl implements OwnerMenuItemService {
         MenuItem menuItem = menuItemRepository.findByIdAndAvailableTrue(menuItemId)
                 .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "menu item", String.valueOf(menuItemId)));
 
-        if(request.getFoodCategoryId() != null) {
-            var foodCategory = foodCategoryRepository.findById(request.getFoodCategoryId())
-                    .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "food category", String.valueOf(request.getFoodCategoryId())));
+        if(request.getCategory() != null) {
+            var foodCategory = foodCategoryRepository.findById(request.getCategory())
+                    .orElseThrow(() -> new CustomException(StatusCode.NOT_FOUND, "food category", String.valueOf(request.getCategory())));
             menuItem.setCategory(foodCategory);
         }
 

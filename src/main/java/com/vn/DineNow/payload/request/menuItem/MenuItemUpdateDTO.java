@@ -25,7 +25,7 @@ public class MenuItemUpdateDTO {
 
     Boolean available;
 
-    Long foodCategoryId;
+    Long category;
 
     MultipartFile imageUrl;
 }

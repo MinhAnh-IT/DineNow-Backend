@@ -30,6 +30,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/owner")
 @RequiredArgsConstructor
@@ -100,6 +102,7 @@ public class OwnerController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @ValidRestaurantApprovedValidator @PathVariable long restaurantId,
             @ModelAttribute @Valid MenuItemRequestDTO menuItemRequestDTO) throws CustomException{
+        log.info("Adding new menu item for restaurant with ID: {}", restaurantId);
         var result = menuItemService.addNewMenuItem(userDetails.getUser().getId(), restaurantId, menuItemRequestDTO);
         APIResponse<MenuItemResponseDTO> response = APIResponse.<MenuItemResponseDTO>builder()
                 .status(StatusCode.CREATED.getCode())
