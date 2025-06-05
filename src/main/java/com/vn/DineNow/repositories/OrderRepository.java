@@ -208,7 +208,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     JOIN o.reservation r
     JOIN r.restaurant rest
     WHERE rest = :restaurant
-      AND o.status IN :statuses
+      AND o.status = 'COMPLETED'
       AND r.reservationTime BETWEEN :startDateTime AND :endDateTime
       AND NOT EXISTS (
           SELECT 1 FROM RestaurantPayment rp

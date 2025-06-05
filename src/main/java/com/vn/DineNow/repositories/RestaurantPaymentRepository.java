@@ -18,7 +18,7 @@ public interface RestaurantPaymentRepository extends JpaRepository<RestaurantPay
             FROM restaurants r
             JOIN reservations res ON res.restaurant_id = r.id
             JOIN orders o ON o.reservation_id = res.id
-            WHERE o.status = 'PAID' OR o.status = 'COMPLETED'
+            WHERE o.status = 'COMPLETED'
               AND res.reservation_time BETWEEN :startDate AND :endDate
               AND r.id NOT IN (
                   SELECT rp.restaurant_id
