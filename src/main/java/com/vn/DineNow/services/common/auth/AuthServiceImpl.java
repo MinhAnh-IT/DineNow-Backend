@@ -217,7 +217,7 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public boolean verifyOTPVerifyAccount(VerifyOTPRequest request) throws CustomException {
-        if(!userRepository.existsByEmailAndProviderAndIsVerified(request.getEmail(), SignWith.LOCAL, false)) {
+        if(!userRepository.existsByEmailAndProviderAndIsVerifiedOrNull(request.getEmail(), SignWith.LOCAL, false)) {
             throw new CustomException(StatusCode.NOT_FOUND, "user", request.getEmail());
         }
 

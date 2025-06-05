@@ -17,5 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByPhone(String phone);
     User findByEmail(String email);
     User findByEmailAndProvider(@NotNull String email, @NotNull SignWith signWith);
-    boolean existsByEmailAndProviderAndIsVerified(@Email(message = "Email should be valid") String email, SignWith signWith, boolean b);
+    @Query("SELECT COUNT(u) > 0 FROM User u WHERE u.email = :email AND u.provider = :provider AND (u.isVerified = :isVerified OR u.isVerified IS NULL)")
+    boolean existsByEmailAndProviderAndIsVerifiedOrNull(@Param("email") String email, @Param("provider") SignWith provider, @Param("isVerified") Boolean isVerified);
+
 }

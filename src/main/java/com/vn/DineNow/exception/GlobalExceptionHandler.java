@@ -26,7 +26,7 @@ public class  GlobalExceptionHandler {
                 .message(ex.getMessage())
                 .build();
         return ResponseEntity.ok(response);
-    }
+    }   
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<APIResponse<Map<String, String>>> handleValidationException(MethodArgumentNotValidException ex) {
